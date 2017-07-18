@@ -1,0 +1,5 @@
+# Mac OS X dumps these all over the place.
+.DS_Store
+
+# IDE Stuff
+.idea/*
