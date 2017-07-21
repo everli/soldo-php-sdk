@@ -6,13 +6,13 @@ namespace Soldo\Resources;
  * Class Company
  * @package Soldo\Resources
  */
-final class Company extends SoldoResource
+final class ExpenseCentre extends SoldoResource
 {
 
     /**
      * Define resource URL
      */
-    const RESOURCE_URL = '/company';
+    const RESOURCE_PATH = '/expensecentres';
 
 
 
