@@ -2,13 +2,10 @@
 
 namespace Soldo;
 
-
-use function GuzzleHttp\Promise\all;
 use Soldo\Authentication\OAuthCredential;
 use Soldo\Exceptions\SoldoSDKException;
 use Soldo\Resources\ExpenseCentre;
 use Soldo\Resources\SoldoCollection;
-use Soldo\Resources\SoldoResource;
 
 /**
  * Class Soldo
@@ -64,6 +61,11 @@ class Soldo
     }
 
 
+    /**
+     * Return an array containing a list of ExpenseCentre
+     *
+     * @return array
+     */
     public function getExpenseCentres()
     {
         $data = $this->client->get(
