@@ -20,7 +20,7 @@ class OAuthCredential extends SoldoResource
 
     /**
      * OAuthCredential constructor.
-     * @param $client_id//
+     * @param $client_id
      * @param $client_secret
      */
     public function __construct($clientId, $clientSecret)
