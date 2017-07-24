@@ -3,7 +3,7 @@
 namespace Soldo\Resources;
 
 /**
- * Class Company
+ * Class ExpenseCentre
  * @package Soldo\Resources
  */
 final class ExpenseCentre extends SoldoResource
