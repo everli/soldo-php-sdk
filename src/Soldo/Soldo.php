@@ -96,7 +96,7 @@ class Soldo
 
 
     /**
-     * Return an array containing a list of Employees
+     * Return an array containing a list of Employee
      *
      * @return array
      */
@@ -107,7 +107,7 @@ class Soldo
     }
 
     /**
-     * Return a single Employees resource
+     * Return a single Employee resource
      *
      * @param $id
      * @return mixed
@@ -119,7 +119,7 @@ class Soldo
     }
 
     /**
-     * Update the Employees by id and return the resource up to date
+     * Update the Employee by id and return the resource up to date
      *
      * @param $id
      * @param $data
