@@ -77,7 +77,6 @@ class SoldoCollection
     private function build($items, $className)
     {
         foreach ($items as $item) {
-            /** @var SoldoResource $resource */
             $this->items[] = new $className($item);
         }
     }
