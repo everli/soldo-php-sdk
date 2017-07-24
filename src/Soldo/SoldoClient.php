@@ -177,12 +177,17 @@ class SoldoClient
     {
         try{
 
+            // get access token
+            $access_token = $this->getAccessToken();
+
+            // build authorization header
             $options = [
                 'headers' => [
-                    'Authorization' => 'Bearer ' . $this->getAccessToken(),
+                    'Authorization' => 'Bearer ' . $access_token,
                 ],
             ];
 
+            // perform the request
             $response = $this->httpClient->request(
                 $method,
                 $path,
