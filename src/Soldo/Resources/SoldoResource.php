@@ -12,21 +12,21 @@ class SoldoResource
     /**
      * @var array
      */
-    protected $_attributes;
+    protected $_attributes = [];
+
 
     /**
      * SoldoResource constructor.
      */
     public function __construct($data = [])
     {
-        $this->_attributes = [];
-        $this->update($data);
+        $this->fill($data);
     }
 
     /**
      * @param array $data
      */
-    public function update(array $data)
+    private function fill(array $data)
     {
         foreach ($data as $key => $value) {
             $this->{$key} = $value;
@@ -54,5 +54,12 @@ class SoldoResource
         return null;
     }
 
+    /**
+     * @return array
+     */
+    public function toArray()
+    {
+        return $this->_attributes;
+    }
 
 }

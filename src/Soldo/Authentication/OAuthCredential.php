@@ -2,7 +2,9 @@
 
 namespace Soldo\Authentication;
 
+use Soldo\Exceptions\SoldoAuthenticationException;
 use Soldo\Resources\SoldoResource;
+use Respect\Validation\Validator;
 
 /**
  * Class OAuthCredential
@@ -15,7 +17,7 @@ use Soldo\Resources\SoldoResource;
  * @property string token_type
  * @property int expires_in
  */
-class OAuthCredential extends SoldoResource
+final class OAuthCredential extends SoldoResource
 {
 
     /**
@@ -46,9 +48,43 @@ class OAuthCredential extends SoldoResource
     }
 
 
+    /**
+     * @param $authData
+     */
+    public function updateAuthenticationData($authData)
+    {
+        $this->validateAuthData($authData);
+
+        $this->access_token = $authData['access_token'];
+        $this->refresh_token = $authData['refresh_token'];
+        $this->token_type = $authData['token_type'];
+        $this->expires_in = $authData['expires_in'];
+    }
 
 
+    /**
+     * Manually validate data since this is a crucial point.
+     *
+     * @param $authData
+     * @return bool
+     * @throws SoldoAuthenticationException
+     */
+    private function validateAuthData($authData)
+    {
+        $validator = Validator::key('access_token', Validator::notEmpty())
+            ->key('refresh_token', Validator::notEmpty())
+            ->key('token_type', Validator::notEmpty())
+            ->key('expires_in', Validator::intVal());
 
+        // TODO: verify exception type and messages
+        if($validator->validate($authData) === false) {
+            throw new SoldoAuthenticationException(
+                'Unable to authenticate user. '
+                .'Check your credential'
+            );
+        }
 
+        return true;
+    }
 
 }

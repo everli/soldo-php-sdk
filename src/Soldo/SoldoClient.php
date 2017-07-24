@@ -25,7 +25,7 @@ use Soldo\Resources\SoldoCollection;
 class SoldoClient
 {
 
-    const TIMEOUT = 0;
+    const TIMEOUT = 60;
 
     /**
      * Define live api base URL
@@ -103,15 +103,35 @@ class SoldoClient
         $array = json_decode($body, true);
 
         // check if it is a valid json
-        if(json_last_error() !== JSON_ERROR_NONE) {
+        if (json_last_error() !== JSON_ERROR_NONE) {
             // return an empty array if the body is empty or null
-            if($array === '' || $array === null) {
+            if ($array === '' || $array === null) {
                 return [];
             }
             throw new \InvalidArgumentException('Invalid JSON string');
         }
         // return associative array
         return json_decode($body, true);
+    }
+
+
+    private function getParsedData($class, $data)
+    {
+        $class_constant = $class . '::EDITABLE';
+        $editable = @constant($class_constant);
+
+        if ($editable === null) {
+            $editable = [];
+        }
+
+        foreach ($data as $key => $value) {
+            if (!in_array($key, $editable)) {
+                unset($data[$key]);
+            }
+        }
+
+        return $data;
+
     }
 
     /**
@@ -126,17 +146,17 @@ class SoldoClient
         $class_constant = $class . '::RESOURCE_PATH';
         $resource_path = @constant($class_constant);
 
-        if($resource_path === null) {
+        if ($resource_path === null) {
             throw new \InvalidArgumentException(
                 'Error trying access constant '
-                .$class . '::RESOURCE_PATH is not defined'
+                . $class . '::RESOURCE_PATH is not defined'
             );
         }
 
         $url = self::API_ENTRY_POINT . $resource_path;
 
         // if it a single resource and not a collection append the id to the url
-        if($id !== null) {
+        if ($id !== null) {
             $url .= "/" . $id;
         }
 
@@ -156,10 +176,10 @@ class SoldoClient
         $class = self::RESOURCE_NAMESPACE . $resourceType;
 
         // check that class exists, throws exception otherwise
-        if(class_exists($class) === false) {
+        if (class_exists($class) === false) {
             throw new \InvalidArgumentException(
                 'Error trying to access a not existing class '
-                .$class . 'doesn\'t exist'
+                . $class . 'doesn\'t exist'
             );
         }
 
@@ -173,34 +193,33 @@ class SoldoClient
      * @param $path
      * @return array|mixed
      */
-    private function call($method, $path)
+    private function call($method, $path, $data = [])
     {
-        try{
+        // get access token
+        $access_token = $this->getAccessToken();
 
-            // get access token
-            $access_token = $this->getAccessToken();
+        // build authorization header
+        $options = [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $access_token,
+            ],
+        ];
 
-            // build authorization header
-            $options = [
-                'headers' => [
-                    'Authorization' => 'Bearer ' . $access_token,
-                ],
-            ];
-
-            // perform the request
-            $response = $this->httpClient->request(
-                $method,
-                $path,
-                $options
-            );
-            return $this->toArray($response->getBody());
-
-        } catch (\Exception $e) {
-
-            // TODO: handle Guzzle exceptions
-            // TODO: log stuff
-
+        // only populate data if method is not GET and data is not empty
+        if ($method !== 'GET' &&
+            !empty($data) && is_array($data)
+        ) {
+            $options['json'] = $data;
         }
+
+        // perform the request
+        $response = $this->httpClient->request(
+            $method,
+            $path,
+            $options
+        );
+
+        return $this->toArray($response->getBody());
     }
 
 
@@ -213,18 +232,25 @@ class SoldoClient
      */
     public function getCollection($resourceType)
     {
-        // get full class name
-        $class = $this->getResourceClass($resourceType);
+        try {
+            // get full class name
+            $class = $this->getResourceClass($resourceType);
 
-        // get remote resource url
-        $resource_path = $this->getRemoteResourceURL($class);
+            // get remote resource url
+            $resource_path = $this->getRemoteResourceURL($class);
 
-        // fetch remote data
-        $data = $this->call('GET', $resource_path);
+            // fetch remote data
+            $data = $this->call('GET', $resource_path);
 
-        //n build collection
-        $collection = new SoldoCollection($data, $class);
-        return $collection;
+            //n build collection
+            $collection = new SoldoCollection($data, $class);
+            return $collection;
+
+        } catch (\Exception $e) {
+
+            throw $e;
+
+        }
 
     }
 
@@ -234,20 +260,60 @@ class SoldoClient
      * @param $resourceType
      * @param $id
      * @return mixed
+     * @throws \Exception
      */
     public function getItem($resourceType, $id)
     {
-        // get full class name
-        $class = $this->getResourceClass($resourceType);
+        try {
 
-        // get remote resource url
-        $resource_path = $this->getRemoteResourceURL($class, $id);
+            // get full class name
+            $class = $this->getResourceClass($resourceType);
 
-        // fetch remote data
-        $data = $this->call('GET', $resource_path);
+            // get remote resource url
+            $resource_path = $this->getRemoteResourceURL($class, $id);
 
-        return new $class($data);
+            // fetch remote data
+            $resource = $this->call('GET', $resource_path);
+            return new $class($resource);
 
+        } catch (\Exception $e) {
+
+            throw $e;
+
+        }
+    }
+
+    /**
+     * Update the remote resource and return it
+     *
+     * @param $resourceType
+     * @param $id
+     * @param $data
+     * @return mixed
+     * @throws \Exception
+     */
+    public function updateItem($resourceType, $id, $data)
+    {
+        try {
+
+            // get full class name
+            $class = $this->getResourceClass($resourceType);
+
+            // keep only editable data according to class::EDITABLE const
+            $data = $this->getParsedData($class, $data);
+
+            // get remote resource url
+            $resource_path = $this->getRemoteResourceURL($class, $id);
+
+            // update remote data and return the updated resource
+            $resource = $this->call('POST', $resource_path, $data);
+            return new $class($resource);
+
+        } catch (\Exception $e) {
+
+            throw $e;
+
+        }
     }
 
 
@@ -258,13 +324,13 @@ class SoldoClient
      */
     public function getAccessToken()
     {
-        if($this->credential->access_token === null) {
+        if ($this->credential->access_token === null) {
             $auth_data = $this->authorize();
-            $this->credential->update($auth_data);
+            $this->credential->updateAuthenticationData($auth_data);
         }
 
         //TODO: handle token expiration
-        if($this->credential->isTokenExpired()) {
+        if ($this->credential->isTokenExpired()) {
 
         }
 
@@ -280,7 +346,7 @@ class SoldoClient
      */
     private function authorize()
     {
-        try{
+        try {
 
             $response = $this->httpClient->request(
                 'POST',
@@ -300,7 +366,7 @@ class SoldoClient
 
             throw new SoldoAuthenticationException(
                 'Unable to authenticate user. '
-                .'Check your credential'
+                . 'Check your credential'
             );
         }
     }

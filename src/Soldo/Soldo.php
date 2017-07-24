@@ -70,7 +70,7 @@ class Soldo
     }
 
     /**
-     * Return a single resource
+     * Return a single ExpenseCentre resource
      *
      * @param $id
      * @return mixed
@@ -80,6 +80,57 @@ class Soldo
         $expense_center = $this->client->getItem('ExpenseCentre', $id);
         return $expense_center;
     }
+
+    /**
+     * Update the ExpenseCentre by id and return the resource up to date
+     *
+     * @param $id
+     * @param $data
+     * @return mixed
+     */
+    public function updateExpenseCentre($id, $data)
+    {
+        $expense_center = $this->client->updateItem('ExpenseCentre', $id, $data);
+        return $expense_center;
+    }
+
+
+    /**
+     * Return an array containing a list of Employees
+     *
+     * @return array
+     */
+    public function getEmployees()
+    {
+        $collection = $this->client->getCollection('Employee');
+        return $collection->get();
+    }
+
+    /**
+     * Return a single Employees resource
+     *
+     * @param $id
+     * @return mixed
+     */
+    public function getEmployee($id)
+    {
+        $expense_center = $this->client->getItem('Employee', $id);
+        return $expense_center;
+    }
+
+    /**
+     * Update the Employees by id and return the resource up to date
+     *
+     * @param $id
+     * @param $data
+     * @return mixed
+     */
+    public function updateEmployee($id, $data)
+    {
+        $expense_center = $this->client->updateItem('Employee', $id, $data);
+        return $expense_center;
+    }
+
 
 
 }

@@ -84,6 +84,7 @@ class SoldoCollection
 
     /**
      * @param $className
+     * @return bool
      */
     private function validateClassName($className)
     {
@@ -93,6 +94,8 @@ class SoldoCollection
                 .$className . 'doesn\'t exists'
             );
         }
+
+        return true;
     }
 
 

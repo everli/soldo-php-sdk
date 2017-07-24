@@ -3,23 +3,23 @@
 namespace Soldo\Resources;
 
 /**
- * Class ExpenseCentre
+ * Class Employee
  * @package Soldo\Resources
  */
-final class ExpenseCentre extends SoldoResource
+final class Employee extends SoldoResource
 {
 
     /**
      * Define resource URL
      */
-    const RESOURCE_PATH = '/expensecentres';
+    const RESOURCE_PATH = '/employees';
 
     /**
      * Define editable property according to API
      */
     const EDITABLE = [
         'custom_reference_id',
-        'assignee',
+        'department',
     ];
 
 
