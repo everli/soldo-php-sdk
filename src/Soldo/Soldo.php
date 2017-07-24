@@ -69,6 +69,12 @@ class Soldo
         return $collection->get();
     }
 
+    /**
+     * Return a single resource
+     *
+     * @param $id
+     * @return mixed
+     */
     public function getExpenseCentre($id)
     {
         $expense_center = $this->client->getItem('ExpenseCentre', $id);
