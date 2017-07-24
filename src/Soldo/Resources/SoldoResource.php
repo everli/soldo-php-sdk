@@ -17,9 +17,10 @@ class SoldoResource
     /**
      * SoldoResource constructor.
      */
-    public function __construct()
+    public function __construct($data = [])
     {
         $this->_attributes = [];
+        $this->update($data);
     }
 
     /**

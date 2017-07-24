@@ -12,6 +12,9 @@ namespace Soldo;
 
 use \GuzzleHttp\Client;
 use \Psr\Http\Message\StreamInterface;
+use \Soldo\Authentication\OAuthCredential;
+use \Soldo\Exceptions\SoldoAuthenticationException;
+use Soldo\Resources\SoldoCollection;
 
 
 /**
@@ -35,14 +38,24 @@ class SoldoClient
     const API_TEST_URL = 'https://api-demo.soldocloud.net';
 
     /**
-     *
+     * Define the entry point for each request (except the authorize one)
      */
     const API_ENTRY_POINT = '/business/v1';
 
     /**
+     * Define authorize URL
+     */
+    const AUTHORIZE_URL = '/oauth/authorize';
+
+    /**
+     * Define resource namespace
+     */
+    const RESOURCE_NAMESPACE = '\Soldo\Resources\\';
+
+    /**
      * @var Client
      */
-    protected $client;
+    protected $httpClient;
 
     /**
      * @var string
@@ -50,17 +63,25 @@ class SoldoClient
     protected $endpoint;
 
     /**
+     * @var OAuthCredential
+     */
+    protected $credential;
+
+
+    /**
      * SoldoClient constructor.
      * @param string $environment
      */
-    public function __construct($environment = 'demo')
+    public function __construct(OAuthCredential $credential, $environment = 'demo')
     {
+        $this->credential = $credential;
+
         $base_uri = $environment == 'live' ?
             self::API_LIVE_URL :
             self::API_TEST_URL;
 
         // instantiate new guzzle client
-        $this->client = new Client([
+        $this->httpClient = new Client([
                 'base_uri' => $base_uri,
                 'timeout' => self::TIMEOUT,
                 'verify' => false
@@ -70,7 +91,10 @@ class SoldoClient
 
 
     /**
+     * Validate and build a json starting from request body
+     *
      * @param StreamInterface $body
+     * @throws \InvalidArgumentException
      * @return array|mixed
      */
     protected function toArray(StreamInterface $body)
@@ -90,29 +114,189 @@ class SoldoClient
         return json_decode($body, true);
     }
 
+    /**
+     * Build the resource remote URL
+     *
+     * @param $class
+     * @throws \InvalidArgumentException
+     * @return string
+     */
+    private function getRemoteResourceURL($class, $id = null)
+    {
+        $class_constant = $class . '::RESOURCE_PATH';
+        $resource_path = @constant($class_constant);
+
+        if($resource_path === null) {
+            throw new \InvalidArgumentException(
+                'Error trying access constant '
+                .$class . '::RESOURCE_PATH is not defined'
+            );
+        }
+
+        $url = self::API_ENTRY_POINT . $resource_path;
+
+        // if it a single resource and not a collection append the id to the url
+        if($id !== null) {
+            $url .= "/" . $id;
+        }
+
+        return $url;
+    }
 
     /**
-     * @param $resourcePath
-     * @param $accessToken
+     * Build resource class
+     *
+     * @param $resourceType
+     * @throws \InvalidArgumentException
+     * @return string
+     */
+    private function getResourceClass($resourceType)
+    {
+        // get full class location
+        $class = self::RESOURCE_NAMESPACE . $resourceType;
+
+        // check that class exists, throws exception otherwise
+        if(class_exists($class) === false) {
+            throw new \InvalidArgumentException(
+                'Error trying to access a not existing class '
+                .$class . 'doesn\'t exist'
+            );
+        }
+
+        return $class;
+    }
+
+    /**
+     * Perform a remote call with Guzzle client
+     *
+     * @param $method
+     * @param $path
      * @return array|mixed
      */
-    public function get($resourcePath, $accessToken)
+    private function call($method, $path)
     {
         try{
-            $response = $this->client->request(
-                'GET',
-                self::API_ENTRY_POINT . $resourcePath,
+
+            $options = [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $this->getAccessToken(),
+                ],
+            ];
+
+            $response = $this->httpClient->request(
+                $method,
+                $path,
+                $options
+            );
+            return $this->toArray($response->getBody());
+
+        } catch (\Exception $e) {
+
+            // TODO: handle Guzzle exceptions
+            // TODO: log stuff
+
+        }
+    }
+
+
+    /**
+     * Build and return a SoldoCollection starting from remote data
+     *
+     * @param $resource
+     * @throws \InvalidArgumentException
+     * @return array|mixed
+     */
+    public function getCollection($resourceType)
+    {
+        // get full class name
+        $class = $this->getResourceClass($resourceType);
+
+        // get remote resource url
+        $resource_path = $this->getRemoteResourceURL($class);
+
+        // fetch remote data
+        $data = $this->call('GET', $resource_path);
+
+        //n build collection
+        $collection = new SoldoCollection($data, $class);
+        return $collection;
+
+    }
+
+    /**
+     * Build the resource starting from remote data
+     *
+     * @param $resourceType
+     * @param $id
+     * @return mixed
+     */
+    public function getItem($resourceType, $id)
+    {
+        // get full class name
+        $class = $this->getResourceClass($resourceType);
+
+        // get remote resource url
+        $resource_path = $this->getRemoteResourceURL($class, $id);
+
+        // fetch remote data
+        $data = $this->call('GET', $resource_path);
+
+        return new $class($data);
+
+    }
+
+
+    /**
+     * Get access token for authenticated request
+     *
+     * @return string
+     */
+    public function getAccessToken()
+    {
+        if($this->credential->access_token === null) {
+            $auth_data = $this->authorize();
+            $this->credential->update($auth_data);
+        }
+
+        //TODO: handle token expiration
+        if($this->credential->isTokenExpired()) {
+
+        }
+
+        return $this->credential->access_token;
+    }
+
+
+    /**
+     * Perform a request to the /authorize endpoint
+     *
+     * @return array|mixed
+     * @throws SoldoAuthenticationException
+     */
+    private function authorize()
+    {
+        try{
+
+            $response = $this->httpClient->request(
+                'POST',
+                self::AUTHORIZE_URL,
                 [
-                    'headers' => [
-                        'Authorization' => 'Bearer '.$accessToken
+                    'form_params' => [
+                        'client_id' => $this->credential->client_id,
+                        'client_secret' => $this->credential->client_secret
                     ]
                 ]
             );
             return $this->toArray($response->getBody());
+
         } catch (\Exception $e) {
 
-            //TODO: handle Guzzle exceptions
+            // TODO: log stuff
 
+            throw new SoldoAuthenticationException(
+                'Unable to authenticate user. '
+                .'Check your credential'
+            );
         }
     }
 

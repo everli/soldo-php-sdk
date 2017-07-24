@@ -24,10 +24,6 @@ class Soldo
      */
     private $client;
 
-    /**
-     * @var string
-     */
-    private $env;
 
     /**
      * Soldo constructor.
@@ -46,17 +42,18 @@ class Soldo
             $config
         );
 
-        if(!array_key_exists('client_id', $config)) {
+        if (!array_key_exists('client_id', $config)) {
             throw new SoldoSDKException('Required "client_id" key is missing in config');
         }
 
-        if(!array_key_exists('client_secret', $config)) {
+        if (!array_key_exists('client_secret', $config)) {
             throw new SoldoSDKException('Required "client_secret" key is missing in config');
         }
 
-        $this->env = $config['environment'];
-        $this->client = new SoldoClient($config['environment']);
-        $this->credential = new OAuthCredential($config['client_id'], $config['client_secret']);
+        $this->client = new SoldoClient(
+            new OAuthCredential($config['client_id'], $config['client_secret']),
+            $config['environment']
+        );
 
     }
 
@@ -68,14 +65,15 @@ class Soldo
      */
     public function getExpenseCentres()
     {
-        $data = $this->client->get(
-            ExpenseCentre::RESOURCE_PATH,
-            $this->credential->getAccessToken()
-        );
-        $collection = new SoldoCollection($data, 'Soldo\Resources\ExpenseCentre');
+        $collection = $this->client->getCollection('ExpenseCentre');
         return $collection->get();
     }
 
+    public function getExpenseCentre($id)
+    {
+        $expense_center = $this->client->getItem('ExpenseCentre', $id);
+        return $expense_center;
+    }
 
 
 }

@@ -33,28 +33,19 @@ class OAuthCredential extends SoldoResource
 
 
     /**
-     * @param string $environment
-     * @return string
+     * Return true if token was generated before expires_in seconds
+     * Add a buffer just to not risk
+     *
+     * TODO: ask Soldo how to generate a new token starting from refresh_token
+     *
+     * @return bool
      */
-    public function getAccessToken($environment = 'demo')
+    public function isTokenExpired()
     {
-        // TODO: handle token expiration
-
-        // return access_token if already exists
-        if($this->access_token !== null) {
-            return $this->access_token;
-        }
-
-        // authenticate otherwise
-        $oAuthClient = new OAuthClient($environment);
-        $response = $oAuthClient->authorize(
-            $this->client_id,
-            $this->client_secret
-        );
-
-        $this->update($response);
-        return $this->access_token;
+        return false;
     }
+
+
 
 
 

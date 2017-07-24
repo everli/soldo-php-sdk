@@ -55,7 +55,8 @@ class SoldoCollection
         $this->pageSize = $data['page_size'];
         $this->currentPage = $data['current_page'];
         $this->resultsSize = $data['results_size'];
-        $this->items = $this->build($data['results'], $className);
+
+        $this->build($data['results'], $className);
 
     }
 
@@ -68,23 +69,17 @@ class SoldoCollection
         return $this->items;
     }
 
+
     /**
      * @param $items
      * @param $className
-     * @return array
      */
     private function build($items, $className)
     {
-        $resources = [];
-
         foreach ($items as $item) {
             /** @var SoldoResource $resource */
-            $resource = new $className();
-            $resource->update($item);
-            $resources[] = $resource;
+            $this->items[] = new $className($item);
         }
-
-        return $resources;
     }
 
 
