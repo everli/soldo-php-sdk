@@ -26,5 +26,8 @@ foreach ($expense_centres as $ec) {
     echo $ec->name . "\n";
 }
 
+$expense_centre = $s->getExpenseCentre($expense_centres[0]->id);
+var_dump($expense_centre->name);
+
 
 
