@@ -57,20 +57,14 @@ class SoldoCollection
     public function __construct()
     {
         $this->validateItemClassName();
-//        $this->validateRawData($data);
-//        $this->validateClassName($className);
-//
-//
-//        $this->pages = $data['pages'];
-//        $this->total = $data['total'];
-//        $this->pageSize = $data['page_size'];
-//        $this->currentPage = $data['current_page'];
-//        $this->resultsSize = $data['results_size'];
-//
-//        $this->build($data['results'], $className);
-
     }
 
+    /**
+     * Fill collection starting from raw data
+     *
+     * @param $data
+     * @return $this
+     */
     public function fill($data)
     {
         $this->validateRawData($data);
