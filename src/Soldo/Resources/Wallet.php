@@ -9,8 +9,8 @@ namespace Soldo\Resources;
  * @property string id
  * @property string name
  * @property string currency_code
- * @property int available_amount
- * @property int blocked_amount
+ * @property float available_amount
+ * @property float blocked_amount
  * @property string primary_user_type
  * @property string primary_user_public_id
  * @property string custom_reference_id
