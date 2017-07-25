@@ -115,6 +115,14 @@ class SoldoClient
     }
 
 
+    /**
+     * Take an array of data and unset all the key that are not present
+     * in the $class::EDITABLE array
+     *
+     * @param $class
+     * @param $data
+     * @return mixed
+     */
     private function getParsedData($class, $data)
     {
         $class_constant = $class . '::EDITABLE';
