@@ -205,12 +205,24 @@ class SoldoClient
             ],
         ];
 
-        // only populate data if method is not GET and data is not empty
-        if ($method !== 'GET' &&
-            !empty($data) && is_array($data)
-        ) {
-            $options['json'] = $data;
+        // do different stuff for each method
+        // only support GET and POST
+        switch ($method) {
+            case 'GET':
+                // pass params as query parameters
+                if(is_array($data) && !empty($data)) {
+                    $options['query'] = $data;
+                }
+                break;
+
+            case 'POST':
+                // build a json from $data and attach to the request
+                if(is_array($data) && !empty($data)) {
+                    $options['json'] = $data;
+                }
+                break;
         }
+
 
         // perform the request
         $response = $this->httpClient->request(
@@ -226,11 +238,12 @@ class SoldoClient
     /**
      * Build and return a SoldoCollection starting from remote data
      *
-     * @param $resource
-     * @throws \InvalidArgumentException
-     * @return array|mixed
+     * @param $resourceType
+     * @param array $queryParameters
+     * @return SoldoCollection
+     * @throws \Exception
      */
-    public function getCollection($resourceType)
+    public function getCollection($resourceType, $queryParameters = [])
     {
         try {
             // get full class name
@@ -240,7 +253,7 @@ class SoldoClient
             $resource_path = $this->getRemoteResourceURL($class);
 
             // fetch remote data
-            $data = $this->call('GET', $resource_path);
+            $data = $this->call('GET', $resource_path, $queryParameters);
 
             //n build collection
             $collection = new SoldoCollection($data, $class);
