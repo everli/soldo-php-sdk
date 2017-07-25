@@ -37,7 +37,7 @@ class SoldoCollection
     /**
      *
      */
-    protected $items;
+    protected $items = [];
 
     /**
      * SoldoCollection constructor.
