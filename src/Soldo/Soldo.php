@@ -132,5 +132,17 @@ class Soldo
     }
 
 
+    /**
+     * Return a single Company resource
+     *
+     * @return mixed
+     */
+    public function getCompany()
+    {
+        $company = $this->client->getItem('Company');
+        return $company;
+    }
+
+
 
 }

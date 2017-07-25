@@ -262,7 +262,7 @@ class SoldoClient
      * @return mixed
      * @throws \Exception
      */
-    public function getItem($resourceType, $id)
+    public function getItem($resourceType, $id = null)
     {
         try {
 
