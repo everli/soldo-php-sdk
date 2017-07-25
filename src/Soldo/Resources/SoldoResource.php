@@ -76,8 +76,6 @@ class SoldoResource
     }
 
     /**
-     * TODO: overwrite this in Company, removing the id
-     *
      * @return string
      */
     public function getRemotePath()
