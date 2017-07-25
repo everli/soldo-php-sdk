@@ -114,8 +114,8 @@ class Soldo
      */
     public function getEmployee($id)
     {
-        $expense_center = $this->client->getItem('Employee', $id);
-        return $expense_center;
+        $employee = $this->client->getItem('Employee', $id);
+        return $employee;
     }
 
     /**
@@ -127,8 +127,8 @@ class Soldo
      */
     public function updateEmployee($id, $data)
     {
-        $expense_center = $this->client->updateItem('Employee', $id, $data);
-        return $expense_center;
+        $employee = $this->client->updateItem('Employee', $id, $data);
+        return $employee;
     }
 
 
