@@ -17,16 +17,16 @@ final class ExpenseCentre extends SoldoResource
 {
 
     /**
-     * Define resource URL
+     * @var string
      */
-    const RESOURCE_PATH = '/expensecentres';
+    protected $basePath = '/expensecentres';
 
     /**
-     * Define editable property according to API
+     * @var array
      */
-    const EDITABLE = [
+    protected $whiteListed = [
         'custom_reference_id',
-        'assignee',
+        'assignee'
     ];
 
 

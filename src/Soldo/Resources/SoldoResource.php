@@ -2,6 +2,8 @@
 
 namespace Soldo\Resources;
 
+use Soldo\SoldoUtilities;
+
 /**
  * Class SoldoResource
  * @package Soldo\Resources
@@ -13,6 +15,16 @@ class SoldoResource
      * @var array
      */
     protected $_attributes = [];
+
+    /**
+     * @var array
+     */
+    protected $whiteListed = [];
+
+    /**
+     * @var string
+     */
+    protected $basePath;
 
 
     /**
@@ -26,11 +38,12 @@ class SoldoResource
     /**
      * @param array $data
      */
-    private function fill(array $data)
+    public function fill(array $data)
     {
         foreach ($data as $key => $value) {
             $this->{$key} = $value;
         }
+        return $this;
     }
 
     /**
@@ -61,5 +74,25 @@ class SoldoResource
     {
         return $this->_attributes;
     }
+
+    /**
+     * TODO: overwrite this in Company, removing the id
+     *
+     * @return string
+     */
+    public function getRemotePath()
+    {
+        return $this->basePath . '/' . $this->id;
+    }
+
+    /**
+     * @param array $data
+     * @return array
+     */
+    public function filterWhiteList($data)
+    {
+        return array_intersect_key($data, array_flip($this->whiteListed));
+    }
+
 
 }

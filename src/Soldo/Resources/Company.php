@@ -14,9 +14,19 @@ final class Company extends SoldoResource
 {
 
     /**
-     * Define resource URL
+     * @var string
      */
-    const RESOURCE_PATH = '/company';
+    protected $basePath = '/company';
+
+    /**
+     * Override method to avoid appending id since it is not expected by Soldo API
+     *
+     * @return string
+     */
+    public function getRemotePath()
+    {
+        return $this->basePath;
+    }
 
 
 

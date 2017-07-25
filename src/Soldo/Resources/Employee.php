@@ -2,6 +2,8 @@
 
 namespace Soldo\Resources;
 
+use Soldo\SoldoUtilities;
+
 /**
  * Class Employee
  * @package Soldo\Resources
@@ -20,16 +22,16 @@ final class Employee extends SoldoResource
 {
 
     /**
-     * Define resource URL
+     * @var string
      */
-    const RESOURCE_PATH = '/employees';
+    protected $basePath = '/employees';
 
     /**
-     * Define editable property according to API
+     * @var array
      */
-    const EDITABLE = [
+    protected $whiteListed = [
         'custom_reference_id',
-        'department',
+        'department'
     ];
 
 

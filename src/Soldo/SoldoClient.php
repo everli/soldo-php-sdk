@@ -15,6 +15,7 @@ use \Psr\Http\Message\StreamInterface;
 use \Soldo\Authentication\OAuthCredential;
 use \Soldo\Exceptions\SoldoAuthenticationException;
 use Soldo\Resources\SoldoCollection;
+use Soldo\Resources\SoldoResource;
 
 
 /**
@@ -50,7 +51,7 @@ class SoldoClient
     /**
      * Define resource namespace
      */
-    const RESOURCE_NAMESPACE = '\Soldo\Resources\\';
+    //const RESOURCE_NAMESPACE = '\Soldo\Resources\\';
 
     /**
      * @var Client
@@ -66,7 +67,6 @@ class SoldoClient
      * @var OAuthCredential
      */
     protected $credential;
-
 
     /**
      * SoldoClient constructor.
@@ -116,85 +116,6 @@ class SoldoClient
 
 
     /**
-     * Take an array of data and unset all the key that are not present
-     * in the $class::EDITABLE array
-     *
-     * @param $class
-     * @param $data
-     * @return mixed
-     */
-    private function getParsedData($class, $data)
-    {
-        $class_constant = $class . '::EDITABLE';
-        $editable = @constant($class_constant);
-
-        if ($editable === null) {
-            $editable = [];
-        }
-
-        foreach ($data as $key => $value) {
-            if (!in_array($key, $editable)) {
-                unset($data[$key]);
-            }
-        }
-
-        return $data;
-
-    }
-
-    /**
-     * Build the resource remote URL
-     *
-     * @param $class
-     * @throws \InvalidArgumentException
-     * @return string
-     */
-    private function getRemoteResourceURL($class, $id = null)
-    {
-        $class_constant = $class . '::RESOURCE_PATH';
-        $resource_path = @constant($class_constant);
-
-        if ($resource_path === null) {
-            throw new \InvalidArgumentException(
-                'Error trying access constant '
-                . $class . '::RESOURCE_PATH is not defined'
-            );
-        }
-
-        $url = self::API_ENTRY_POINT . $resource_path;
-
-        // if it a single resource and not a collection append the id to the url
-        if ($id !== null) {
-            $url .= "/" . $id;
-        }
-
-        return $url;
-    }
-
-    /**
-     * Build resource class
-     *
-     * @param $resourceType
-     * @throws \InvalidArgumentException
-     * @return string
-     */
-    private function getResourceClass($resourceType)
-    {
-        // get full class location
-        $class = self::RESOURCE_NAMESPACE . $resourceType;
-
-        // check that class exists, throws exception otherwise
-        if (class_exists($class) === false) {
-            throw new \InvalidArgumentException(
-                'Error trying to access a not existing class '
-                . $class . 'doesn\'t exist'
-            );
-        }
-
-        return $class;
-    }
-
-    /**
      * Perform a remote call with Guzzle client
      *
      * @param $method
@@ -235,13 +156,23 @@ class SoldoClient
         // perform the request
         $response = $this->httpClient->request(
             $method,
-            $path,
+            self::API_ENTRY_POINT . $path,
             $options
         );
 
         return $this->toArray($response->getBody());
     }
 
+
+    private function validateClassName($className)
+    {
+        if(class_exists($className) === false) {
+            throw new \InvalidArgumentException(
+                'Error trying to access a not existing class '
+                . $className . ' doesn\'t exist'
+            );
+        }
+    }
 
     /**
      * Build and return a SoldoCollection starting from remote data
@@ -251,21 +182,22 @@ class SoldoClient
      * @return SoldoCollection
      * @throws \Exception
      */
-    public function getCollection($resourceType, $queryParameters = [])
+    public function getCollection($className, $queryParameters = [])
     {
         try {
-            // get full class name
-            $class = $this->getResourceClass($resourceType);
 
-            // get remote resource url
-            $resource_path = $this->getRemoteResourceURL($class);
+            $this->validateClassName($className);
 
-            // fetch remote data
-            $data = $this->call('GET', $resource_path, $queryParameters);
+            /** @var SoldoCollection $collection */
+            $collection = new $className();
 
-            //n build collection
-            $collection = new SoldoCollection($data, $class);
-            return $collection;
+            $data = $this->call(
+                'GET',
+                $collection->getRemotePath(),
+                $queryParameters
+            );
+
+            return $collection->fill($data);
 
         } catch (\Exception $e) {
 
@@ -283,19 +215,23 @@ class SoldoClient
      * @return mixed
      * @throws \Exception
      */
-    public function getItem($resourceType, $id = null)
+    public function getItem($className, $id = null)
     {
+
         try {
 
-            // get full class name
-            $class = $this->getResourceClass($resourceType);
+            $this->validateClassName($className);
 
-            // get remote resource url
-            $resource_path = $this->getRemoteResourceURL($class, $id);
+            /** @var SoldoResource $object */
+            $object = new $className();
+            $object->id = $id;
 
-            // fetch remote data
-            $resource = $this->call('GET', $resource_path);
-            return new $class($resource);
+            $data = $this->call(
+                'GET',
+                $object->getRemotePath()
+            );
+
+            return $object->fill($data);
 
         } catch (\Exception $e) {
 
@@ -313,22 +249,23 @@ class SoldoClient
      * @return mixed
      * @throws \Exception
      */
-    public function updateItem($resourceType, $id, $data)
+    public function updateItem($className, $id, $data)
     {
+
         try {
 
-            // get full class name
-            $class = $this->getResourceClass($resourceType);
+            $this->validateClassName($className);
 
-            // keep only editable data according to class::EDITABLE const
-            $data = $this->getParsedData($class, $data);
+            /** @var SoldoResource $object */
+            $object = new $className();
+            $object->id = $id;
 
-            // get remote resource url
-            $resource_path = $this->getRemoteResourceURL($class, $id);
+            $remote_path = $object->getRemotePath();
+            $update_data = $object->filterWhiteList($data);
 
-            // update remote data and return the updated resource
-            $resource = $this->call('POST', $resource_path, $data);
-            return new $class($resource);
+            $updated_data = $this->call('POST', $remote_path, $update_data);
+
+            return $object->fill($updated_data);
 
         } catch (\Exception $e) {
 

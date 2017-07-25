@@ -25,9 +25,9 @@ final class Card extends SoldoResource
 {
 
     /**
-     * Define resource URL
+     * @var string
      */
-    const RESOURCE_PATH = '/cards';
+    protected $basePath = '/cards';
 
 
 

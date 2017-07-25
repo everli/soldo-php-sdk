@@ -35,20 +35,45 @@ class SoldoCollection
     protected $resultsSize;
 
     /**
-     *
+     * @var array
      */
     protected $items = [];
+
+    /**
+     * @var string
+     */
+    protected $path;
+
+    /**
+     * @var string
+     */
+    protected $itemType = '\Soldo\Resources\SoldoResource';
 
     /**
      * SoldoCollection constructor.
      * @param $data
      * @param $className
      */
-    public function __construct($data, $className)
+    public function __construct()
+    {
+        $this->validateItemClassName();
+//        $this->validateRawData($data);
+//        $this->validateClassName($className);
+//
+//
+//        $this->pages = $data['pages'];
+//        $this->total = $data['total'];
+//        $this->pageSize = $data['page_size'];
+//        $this->currentPage = $data['current_page'];
+//        $this->resultsSize = $data['results_size'];
+//
+//        $this->build($data['results'], $className);
+
+    }
+
+    public function fill($data)
     {
         $this->validateRawData($data);
-        $this->validateClassName($className);
-
 
         $this->pages = $data['pages'];
         $this->total = $data['total'];
@@ -56,10 +81,10 @@ class SoldoCollection
         $this->currentPage = $data['current_page'];
         $this->resultsSize = $data['results_size'];
 
-        $this->build($data['results'], $className);
+        $this->build($data['results']);
 
+        return $this;
     }
-
 
     /**
      * @return array
@@ -69,15 +94,24 @@ class SoldoCollection
         return $this->items;
     }
 
+    /**
+     * @return string
+     */
+    public function getRemotePath()
+    {
+        return $this->path;
+    }
+
 
     /**
      * @param $items
      * @param $className
      */
-    private function build($items, $className)
+    private function build($items)
     {
+        $item_class_name = $this->itemType;
         foreach ($items as $item) {
-            $this->items[] = new $className($item);
+            $this->items[] = new $item_class_name($item);
         }
     }
 
@@ -86,12 +120,12 @@ class SoldoCollection
      * @param $className
      * @return bool
      */
-    private function validateClassName($className)
+    private function validateItemClassName()
     {
-        if(class_exists($className) === false) {
+        if(class_exists($this->itemType) === false) {
             throw new InvalidArgumentException(
                 'Could not generate a Soldo collection '
-                .$className . 'doesn\'t exists'
+                .$this->itemType . 'doesn\'t exists'
             );
         }
 

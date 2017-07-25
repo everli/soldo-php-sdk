@@ -20,11 +20,9 @@ final class Wallet extends SoldoResource
 {
 
     /**
-     * Define resource URL
+     * @var string
      */
-    const RESOURCE_PATH = '/wallets';
-
-
+    protected $basePath = '/wallets';
 
 
 }

@@ -24,7 +24,7 @@ var_dump($expense_centre->toArray());
 
 // update expense centre
 $data = [
-    'assignee' => 'Massimiliano Pesente',
+    'assignee' => 'Test Assignee',
     'id' => 'THIS_SHOULD_NOT_BE_UDPATED',
 ];
 
