@@ -4,8 +4,11 @@ namespace Soldo;
 
 use Soldo\Authentication\OAuthCredential;
 use Soldo\Exceptions\SoldoSDKException;
+use Soldo\Resources\Card;
+use Soldo\Resources\Company;
+use Soldo\Resources\Employee;
 use Soldo\Resources\ExpenseCentre;
-use Soldo\Resources\SoldoCollection;
+use Soldo\Resources\Wallet;
 
 /**
  * Class Soldo
@@ -52,15 +55,38 @@ class Soldo
 
     }
 
+    /**
+     * Return an array containing a list of Wallet
+     *
+     * @return array
+     */
+    public function getWallets($searchFields = [])
+    {
+        $collection = $this->client->getCollection('Wallet', $searchFields);
+        return $collection->get();
+    }
+
+    /**
+     * Return a single Wallet resource
+     *
+     * @param $id
+     * @return Wallet
+     */
+    public function getWallet($id)
+    {
+        $wallet = $this->client->getItem('Wallet', $id);
+        return $wallet;
+    }
+
 
     /**
      * Return an array containing a list of ExpenseCentre
      *
      * @return array
      */
-    public function getExpenseCentres()
+    public function getExpenseCentres($searchFields = [])
     {
-        $collection = $this->client->getCollection('ExpenseCentre');
+        $collection = $this->client->getCollection('ExpenseCentre', $searchFields);
         return $collection->get();
     }
 
@@ -68,7 +94,7 @@ class Soldo
      * Return a single ExpenseCentre resource
      *
      * @param $id
-     * @return mixed
+     * @return ExpenseCentre
      */
     public function getExpenseCentre($id)
     {
@@ -81,7 +107,7 @@ class Soldo
      *
      * @param $id
      * @param $data
-     * @return mixed
+     * @return ExpenseCentre
      */
     public function updateExpenseCentre($id, $data)
     {
@@ -93,11 +119,12 @@ class Soldo
     /**
      * Return an array containing a list of Employee
      *
+     * @param array $search_fields
      * @return array
      */
-    public function getEmployees()
+    public function getEmployees($searchFields = [])
     {
-        $collection = $this->client->getCollection('Employee');
+        $collection = $this->client->getCollection('Employee', $searchFields);
         return $collection->get();
     }
 
@@ -105,7 +132,7 @@ class Soldo
      * Return a single Employee resource
      *
      * @param $id
-     * @return mixed
+     * @return Employee
      */
     public function getEmployee($id)
     {
@@ -113,12 +140,37 @@ class Soldo
         return $employee;
     }
 
+
+    /**
+     * Return an array containing a list of Card
+     *
+     * @param array $search_fields
+     * @return array
+     */
+    public function getCards($searchFields = [])
+    {
+        $collection = $this->client->getCollection('Card', $searchFields);
+        return $collection->get();
+    }
+
+    /**
+     * Return a single Card resource
+     *
+     * @param $id
+     * @return Card
+     */
+    public function getCard($id)
+    {
+        $card = $this->client->getItem('Card', $id);
+        return $card;
+    }
+
     /**
      * Update the Employee by id and return the resource up to date
      *
      * @param $id
      * @param $data
-     * @return mixed
+     * @return Employee
      */
     public function updateEmployee($id, $data)
     {
@@ -130,7 +182,7 @@ class Soldo
     /**
      * Return a single Company resource
      *
-     * @return mixed
+     * @return Company
      */
     public function getCompany()
     {
