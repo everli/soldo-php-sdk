@@ -25,7 +25,9 @@ use Soldo\Resources\SoldoResource;
  */
 class SoldoClient
 {
-
+    /**
+     * Define Guzzle timeout
+     */
     const TIMEOUT = 60;
 
     /**
@@ -47,11 +49,6 @@ class SoldoClient
      * Define authorize URL
      */
     const AUTHORIZE_URL = '/oauth/authorize';
-
-    /**
-     * Define resource namespace
-     */
-    //const RESOURCE_NAMESPACE = '\Soldo\Resources\\';
 
     /**
      * @var Client
@@ -164,6 +161,11 @@ class SoldoClient
     }
 
 
+    /**
+     * Throws an exception if class does not exist
+     *
+     * @param $className
+     */
     private function validateClassName($className)
     {
         if(class_exists($className) === false) {
@@ -185,18 +187,17 @@ class SoldoClient
     public function getCollection($className, $queryParameters = [])
     {
         try {
-
+            // validate class name
             $this->validateClassName($className);
 
             /** @var SoldoCollection $collection */
             $collection = new $className();
 
-            $data = $this->call(
-                'GET',
-                $collection->getRemotePath(),
-                $queryParameters
-            );
+            // get collection remote path
+            $remote_path = $collection->getRemotePath();
 
+            // make request and fill collection
+            $data = $this->call('GET', $remote_path, $queryParameters);
             return $collection->fill($data);
 
         } catch (\Exception $e) {
@@ -226,11 +227,11 @@ class SoldoClient
             $object = new $className();
             $object->id = $id;
 
-            $data = $this->call(
-                'GET',
-                $object->getRemotePath()
-            );
+            // get resource remote path
+            $remote_path = $object->getRemotePath();
 
+            // fetch data and fill object
+            $data = $this->call('GET', $remote_path);
             return $object->fill($data);
 
         } catch (\Exception $e) {
@@ -260,11 +261,14 @@ class SoldoClient
             $object = new $className();
             $object->id = $id;
 
+            // get remote path
             $remote_path = $object->getRemotePath();
+
+            // keep only wanted data
             $update_data = $object->filterWhiteList($data);
 
+            // fetch data and update object
             $updated_data = $this->call('POST', $remote_path, $update_data);
-
             return $object->fill($updated_data);
 
         } catch (\Exception $e) {
