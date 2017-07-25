@@ -15,11 +15,6 @@ class Soldo
 {
 
     /**
-     * @var OAuthCredential
-     */
-    private $credential;
-
-    /**
      * @var SoldoClient
      */
     private $client;
