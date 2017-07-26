@@ -5,10 +5,14 @@ namespace Soldo;
 use Soldo\Authentication\OAuthCredential;
 use Soldo\Exceptions\SoldoSDKException;
 use Soldo\Resources\Card;
+use Soldo\Resources\Cards;
 use Soldo\Resources\Company;
 use Soldo\Resources\Employee;
+use Soldo\Resources\Employees;
 use Soldo\Resources\ExpenseCentre;
+use Soldo\Resources\ExpenseCentres;
 use Soldo\Resources\Wallet;
+use Soldo\Resources\Wallets;
 
 /**
  * Class Soldo
@@ -62,7 +66,7 @@ class Soldo
      */
     public function getWallets($searchFields = [])
     {
-        $collection = $this->client->getCollection('\Soldo\Resources\Wallets', $searchFields);
+        $collection = $this->client->getCollection(Wallets::class, $searchFields);
         return $collection->get();
     }
 
@@ -74,7 +78,7 @@ class Soldo
      */
     public function getWallet($id)
     {
-        $wallet = $this->client->getItem('\Soldo\Resources\Wallet', $id);
+        $wallet = $this->client->getItem(Wallet::class, $id);
         return $wallet;
     }
 
@@ -86,7 +90,7 @@ class Soldo
      */
     public function getExpenseCentres($searchFields = [])
     {
-        $collection = $this->client->getCollection('\Soldo\Resources\ExpenseCentres', $searchFields);
+        $collection = $this->client->getCollection(ExpenseCentres::class, $searchFields);
         return $collection->get();
     }
 
@@ -98,7 +102,7 @@ class Soldo
      */
     public function getExpenseCentre($id)
     {
-        $expense_center = $this->client->getItem('\Soldo\Resources\ExpenseCentre', $id);
+        $expense_center = $this->client->getItem(ExpenseCentre::class, $id);
         return $expense_center;
     }
 
@@ -111,7 +115,7 @@ class Soldo
      */
     public function updateExpenseCentre($id, $data)
     {
-        $expense_center = $this->client->updateItem('\Soldo\Resources\ExpenseCentre', $id, $data);
+        $expense_center = $this->client->updateItem(ExpenseCentre::class, $id, $data);
         return $expense_center;
     }
 
@@ -124,7 +128,7 @@ class Soldo
      */
     public function getEmployees($searchFields = [])
     {
-        $collection = $this->client->getCollection('\Soldo\Resources\Employees', $searchFields);
+        $collection = $this->client->getCollection(Employees::class, $searchFields);
         return $collection->get();
     }
 
@@ -136,7 +140,7 @@ class Soldo
      */
     public function getEmployee($id)
     {
-        $employee = $this->client->getItem('\Soldo\Resources\Employee', $id);
+        $employee = $this->client->getItem(Employee::class, $id);
         return $employee;
     }
 
@@ -149,7 +153,7 @@ class Soldo
      */
     public function getCards($searchFields = [])
     {
-        $collection = $this->client->getCollection('\Soldo\Resources\Cards', $searchFields);
+        $collection = $this->client->getCollection(Cards::class, $searchFields);
         return $collection->get();
     }
 
@@ -161,7 +165,7 @@ class Soldo
      */
     public function getCard($id)
     {
-        $card = $this->client->getItem('\Soldo\Resources\Card', $id);
+        $card = $this->client->getItem(Card::class, $id);
         return $card;
     }
 
@@ -174,7 +178,7 @@ class Soldo
      */
     public function updateEmployee($id, $data)
     {
-        $employee = $this->client->updateItem('\Soldo\Resources\Employee', $id, $data);
+        $employee = $this->client->updateItem(Employee::class, $id, $data);
         return $employee;
     }
 
@@ -186,7 +190,7 @@ class Soldo
      */
     public function getCompany()
     {
-        $company = $this->client->getItem('\Soldo\Resources\Company');
+        $company = $this->client->getItem(Company::class);
         return $company;
     }
 

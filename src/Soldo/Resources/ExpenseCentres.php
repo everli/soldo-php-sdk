@@ -16,7 +16,7 @@ final class ExpenseCentres extends SoldoCollection
     /**
      * @var string
      */
-    protected $itemType = '\Soldo\Resources\ExpenseCentre';
+    protected $itemType = ExpenseCentre::class;
 
 
 }

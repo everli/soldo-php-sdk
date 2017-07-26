@@ -47,7 +47,7 @@ class SoldoCollection
     /**
      * @var string
      */
-    protected $itemType = '\Soldo\Resources\SoldoResource';
+    protected $itemType = SoldoResource::class;
 
     /**
      * SoldoCollection constructor.

@@ -16,7 +16,7 @@ final class Wallets extends SoldoCollection
     /**
      * @var string
      */
-    protected $itemType = '\Soldo\Resources\Wallet';
+    protected $itemType = Wallet::class;
 
 
 }

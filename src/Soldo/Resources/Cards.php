@@ -16,7 +16,9 @@ final class Cards extends SoldoCollection
     /**
      * @var string
      */
-    protected $itemType = '\Soldo\Resources\Card';
+    protected $itemType = Card::class;
+
+
 
 
 }
