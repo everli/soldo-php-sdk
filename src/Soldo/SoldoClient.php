@@ -177,6 +177,38 @@ class SoldoClient
     }
 
     /**
+     * Get an has many relationship
+     *
+     * @param $className
+     * @param $id
+     * @param $relationshipName
+     * @return array
+     * @throws \Exception
+     */
+    public function getRelationship($className, $id, $relationshipName)
+    {
+        try {
+            // validate class name
+            $this->validateClassName($className);
+
+            /** @var SoldoResource $object */
+            $object = new $className();
+            $object->id = $id;
+
+            // get relationship remote path
+            $remote_path = $object->getRelationshipRemotePath($relationshipName);
+
+            $data = $this->call('GET', $remote_path);
+            return $object->buildRelationship($relationshipName, $data);
+
+        } catch (\Exception $e) {
+
+            throw $e;
+
+        }
+    }
+
+    /**
      * Build and return a SoldoCollection starting from remote data
      *
      * @param $resourceType

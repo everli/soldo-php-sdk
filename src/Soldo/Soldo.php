@@ -169,6 +169,19 @@ class Soldo
         return $card;
     }
 
+
+    /**
+     * Return an array containing the list of Rule for the card.
+     *
+     * @param $id
+     * @return array
+     */
+    public function getCardRules($id)
+    {
+        $rules = $this->client->getRelationship(Card::class, $id, 'rules');
+        return $rules;
+    }
+
     /**
      * Update the Employee by id and return the resource up to date
      *

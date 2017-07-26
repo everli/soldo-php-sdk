@@ -29,6 +29,15 @@ final class Card extends SoldoResource
      */
     protected $basePath = '/cards';
 
+    /**
+     * @var array
+     */
+    protected $relationships = [
+        'rules' => Rule::class
+    ];
+
+
+
 
 
 
