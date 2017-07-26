@@ -56,7 +56,7 @@ class SoldoCollection
      */
     public function __construct()
     {
-        $this->validateItemClassName();
+        $this->validateItemType();
     }
 
     /**
@@ -114,7 +114,7 @@ class SoldoCollection
      * @param $className
      * @return bool
      */
-    private function validateItemClassName()
+    private function validateItemType()
     {
         if(class_exists($this->itemType) === false) {
             throw new InvalidArgumentException(
