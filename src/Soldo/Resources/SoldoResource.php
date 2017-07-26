@@ -2,8 +2,6 @@
 
 namespace Soldo\Resources;
 
-use Soldo\SoldoUtilities;
-
 /**
  * Class SoldoResource
  * @package Soldo\Resources
