@@ -2,7 +2,6 @@
 
 namespace Soldo\Resources;
 
-use Soldo\SoldoUtilities;
 
 /**
  * Class Employee
