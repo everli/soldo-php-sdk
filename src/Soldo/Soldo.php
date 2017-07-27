@@ -4,6 +4,7 @@ namespace Soldo;
 
 use Soldo\Authentication\OAuthCredential;
 use Soldo\Exceptions\SoldoSDKException;
+use Soldo\Utils\Paginator;
 use Soldo\Resources\Card;
 use Soldo\Resources\Cards;
 use Soldo\Resources\Company;
@@ -60,12 +61,15 @@ class Soldo
     /**
      * Return an array containing a list of Wallet
      *
+     * @param int $page
+     * @param int $perPage
      * @param array $searchFields
      * @return array
      */
-    public function getWallets($searchFields = [])
+    public function getWallets($page = 0, $perPage = Paginator::MAX_ALLOWED_ITEMS_PER_PAGE, $searchFields = [])
     {
-        $collection = $this->client->getCollection(Wallets::class, $searchFields);
+        $paginator = new Paginator($page, $perPage);
+        $collection = $this->client->getCollection(Wallets::class, $paginator, $searchFields);
 
         return $collection->get();
     }
@@ -86,12 +90,15 @@ class Soldo
     /**
      * Return an array containing a list of ExpenseCentre
      *
+     * @param int $page
+     * @param int $perPage
      * @param array $searchFields
      * @return array
      */
-    public function getExpenseCentres($searchFields = [])
+    public function getExpenseCentres($page = 0, $perPage = Paginator::MAX_ALLOWED_ITEMS_PER_PAGE, $searchFields = [])
     {
-        $collection = $this->client->getCollection(ExpenseCentres::class, $searchFields);
+        $paginator = new Paginator($page, $perPage);
+        $collection = $this->client->getCollection(ExpenseCentres::class, $paginator, $searchFields);
 
         return $collection->get();
     }
@@ -126,12 +133,15 @@ class Soldo
     /**
      * Return an array containing a list of Employee
      *
+     * @param int $page
+     * @param int $perPage
      * @param array $searchFields
      * @return array
      */
-    public function getEmployees($searchFields = [])
+    public function getEmployees($page = 0, $perPage = Paginator::MAX_ALLOWED_ITEMS_PER_PAGE, $searchFields = [])
     {
-        $collection = $this->client->getCollection(Employees::class, $searchFields);
+        $paginator = new Paginator($page, $perPage);
+        $collection = $this->client->getCollection(Employees::class, $paginator, $searchFields);
 
         return $collection->get();
     }
@@ -152,12 +162,15 @@ class Soldo
     /**
      * Return an array containing a list of Card
      *
+     * @param int $page
+     * @param int $perPage
      * @param array $searchFields
      * @return array
      */
-    public function getCards($searchFields = [])
+    public function getCards($page = 0, $perPage = Paginator::MAX_ALLOWED_ITEMS_PER_PAGE, $searchFields = [])
     {
-        $collection = $this->client->getCollection(Cards::class, $searchFields);
+        $paginator = new Paginator($page, $perPage);
+        $collection = $this->client->getCollection(Cards::class, $paginator, $searchFields);
 
         return $collection->get();
     }

@@ -13,6 +13,7 @@ use \GuzzleHttp\Client;
 use \Psr\Http\Message\StreamInterface;
 use \Soldo\Authentication\OAuthCredential;
 use \Soldo\Exceptions\SoldoAuthenticationException;
+use Soldo\Utils\Paginator;
 use Soldo\Resources\SoldoCollection;
 use Soldo\Resources\SoldoResource;
 
@@ -116,10 +117,12 @@ class SoldoClient
      * @param string $method
      * @param string $path
      * @param array $data
+     * @param Paginator $paginator
      * @return array|mixed
      */
-    private function call($method, $path, $data = [])
+    private function call($method, $path, $data = [], Paginator $paginator = null)
     {
+
         // get access token
         $access_token = $this->getAccessToken();
 
@@ -128,7 +131,14 @@ class SoldoClient
             'headers' => [
                 'Authorization' => 'Bearer ' . $access_token,
             ],
+            'query' => [],
+            'json' =>[],
         ];
+
+        // append pagination params to query
+        if ($paginator !== null) {
+            $options['query'] = array_merge($options['query'], $paginator->getQueryParameters());
+        }
 
         // do different stuff for each method
         // only support GET and POST
@@ -136,14 +146,14 @@ class SoldoClient
             case 'GET':
                 // pass params as query parameters
                 if (is_array($data) && !empty($data)) {
-                    $options['query'] = $data;
+                    $options['query'] = array_merge($options['query'], $data);
                 }
                 break;
 
             case 'POST':
                 // build a json from $data and attach to the request
                 if (is_array($data) && !empty($data)) {
-                    $options['json'] = $data;
+                    $options['json'] = array_merge($options['json'], $data);
                 }
                 break;
         }
@@ -207,11 +217,12 @@ class SoldoClient
      * Build and return a SoldoCollection starting from remote data
      *
      * @param string $className
+     * @param Paginator $paginator
      * @param array $queryParameters
      * @throws \Exception
      * @return SoldoCollection
      */
-    public function getCollection($className, $queryParameters = [])
+    public function getCollection($className, Paginator $paginator = null, $queryParameters = [])
     {
         try {
             // validate class name
@@ -224,7 +235,7 @@ class SoldoClient
             $remote_path = $collection->getRemotePath();
 
             // make request and fill collection
-            $data = $this->call('GET', $remote_path, $queryParameters);
+            $data = $this->call('GET', $remote_path, $queryParameters, $paginator);
 
             return $collection->fill($data);
         } catch (\Exception $e) {
