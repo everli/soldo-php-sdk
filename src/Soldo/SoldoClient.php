@@ -73,7 +73,7 @@ class SoldoClient
     {
         $this->credential = $credential;
 
-        $base_uri = $environment == 'live' ?
+        $base_uri = $environment === 'live' ?
             self::API_LIVE_URL :
             self::API_TEST_URL;
 
