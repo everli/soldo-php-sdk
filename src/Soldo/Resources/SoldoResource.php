@@ -91,9 +91,13 @@ class SoldoResource
         return $this->basePath . '/' . $this->id;
     }
 
+
     /**
-     * @param string $relationshipName
-     * @param array $data
+     * Get an array of child resource.
+     *
+     * @param $relationshipName
+     * @param $data
+     * @return array
      */
     public function buildRelationship($relationshipName, $data)
     {
