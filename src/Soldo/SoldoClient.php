@@ -26,7 +26,7 @@ use Soldo\Resources\SoldoResource;
 class SoldoClient
 {
     /**
-     * Define Guzzle timeout
+     * Define Guzzle timeout in seconds
      */
     const TIMEOUT = 60;
 
