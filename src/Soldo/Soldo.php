@@ -59,9 +59,11 @@ class Soldo
 
     }
 
+
     /**
      * Return an array containing a list of Wallet
      *
+     * @param array $searchFields
      * @return array
      */
     public function getWallets($searchFields = [])
@@ -86,6 +88,7 @@ class Soldo
     /**
      * Return an array containing a list of ExpenseCentre
      *
+     * @param array $searchFields
      * @return array
      */
     public function getExpenseCentres($searchFields = [])
@@ -123,7 +126,7 @@ class Soldo
     /**
      * Return an array containing a list of Employee
      *
-     * @param array $search_fields
+     * @param array $searchFields
      * @return array
      */
     public function getEmployees($searchFields = [])
@@ -148,7 +151,7 @@ class Soldo
     /**
      * Return an array containing a list of Card
      *
-     * @param array $search_fields
+     * @param array $searchFields
      * @return array
      */
     public function getCards($searchFields = [])

@@ -115,8 +115,9 @@ class SoldoClient
     /**
      * Perform a remote call with Guzzle client
      *
-     * @param $method
-     * @param $path
+     * @param string $method
+     * @param string $path
+     * @param array $data
      * @return array|mixed
      */
     private function call($method, $path, $data = [])
@@ -208,10 +209,11 @@ class SoldoClient
         }
     }
 
+
     /**
      * Build and return a SoldoCollection starting from remote data
      *
-     * @param $resourceType
+     * @param string $className
      * @param array $queryParameters
      * @return SoldoCollection
      * @throws \Exception
@@ -243,9 +245,9 @@ class SoldoClient
     /**
      * Build the resource starting from remote data
      *
-     * @param $resourceType
-     * @param $id
-     * @return mixed
+     * @param string $className
+     * @param string $id
+     * @return SoldoResource
      * @throws \Exception
      */
     public function getItem($className, $id = null)
@@ -276,10 +278,10 @@ class SoldoClient
     /**
      * Update the remote resource and return it
      *
-     * @param $resourceType
-     * @param $id
-     * @param $data
-     * @return mixed
+     * @param string $className
+     * @param string $id
+     * @param array $data
+     * @return SoldoResource
      * @throws \Exception
      */
     public function updateItem($className, $id, $data)

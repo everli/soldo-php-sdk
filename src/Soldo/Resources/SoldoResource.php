@@ -37,6 +37,7 @@ class SoldoResource
 
     /**
      * SoldoResource constructor.
+     * @param array $data
      */
     public function __construct($data = [])
     {
