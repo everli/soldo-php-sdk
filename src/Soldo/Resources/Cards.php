@@ -17,8 +17,4 @@ final class Cards extends SoldoCollection
      * @var string
      */
     protected $itemType = Card::class;
-
-
-
-
 }

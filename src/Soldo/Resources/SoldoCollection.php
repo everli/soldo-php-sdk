@@ -2,7 +2,6 @@
 
 namespace Soldo\Resources;
 
-
 use Psr\Log\InvalidArgumentException;
 use Respect\Validation\Validator;
 use Soldo\Exceptions\SoldoInvalidCollectionException;
@@ -96,7 +95,6 @@ class SoldoCollection
         return $this->path;
     }
 
-
     /**
      * @param $items
      * @param $className
@@ -109,28 +107,26 @@ class SoldoCollection
         }
     }
 
-
     /**
      * @param $className
      * @return bool
      */
     private function validateItemType()
     {
-        if(class_exists($this->itemType) === false) {
+        if (class_exists($this->itemType) === false) {
             throw new InvalidArgumentException(
                 'Could not generate a Soldo collection '
-                .$this->itemType . 'doesn\'t exist'
+                . $this->itemType . 'doesn\'t exist'
             );
         }
 
         return true;
     }
 
-
     /**
      * @param $data
-     * @return bool
      * @throws SoldoInvalidCollectionException
+     * @return bool
      */
     private function validateRawData($data)
     {
@@ -141,10 +137,10 @@ class SoldoCollection
             ->key('results_size', Validator::intVal())
             ->key('results', Validator::arrayType());
 
-        if($validator->validate($data) === false) {
+        if ($validator->validate($data) === false) {
             throw new SoldoInvalidCollectionException(
                 'Could not generate a Soldo collection '
-                .'with the array provided'
+                . 'with the array provided'
             );
         }
 

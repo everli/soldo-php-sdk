@@ -7,7 +7,6 @@
  * faucibus dolor auctor.
  *
  */
-
 namespace Soldo;
 
 use \GuzzleHttp\Client;
@@ -16,7 +15,6 @@ use \Soldo\Authentication\OAuthCredential;
 use \Soldo\Exceptions\SoldoAuthenticationException;
 use Soldo\Resources\SoldoCollection;
 use Soldo\Resources\SoldoResource;
-
 
 /**
  * Class SoldoClient
@@ -68,6 +66,7 @@ class SoldoClient
     /**
      * SoldoClient constructor.
      * @param string $environment
+     * @param OAuthCredential $credential
      */
     public function __construct(OAuthCredential $credential, $environment = 'demo')
     {
@@ -78,14 +77,14 @@ class SoldoClient
             self::API_TEST_URL;
 
         // instantiate new guzzle client
-        $this->httpClient = new Client([
+        $this->httpClient = new Client(
+            [
                 'base_uri' => $base_uri,
                 'timeout' => self::TIMEOUT,
-                'verify' => false
+                'verify' => false,
             ]
         );
     }
-
 
     /**
      * Validate and build a json starting from request body
@@ -110,7 +109,6 @@ class SoldoClient
         // return associative array
         return json_decode($body, true);
     }
-
 
     /**
      * Perform a remote call with Guzzle client
@@ -137,19 +135,18 @@ class SoldoClient
         switch ($method) {
             case 'GET':
                 // pass params as query parameters
-                if(is_array($data) && !empty($data)) {
+                if (is_array($data) && !empty($data)) {
                     $options['query'] = $data;
                 }
                 break;
 
             case 'POST':
                 // build a json from $data and attach to the request
-                if(is_array($data) && !empty($data)) {
+                if (is_array($data) && !empty($data)) {
                     $options['json'] = $data;
                 }
                 break;
         }
-
 
         // perform the request
         $response = $this->httpClient->request(
@@ -161,7 +158,6 @@ class SoldoClient
         return $this->toArray($response->getBody());
     }
 
-
     /**
      * Throws an exception if class does not exist
      *
@@ -169,7 +165,7 @@ class SoldoClient
      */
     private function validateClassName($className)
     {
-        if(class_exists($className) === false) {
+        if (class_exists($className) === false) {
             throw new \InvalidArgumentException(
                 'Error trying to access a not existing class '
                 . $className . ' doesn\'t exist'
@@ -183,8 +179,8 @@ class SoldoClient
      * @param $className
      * @param $id
      * @param $relationshipName
-     * @return array
      * @throws \Exception
+     * @return array
      */
     public function getRelationship($className, $id, $relationshipName)
     {
@@ -200,23 +196,20 @@ class SoldoClient
             $remote_path = $object->getRelationshipRemotePath($relationshipName);
 
             $data = $this->call('GET', $remote_path);
+
             return $object->buildRelationship($relationshipName, $data);
-
         } catch (\Exception $e) {
-
             throw $e;
-
         }
     }
-
 
     /**
      * Build and return a SoldoCollection starting from remote data
      *
      * @param string $className
      * @param array $queryParameters
-     * @return SoldoCollection
      * @throws \Exception
+     * @return SoldoCollection
      */
     public function getCollection($className, $queryParameters = [])
     {
@@ -232,14 +225,11 @@ class SoldoClient
 
             // make request and fill collection
             $data = $this->call('GET', $remote_path, $queryParameters);
+
             return $collection->fill($data);
-
         } catch (\Exception $e) {
-
             throw $e;
-
         }
-
     }
 
     /**
@@ -247,14 +237,12 @@ class SoldoClient
      *
      * @param string $className
      * @param string $id
-     * @return SoldoResource
      * @throws \Exception
+     * @return SoldoResource
      */
     public function getItem($className, $id = null)
     {
-
         try {
-
             $this->validateClassName($className);
 
             /** @var SoldoResource $object */
@@ -266,12 +254,10 @@ class SoldoClient
 
             // fetch data and fill object
             $data = $this->call('GET', $remote_path);
+
             return $object->fill($data);
-
         } catch (\Exception $e) {
-
             throw $e;
-
         }
     }
 
@@ -281,14 +267,12 @@ class SoldoClient
      * @param string $className
      * @param string $id
      * @param array $data
-     * @return SoldoResource
      * @throws \Exception
+     * @return SoldoResource
      */
     public function updateItem($className, $id, $data)
     {
-
         try {
-
             $this->validateClassName($className);
 
             /** @var SoldoResource $object */
@@ -303,15 +287,12 @@ class SoldoClient
 
             // fetch data and update object
             $updated_data = $this->call('POST', $remote_path, $update_data);
+
             return $object->fill($updated_data);
-
         } catch (\Exception $e) {
-
             throw $e;
-
         }
     }
-
 
     /**
      * Get access token for authenticated request
@@ -327,35 +308,32 @@ class SoldoClient
 
         //TODO: handle token expiration
         if ($this->credential->isTokenExpired()) {
-
         }
 
         return $this->credential->access_token;
     }
 
-
     /**
      * Perform a request to the /authorize endpoint
      *
-     * @return array|mixed
      * @throws SoldoAuthenticationException
+     * @return array|mixed
      */
     private function authorize()
     {
         try {
-
             $response = $this->httpClient->request(
                 'POST',
                 self::AUTHORIZE_URL,
                 [
                     'form_params' => [
                         'client_id' => $this->credential->client_id,
-                        'client_secret' => $this->credential->client_secret
-                    ]
+                        'client_secret' => $this->credential->client_secret,
+                    ],
                 ]
             );
-            return $this->toArray($response->getBody());
 
+            return $this->toArray($response->getBody());
         } catch (\Exception $e) {
 
             // TODO: log stuff
@@ -366,7 +344,4 @@ class SoldoClient
             );
         }
     }
-
-
 }
-

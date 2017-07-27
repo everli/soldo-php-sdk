@@ -10,6 +10,4 @@ use \Exception;
  */
 class SoldoSDKException extends Exception
 {
-
 }
-

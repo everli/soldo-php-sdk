@@ -1,6 +1,7 @@
 <?php
 
 namespace Soldo\Resources;
+
 use Respect\Validation\Validator;
 use Soldo\Exceptions\SoldoInvalidRelationshipException;
 
@@ -34,7 +35,6 @@ class SoldoResource
      */
     protected $basePath;
 
-
     /**
      * SoldoResource constructor.
      * @param array $data
@@ -52,6 +52,7 @@ class SoldoResource
         foreach ($data as $key => $value) {
             $this->{$key} = $value;
         }
+
         return $this;
     }
 
@@ -73,6 +74,7 @@ class SoldoResource
         if (array_key_exists($name, $this->_attributes)) {
             return $this->_attributes[$name];
         }
+
         return null;
     }
 
@@ -92,7 +94,6 @@ class SoldoResource
         return $this->basePath . '/' . $this->id;
     }
 
-
     /**
      * Get an array of child resource.
      *
@@ -110,8 +111,8 @@ class SoldoResource
         foreach ($data[$relationshipName] as $r) {
             $relationship[] = new $className($r);
         }
-        return $relationship;
 
+        return $relationship;
     }
 
     /**
@@ -122,10 +123,10 @@ class SoldoResource
     private function validateRelationshipRawData($relationshipName, $data)
     {
         $validator = Validator::key($relationshipName, Validator::arrayType()->notEmpty());
-        if($validator->validate($data) === false) {
+        if ($validator->validate($data) === false) {
             throw new SoldoInvalidRelationshipException(
                 'Could not build ' . $relationshipName . ' relationship '
-                .'with the array provided'
+                . 'with the array provided'
             );
         }
     }
@@ -137,6 +138,7 @@ class SoldoResource
     public function getRelationshipRemotePath($relationshipName)
     {
         $this->validateRelationship($relationshipName);
+
         return $this->getRemotePath() . '/' . $relationshipName;
     }
 
@@ -149,7 +151,6 @@ class SoldoResource
         return array_intersect_key($data, array_flip($this->whiteListed));
     }
 
-
     /**
      * Validate a relationship: the $this->relationship must contain a $relationshipName key
      * and the value of the key must be a valid resource name
@@ -158,7 +159,7 @@ class SoldoResource
      */
     private function validateRelationship($relationshipName)
     {
-        if(!array_key_exists($relationshipName, $this->relationships)) {
+        if (!array_key_exists($relationshipName, $this->relationships)) {
             throw new \InvalidArgumentException(
                 'There is no relationship mapped with '
                 . $relationshipName . ' name'
@@ -166,13 +167,11 @@ class SoldoResource
         }
 
         $className = $this->relationships[$relationshipName];
-        if(class_exists($className) === false) {
+        if (class_exists($className) === false) {
             throw new \InvalidArgumentException(
                 'Invalid resource class name '
                 . $className . ' doesn\'t exist'
             );
         }
     }
-
-
 }

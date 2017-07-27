@@ -8,5 +8,4 @@ namespace Soldo\Exceptions;
  */
 class SoldoAuthenticationException extends SoldoSDKException
 {
-
 }

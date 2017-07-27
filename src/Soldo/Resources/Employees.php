@@ -17,6 +17,4 @@ final class Employees extends SoldoCollection
      * @var string
      */
     protected $itemType = Employee::class;
-
-
 }

@@ -23,6 +23,4 @@ final class Wallet extends SoldoResource
      * @var string
      */
     protected $basePath = '/wallets';
-
-
 }

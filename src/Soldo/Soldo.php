@@ -26,7 +26,6 @@ class Soldo
      */
     private $client;
 
-
     /**
      * Soldo constructor.
      * @param array $config
@@ -56,9 +55,7 @@ class Soldo
             new OAuthCredential($config['client_id'], $config['client_secret']),
             $config['environment']
         );
-
     }
-
 
     /**
      * Return an array containing a list of Wallet
@@ -69,6 +66,7 @@ class Soldo
     public function getWallets($searchFields = [])
     {
         $collection = $this->client->getCollection(Wallets::class, $searchFields);
+
         return $collection->get();
     }
 
@@ -81,9 +79,9 @@ class Soldo
     public function getWallet($id)
     {
         $wallet = $this->client->getItem(Wallet::class, $id);
+
         return $wallet;
     }
-
 
     /**
      * Return an array containing a list of ExpenseCentre
@@ -94,6 +92,7 @@ class Soldo
     public function getExpenseCentres($searchFields = [])
     {
         $collection = $this->client->getCollection(ExpenseCentres::class, $searchFields);
+
         return $collection->get();
     }
 
@@ -106,6 +105,7 @@ class Soldo
     public function getExpenseCentre($id)
     {
         $expense_center = $this->client->getItem(ExpenseCentre::class, $id);
+
         return $expense_center;
     }
 
@@ -119,9 +119,9 @@ class Soldo
     public function updateExpenseCentre($id, $data)
     {
         $expense_center = $this->client->updateItem(ExpenseCentre::class, $id, $data);
+
         return $expense_center;
     }
-
 
     /**
      * Return an array containing a list of Employee
@@ -132,6 +132,7 @@ class Soldo
     public function getEmployees($searchFields = [])
     {
         $collection = $this->client->getCollection(Employees::class, $searchFields);
+
         return $collection->get();
     }
 
@@ -144,9 +145,9 @@ class Soldo
     public function getEmployee($id)
     {
         $employee = $this->client->getItem(Employee::class, $id);
+
         return $employee;
     }
-
 
     /**
      * Return an array containing a list of Card
@@ -157,6 +158,7 @@ class Soldo
     public function getCards($searchFields = [])
     {
         $collection = $this->client->getCollection(Cards::class, $searchFields);
+
         return $collection->get();
     }
 
@@ -169,9 +171,9 @@ class Soldo
     public function getCard($id)
     {
         $card = $this->client->getItem(Card::class, $id);
+
         return $card;
     }
-
 
     /**
      * Return an array containing the list of Rule for the card.
@@ -182,6 +184,7 @@ class Soldo
     public function getCardRules($id)
     {
         $rules = $this->client->getRelationship(Card::class, $id, 'rules');
+
         return $rules;
     }
 
@@ -195,9 +198,9 @@ class Soldo
     public function updateEmployee($id, $data)
     {
         $employee = $this->client->updateItem(Employee::class, $id, $data);
+
         return $employee;
     }
-
 
     /**
      * Return a single Company resource
@@ -207,9 +210,7 @@ class Soldo
     public function getCompany()
     {
         $company = $this->client->getItem(Company::class);
+
         return $company;
     }
-
-
-
 }

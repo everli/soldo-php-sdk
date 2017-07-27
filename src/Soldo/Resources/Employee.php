@@ -2,7 +2,6 @@
 
 namespace Soldo\Resources;
 
-
 /**
  * Class Employee
  * @package Soldo\Resources
@@ -30,8 +29,6 @@ final class Employee extends SoldoResource
      */
     protected $whiteListed = [
         'custom_reference_id',
-        'department'
+        'department',
     ];
-
-
 }

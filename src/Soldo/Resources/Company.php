@@ -27,8 +27,4 @@ final class Company extends SoldoResource
     {
         return $this->basePath;
     }
-
-
-
-
 }

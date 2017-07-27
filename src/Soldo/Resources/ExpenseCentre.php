@@ -26,8 +26,6 @@ final class ExpenseCentre extends SoldoResource
      */
     protected $whiteListed = [
         'custom_reference_id',
-        'assignee'
+        'assignee',
     ];
-
-
 }

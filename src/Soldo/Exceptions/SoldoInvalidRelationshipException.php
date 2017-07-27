@@ -5,8 +5,6 @@
  */
 namespace Soldo\Exceptions;
 
-
 class SoldoInvalidRelationshipException extends SoldoSDKException
 {
-
 }

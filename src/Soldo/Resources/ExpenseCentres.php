@@ -17,6 +17,4 @@ final class ExpenseCentres extends SoldoCollection
      * @var string
      */
     protected $itemType = ExpenseCentre::class;
-
-
 }

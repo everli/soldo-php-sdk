@@ -33,12 +33,6 @@ final class Card extends SoldoResource
      * @var array
      */
     protected $relationships = [
-        'rules' => Rule::class
+        'rules' => Rule::class,
     ];
-
-
-
-
-
-
 }

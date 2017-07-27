@@ -24,6 +24,7 @@ final class OAuthCredential extends SoldoResource
      * OAuthCredential constructor.
      * @param string $clientID
      * @param string $clientSecret
+     * @param mixed $clientId
      */
     public function __construct($clientId, $clientSecret)
     {
@@ -32,7 +33,6 @@ final class OAuthCredential extends SoldoResource
         $this->client_id = $clientId;
         $this->client_secret = $clientSecret;
     }
-
 
     /**
      * Return true if token was generated before expires_in seconds
@@ -47,7 +47,6 @@ final class OAuthCredential extends SoldoResource
         return false;
     }
 
-
     /**
      * @param $authData
      */
@@ -61,13 +60,12 @@ final class OAuthCredential extends SoldoResource
         $this->expires_in = $authData['expires_in'];
     }
 
-
     /**
      * Manually validate data since this is a crucial point.
      *
      * @param $authData
-     * @return bool
      * @throws SoldoAuthenticationException
+     * @return bool
      */
     private function validateAuthData($authData)
     {
@@ -77,14 +75,13 @@ final class OAuthCredential extends SoldoResource
             ->key('expires_in', Validator::intVal());
 
         // TODO: verify exception type and messages
-        if($validator->validate($authData) === false) {
+        if ($validator->validate($authData) === false) {
             throw new SoldoAuthenticationException(
                 'Unable to authenticate user. '
-                .'Check your credential'
+                . 'Check your credential'
             );
         }
 
         return true;
     }
-
 }

@@ -12,7 +12,4 @@ namespace Soldo\Resources;
  */
 final class Rule extends SoldoResource
 {
-
-
-
 }
