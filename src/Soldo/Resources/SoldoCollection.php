@@ -119,7 +119,7 @@ class SoldoCollection
         if(class_exists($this->itemType) === false) {
             throw new InvalidArgumentException(
                 'Could not generate a Soldo collection '
-                .$this->itemType . 'doesn\'t exists'
+                .$this->itemType . 'doesn\'t exist'
             );
         }
 
