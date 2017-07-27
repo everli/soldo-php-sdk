@@ -3,22 +3,22 @@
 
 require 'bootstrap.php';
 
-$expense_centres = $soldo->getExpenseCentres();
+$expense_centres = $soldo->getExpenseCentres(0, 1);
 foreach ($expense_centres as $ec) {
     /** @var \Soldo\Resources\ExpenseCentre $ec */
-    var_dump($ec->toArray());
+    dump($ec);
 }
 
-echo "\n";
+echo PHP_EOL;
 
 // get id of the first element
 $id = $expense_centres[0]->id;
-var_dump($id);
+dump($id);
 
 // get expense centre
 /** @var \Soldo\Resources\ExpenseCentre $expense_centre */
 $expense_centre = $soldo->getExpenseCentre($id);
-var_dump($expense_centre->toArray());
+dump($expense_centre);
 
 // update expense centre
 $data = [
@@ -28,4 +28,4 @@ $data = [
 
 /** @var \Soldo\Resources\ExpenseCentre $updated_expense_centre */
 $updated_expense_centre = $soldo->updateExpenseCentre($id, $data);
-print_r($updated_expense_centre->toArray());
+dump($updated_expense_centre);

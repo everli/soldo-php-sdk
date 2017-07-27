@@ -3,22 +3,23 @@
 
 require 'bootstrap.php';
 
-$employees = $soldo->getEmployees();
+$employees = $soldo->getEmployees(-1, 1);
 foreach ($employees as $em) {
     /** @var \Soldo\Resources\Employee $em */
-    var_dump($em->toArray());
+    dump($em);
 }
 
-echo "\n";
+echo PHP_EOL;
+exit;
 
 // get id of the first element
 $id = $employees[0]->id;
-var_dump($id);
+dump($id);
 
 // get expense centre
 /** @var \Soldo\Resources\ExpenseCentre $expense_centre */
 $employee = $soldo->getEmployee($id);
-var_dump($employee->toArray());
+dump($employee);
 
 // update expense centre
 $data = [
@@ -29,4 +30,4 @@ $data = [
 
 /** @var \Soldo\Resources\ExpenseCentre $updated_expense_centre */
 $updated_employee = $soldo->updateEmployee($id, $data);
-print_r($updated_employee->toArray());
+dump($updated_employee);
