@@ -226,4 +226,19 @@ class Soldo
 
         return $company;
     }
+
+    /**
+     * Transfer an amount of money from one wallet to another
+     *
+     * @param $fromWalletId
+     * @param $toWalletId
+     * @param $amount
+     * @param string $currencyCode
+     */
+    public function transferMoney($fromWalletId, $toWalletId, $amount, $currencyCode = 'EUR')
+    {
+        $internal_transfer = $this->client->performTransfer($fromWalletId, $toWalletId, $amount, $currencyCode);
+
+        return $internal_transfer;
+    }
 }

@@ -13,6 +13,8 @@ use \GuzzleHttp\Client;
 use \Psr\Http\Message\StreamInterface;
 use \Soldo\Authentication\OAuthCredential;
 use \Soldo\Exceptions\SoldoAuthenticationException;
+use Soldo\Exceptions\SoldoTransferException;
+use Soldo\Resources\InternalTransfer;
 use Soldo\Utils\Paginator;
 use Soldo\Resources\SoldoCollection;
 use Soldo\Resources\SoldoResource;
@@ -48,6 +50,11 @@ class SoldoClient
      * Define authorize URL
      */
     const AUTHORIZE_URL = '/oauth/authorize';
+
+    /**
+     * Define an internal token to authenticate transfer and webhook
+     */
+    const INTERNAL_TOKEN = '3BCABDC115ED11E79287';
 
     /**
      * @var Client
@@ -305,6 +312,23 @@ class SoldoClient
         }
     }
 
+    public function performTransfer($fromWalletId, $toWalletId, $amount, $currencyCode)
+    {
+        try {
+            $transfer = new InternalTransfer();
+            $transfer->fromWalletId = $fromWalletId;
+            $transfer->toWalletId = $toWalletId;
+            $transfer->amount = $amount;
+            $transfer->currency = $currencyCode;
+
+            $data = $this->transfer($transfer);
+
+            return $transfer->fill($data);
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
+
     /**
      * Get access token for authenticated request
      *
@@ -322,6 +346,50 @@ class SoldoClient
         }
 
         return $this->credential->access_token;
+    }
+
+    /**
+     * @param InternalTransfer $internalTransfer
+     * @throws SoldoAuthenticationException
+     * @return array
+     */
+    private function transfer(InternalTransfer $internalTransfer)
+    {
+        try {
+
+            // get token, fingerprint and path
+            $access_token = $this->getAccessToken();
+            $fingerprint = $internalTransfer->generateFingerPrint(self::INTERNAL_TOKEN);
+            $path = $internalTransfer->getRemotePath();
+
+            // build authorization header
+            $options = [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $access_token,
+                    'X-Soldo-Fingerprint' => $fingerprint,
+                ],
+                'form_params' => [
+                    'amount' => $internalTransfer->amount,
+                    'currencyCode' => $internalTransfer->currency,
+                ],
+            ];
+
+            // Soldo call
+            $response = $this->httpClient->request(
+                'POST',
+                self::API_ENTRY_POINT . $path,
+                $options
+            );
+
+            return $this->toArray($response->getBody());
+        } catch (\Exception $e) {
+            // TODO: log stuff
+
+            throw new SoldoTransferException(
+                'Unable to transfer money. '
+                . $e->getMessage()
+            );
+        }
     }
 
     /**
