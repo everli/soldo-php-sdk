@@ -22,9 +22,9 @@ namespace Soldo\Resources;
  * @property float auth_exchange_rate
  * @property string date
  * @property string settlement_date
- * @property merchant >>>>>>>><
- * @property merchant_category <<<<<<<<<<<
- * @property tags <<<<<<<<<<<<
+ * @property object merchant
+ * @property object merchant_category
+ * @property array tags
  * @property string card_id
  * @property string masked_pan
  * @property string owner_id
