@@ -4,6 +4,8 @@ namespace Soldo;
 
 use Soldo\Authentication\OAuthCredential;
 use Soldo\Exceptions\SoldoSDKException;
+use Soldo\Resources\Transaction;
+use Soldo\Resources\Transactions;
 use Soldo\Utils\Paginator;
 use Soldo\Resources\Card;
 use Soldo\Resources\Cards;
@@ -158,6 +160,36 @@ class Soldo
 
         return $employee;
     }
+
+    /**
+     * Return an array containing a list of Transaction
+     *
+     * @param int $page
+     * @param int $perPage
+     * @param array $searchFields
+     * @return array
+     */
+    public function getTransactions($page = 0, $perPage = Paginator::MAX_ALLOWED_ITEMS_PER_PAGE, $searchFields = [])
+    {
+        $paginator = new Paginator($page, $perPage);
+        $collection = $this->client->getCollection(Transactions::class, $paginator, $searchFields);
+
+        return $collection->get();
+    }
+
+    /**
+     * Return a single Transaction resource
+     *
+     * @param $id
+     * @return Transaction
+     */
+    public function getTransaction($id, $queryParameters = [])
+    {
+        $transaction = $this->client->getItem(Transaction::class, $id, $queryParameters);
+
+        return $transaction;
+    }
+
 
     /**
      * Return an array containing a list of Card

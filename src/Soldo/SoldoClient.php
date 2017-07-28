@@ -255,10 +255,11 @@ class SoldoClient
      *
      * @param string $className
      * @param string $id
+     * @param array $queryParameters
      * @throws \Exception
      * @return SoldoResource
      */
-    public function getItem($className, $id = null)
+    public function getItem($className, $id = null, $queryParameters = [])
     {
         try {
             $this->validateClassName($className);
@@ -271,7 +272,7 @@ class SoldoClient
             $remote_path = $object->getRemotePath();
 
             // fetch data and fill object
-            $data = $this->call('GET', $remote_path);
+            $data = $this->call('GET', $remote_path, $queryParameters);
 
             return $object->fill($data);
         } catch (\Exception $e) {
