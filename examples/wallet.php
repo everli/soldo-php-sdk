@@ -3,8 +3,30 @@
 
 require 'bootstrap.php';
 
-$wallets = $soldo->getWallets(0, 100, ['type' => 'employee']);
-dump($wallets);
+$wallets = $soldo->getWallets(0, 100);
+//dump($wallets);
+
+$fromWalletId = null;
+$toWalletId = null;
+
+foreach ($wallets as $w) {
+    /** @var \Soldo\Resources\Wallet $w */
+    if ($w->available_amount > 0) {
+        $fromWalletId = $w->id;
+        break;
+    }
+}
+
+foreach ($wallets as $w) {
+    /** @var \Soldo\Resources\Wallet $w */
+    if ($w->id != $fromWalletId) {
+        $toWalletId = $w->id;
+        break;
+    }
+}
+
+$transfer = $soldo->transferMoney($fromWalletId, $toWalletId, 5);
+dump($transfer);
 
 foreach ($wallets as $w) {
     /** @var \Soldo\Resources\Wallet $w */
