@@ -4,6 +4,7 @@ namespace Soldo\Resources;
 
 use Respect\Validation\Validator;
 use Soldo\Exceptions\SoldoInvalidRelationshipException;
+use Soldo\Exceptions\SoldoCastException;
 
 /**
  * Class SoldoResource
@@ -31,6 +32,14 @@ class SoldoResource
     protected $relationships = [];
 
     /**
+     * An array containing the list of attributes that need to be casted
+     * into a SoldoResource or one of its child class (e.g. a Wallet)
+     *
+     * @var array
+     */
+    protected $cast = [];
+
+    /**
      * @var string
      */
     protected $basePath;
@@ -45,11 +54,44 @@ class SoldoResource
     }
 
     /**
+     * Validate that className is a valid class and that it is of type SoldoResource
+     *
+     * @param $className
+     * @param $attributeName
+     * @throws SoldoCastException
+     */
+    private function validateResource($className, $attributeName)
+    {
+        if (class_exists($className) === false) {
+            throw new SoldoCastException(
+                'Could not cast ' . $attributeName . '.'
+                . $className . ' doesn\'t exist'
+            );
+        }
+
+        // create a dummy object and check if it is a SoldoResource
+        $dummy = new $className();
+        if (is_a($dummy, '\Soldo\Resources\SoldoResource') === false) {
+            throw new SoldoCastException(
+                'Could not cast ' . $attributeName . '.'
+                . $className . ' is not a SoldoResource child'
+            );
+        }
+    }
+
+    /**
      * @param array $data
      */
     public function fill(array $data)
     {
         foreach ($data as $key => $value) {
+            if (array_key_exists($key, $this->cast)) {
+                $class = $this->cast[$key];
+                $this->validateResource($class, $key);
+                $this->{$key} = new $class($value);
+                continue;
+            }
+
             $this->{$key} = $value;
         }
 
