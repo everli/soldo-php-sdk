@@ -39,9 +39,6 @@ class Soldo
         $config = array_merge(
             [
                 'environment' => 'demo', //live
-                'log.enabled' => false,
-                'log.file' => null,
-                'log.level' => 'WARNING',
             ],
             $config
         );
