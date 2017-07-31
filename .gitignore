@@ -2,3 +2,5 @@
 .idea/*
 .php_cs.cache
 /vendor/*
+/test/SoldoTestCredentials.php
+/examples/soldo.log
