@@ -11,6 +11,8 @@ namespace Soldo;
 
 use \GuzzleHttp\Client;
 use \Psr\Http\Message\StreamInterface;
+use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
 use \Soldo\Authentication\OAuthCredential;
 use \Soldo\Exceptions\SoldoAuthenticationException;
 use Soldo\Exceptions\SoldoTransferException;
@@ -67,13 +69,14 @@ class SoldoClient
     protected $credential;
 
     /**
-     * SoldoClient constructor.
-     * @param string $environment
-     * @param OAuthCredential $credential
+     * @var LoggerInterface
      */
-    public function __construct(OAuthCredential $credential, $environment = 'demo')
+    protected $logger;
+
+    public function __construct(OAuthCredential $credential, $environment = 'demo', LoggerInterface $logger = null)
     {
         $this->credential = $credential;
+        $this->logger = $logger;
 
         $base_uri = $environment === 'live' ?
             self::API_LIVE_URL :
@@ -87,6 +90,13 @@ class SoldoClient
                 'verify' => false,
             ]
         );
+    }
+
+    private function log($level, $message, $context)
+    {
+        if ($this->logger !== null) {
+            $this->logger->log($level, $message, $context);
+        }
     }
 
     /**
@@ -134,7 +144,7 @@ class SoldoClient
                 'Authorization' => 'Bearer ' . $access_token,
             ],
             'query' => [],
-            'json' =>[],
+            'json' => [],
         ];
 
         // append pagination params to query
@@ -159,6 +169,13 @@ class SoldoClient
                 }
                 break;
         }
+
+        // log
+        $this->log(
+            LogLevel::INFO,
+            'SoldoClient call',
+            [$method, $path, $options['query'], $options['json']]
+        );
 
         // perform the request
         $response = $this->httpClient->request(
@@ -211,6 +228,14 @@ class SoldoClient
 
             return $object->buildRelationship($relationshipName, $data);
         } catch (\Exception $e) {
+
+            // log
+            $this->log(
+                LogLevel::ERROR,
+                'Error getting relationship',
+                [$e->getCode(), $e->getMessage()]
+            );
+
             throw $e;
         }
     }
@@ -241,6 +266,14 @@ class SoldoClient
 
             return $collection->fill($data);
         } catch (\Exception $e) {
+
+            // log
+            $this->log(
+                LogLevel::ERROR,
+                'Error getting collection',
+                [$e->getCode(), $e->getMessage()]
+            );
+
             throw $e;
         }
     }
@@ -271,6 +304,14 @@ class SoldoClient
 
             return $object->fill($data);
         } catch (\Exception $e) {
+
+            // log
+            $this->log(
+                LogLevel::ERROR,
+                'Error getting item',
+                [$e->getCode(), $e->getMessage()]
+            );
+
             throw $e;
         }
     }
@@ -304,6 +345,14 @@ class SoldoClient
 
             return $object->fill($updated_data);
         } catch (\Exception $e) {
+
+            // log
+            $this->log(
+                LogLevel::ERROR,
+                'Error updating item',
+                [$e->getCode(), $e->getMessage()]
+            );
+
             throw $e;
         }
     }
@@ -316,8 +365,8 @@ class SoldoClient
      * @param $amount
      * @param $currencyCode
      * @param $internalToken
-     * @return InternalTransfer
      * @throws \Exception
+     * @return InternalTransfer
      */
     public function performTransfer($fromWalletId, $toWalletId, $amount, $currencyCode, $internalToken)
     {
@@ -332,6 +381,14 @@ class SoldoClient
 
             return $transfer->fill($data);
         } catch (\Exception $e) {
+
+            // log
+            $this->log(
+                LogLevel::ERROR,
+                'Error performing transfer',
+                [$e->getCode(), $e->getMessage()]
+            );
+
             throw $e;
         }
     }
@@ -357,6 +414,7 @@ class SoldoClient
 
     /**
      * @param InternalTransfer $internalTransfer
+     * @param string $internalToken
      * @throws SoldoAuthenticationException
      * @return array
      */
@@ -381,6 +439,13 @@ class SoldoClient
                 ],
             ];
 
+            // log
+            $this->log(
+                LogLevel::INFO,
+                'SoldoClient transfer',
+                [$internalTransfer->toArray()]
+            );
+
             // Soldo call
             $response = $this->httpClient->request(
                 'POST',
@@ -390,7 +455,13 @@ class SoldoClient
 
             return $this->toArray($response->getBody());
         } catch (\Exception $e) {
-            // TODO: log stuff
+
+            // log
+            $this->log(
+                LogLevel::ERROR,
+                'Error getting relationship',
+                [$e->getCode(), $e->getMessage(), $internalTransfer->toArray()]
+            );
 
             throw new SoldoTransferException(
                 'Unable to transfer money. '
@@ -419,10 +490,22 @@ class SoldoClient
                 ]
             );
 
+            // log
+            $this->log(
+                LogLevel::INFO,
+                'SoldoClient authorize',
+                []
+            );
+
             return $this->toArray($response->getBody());
         } catch (\Exception $e) {
 
-            // TODO: log stuff
+            // log
+            $this->log(
+                LogLevel::ERROR,
+                'Error authorizing user',
+                [$e->getCode(), $e->getMessage()]
+            );
 
             throw new SoldoAuthenticationException(
                 'Unable to authenticate user. '

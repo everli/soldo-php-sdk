@@ -2,6 +2,7 @@
 
 namespace Soldo;
 
+use Psr\Log\LoggerInterface;
 use Soldo\Authentication\OAuthCredential;
 use Soldo\Exceptions\SoldoSDKException;
 use Soldo\Resources\Transaction;
@@ -32,9 +33,10 @@ class Soldo
     /**
      * Soldo constructor.
      * @param array $config
+     * @param null!LoggerInterface $logger
      * @throws SoldoSDKException
      */
-    public function __construct(array $config = [])
+    public function __construct(array $config = [], LoggerInterface $logger = null)
     {
         $config = array_merge(
             [
@@ -53,7 +55,8 @@ class Soldo
 
         $this->client = new SoldoClient(
             new OAuthCredential($config['client_id'], $config['client_secret']),
-            $config['environment']
+            $config['environment'],
+            $logger
         );
     }
 
@@ -178,6 +181,7 @@ class Soldo
      * Return a single Transaction resource
      *
      * @param $id
+     * @param array $queryParameters
      * @return Transaction
      */
     public function getTransaction($id, $queryParameters = [])
@@ -186,7 +190,6 @@ class Soldo
 
         return $transaction;
     }
-
 
     /**
      * Return an array containing a list of Card
@@ -259,9 +262,10 @@ class Soldo
     /**
      * Transfer an amount of money from one wallet to another
      *
-     * @param $fromWalletId
-     * @param $toWalletId
-     * @param $amount
+     * @param string $fromWalletId
+     * @param string $toWalletId
+     * @param float $amount
+     * @param string $internalToken
      * @param string $currencyCode
      */
     public function transferMoney($fromWalletId, $toWalletId, $amount, $internalToken, $currencyCode = 'EUR')
