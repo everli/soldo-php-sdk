@@ -54,6 +54,8 @@ dump($id);
 $wallet = $soldo->getWallet($id);
 dump($wallet);
 
+$not_existing_wallet = $soldo->getWallet('a_not_existing_wallet_id');
+
 //// get wallet
 /** @var \Soldo\Resources\SoldoCollection $wallet_filtered_list */
 $wallet_filtered_list = $soldo->getWallets(100, 100, ['customreferenceId' => $custom_reference_id]);
