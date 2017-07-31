@@ -52,11 +52,6 @@ class SoldoClient
     const AUTHORIZE_URL = '/oauth/authorize';
 
     /**
-     * Define an internal token to authenticate transfer and webhook
-     */
-    const INTERNAL_TOKEN = '3BCABDC115ED11E79287';
-
-    /**
      * @var Client
      */
     protected $httpClient;
@@ -313,7 +308,18 @@ class SoldoClient
         }
     }
 
-    public function performTransfer($fromWalletId, $toWalletId, $amount, $currencyCode)
+    /**
+     * Transfer money from a wallet to another.
+     *
+     * @param $fromWalletId
+     * @param $toWalletId
+     * @param $amount
+     * @param $currencyCode
+     * @param $internalToken
+     * @return InternalTransfer
+     * @throws \Exception
+     */
+    public function performTransfer($fromWalletId, $toWalletId, $amount, $currencyCode, $internalToken)
     {
         try {
             $transfer = new InternalTransfer();
@@ -322,7 +328,7 @@ class SoldoClient
             $transfer->amount = $amount;
             $transfer->currency = $currencyCode;
 
-            $data = $this->transfer($transfer);
+            $data = $this->transfer($transfer, $internalToken);
 
             return $transfer->fill($data);
         } catch (\Exception $e) {
@@ -354,13 +360,13 @@ class SoldoClient
      * @throws SoldoAuthenticationException
      * @return array
      */
-    private function transfer(InternalTransfer $internalTransfer)
+    private function transfer(InternalTransfer $internalTransfer, $internalToken)
     {
         try {
 
             // get token, fingerprint and path
             $access_token = $this->getAccessToken();
-            $fingerprint = $internalTransfer->generateFingerPrint(self::INTERNAL_TOKEN);
+            $fingerprint = $internalTransfer->generateFingerPrint($internalToken);
             $path = $internalTransfer->getRemotePath();
 
             // build authorization header

@@ -25,7 +25,7 @@ foreach ($wallets as $w) {
     }
 }
 
-$transfer = $soldo->transferMoney($fromWalletId, $toWalletId, 5);
+$transfer = $soldo->transferMoney($fromWalletId, $toWalletId, 5, '3BCABDC115ED11E79287');
 dump($transfer);
 
 foreach ($wallets as $w) {
