@@ -15,7 +15,13 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use \Soldo\Authentication\OAuthCredential;
 use \Soldo\Exceptions\SoldoAuthenticationException;
-use Soldo\Exceptions\SoldoTransferException;
+use Soldo\Exceptions\SoldoBadRequestException;
+use Soldo\Exceptions\SoldoInternalServerErrorException;
+use Soldo\Exceptions\SoldoInternalTransferException;
+use Soldo\Exceptions\SoldoMethodNotAllowedException;
+use Soldo\Exceptions\SoldoModelNotFoundException;
+use Soldo\Exceptions\SoldoSDKException;
+use Soldo\Exceptions\SoldoUnauthorizedException;
 use Soldo\Resources\InternalTransfer;
 use Soldo\Utils\Paginator;
 use Soldo\Resources\SoldoCollection;
@@ -73,6 +79,12 @@ class SoldoClient
      */
     protected $logger;
 
+    /**
+     * SoldoClient constructor.
+     * @param OAuthCredential $credential
+     * @param string $environment
+     * @param LoggerInterface|null $logger
+     */
     public function __construct(OAuthCredential $credential, $environment = 'demo', LoggerInterface $logger = null)
     {
         $this->credential = $credential;
@@ -92,6 +104,13 @@ class SoldoClient
         );
     }
 
+    /**
+     * Log stuff if a logger is provided
+     *
+     * @param $level
+     * @param $message
+     * @param $context
+     */
     private function log($level, $message, $context)
     {
         if ($this->logger !== null) {
@@ -229,14 +248,7 @@ class SoldoClient
             return $object->buildRelationship($relationshipName, $data);
         } catch (\Exception $e) {
 
-            // log
-            $this->log(
-                LogLevel::ERROR,
-                'Error getting relationship',
-                [$e->getCode(), $e->getMessage()]
-            );
-
-            throw $e;
+            $this->handleException($e, ['class' => $className, 'id' => $id, 'relationship' => $relationshipName]);
         }
     }
 
@@ -267,16 +279,74 @@ class SoldoClient
             return $collection->fill($data);
         } catch (\Exception $e) {
 
-            // log
-            $this->log(
-                LogLevel::ERROR,
-                'Error getting collection',
-                [$e->getCode(), $e->getMessage()]
-            );
-
-            throw $e;
+            $this->handleException($e, ['class' => $className, 'data' => $queryParameters]);
         }
     }
+
+
+    /**
+     * Throw exception and log error
+     *
+     * @param \Exception $e
+     * @param array $data
+     * @throws SoldoAuthenticationException
+     * @throws SoldoBadRequestException
+     * @throws SoldoInternalServerErrorException
+     * @throws SoldoMethodNotAllowedException
+     * @throws SoldoModelNotFoundException
+     * @throws SoldoSDKException
+     */
+    private function handleException(\Exception $e, $data = [])
+    {
+
+        $code = $e->getCode();
+        $message = $e->getMessage();
+
+        // log
+        $this->log(
+            LogLevel::ERROR,
+            $message,
+            $data
+        );
+
+        switch ($code) {
+
+            case 400:
+                throw new SoldoBadRequestException(
+                    'Your request is invalid'
+                );
+                break;
+
+            case 401:
+                throw new SoldoUnauthorizedException(
+                    'API key is wrong'
+                );
+                break;
+
+            case 404:
+                throw new SoldoModelNotFoundException(
+                    'The specified resource could not be found'
+                );
+                break;
+
+            case 405:
+                throw new SoldoMethodNotAllowedException(
+                    'You don’t have the grant required to use the method'
+                );
+                break;
+
+            case 500:
+                throw new SoldoInternalServerErrorException(
+                    'Soldo had a problem with its server. Try again later'
+                );
+                break;
+
+            default:
+                throw new SoldoSDKException($message);
+                break;
+        }
+    }
+
 
     /**
      * Build the resource starting from remote data
@@ -305,14 +375,8 @@ class SoldoClient
             return $object->fill($data);
         } catch (\Exception $e) {
 
-            // log
-            $this->log(
-                LogLevel::ERROR,
-                'Error getting item',
-                [$e->getCode(), $e->getMessage()]
-            );
+            $this->handleException($e, ['className' => $className, 'id' => $id, 'data' => $queryParameters]);
 
-            throw $e;
         }
     }
 
@@ -345,15 +409,7 @@ class SoldoClient
 
             return $object->fill($updated_data);
         } catch (\Exception $e) {
-
-            // log
-            $this->log(
-                LogLevel::ERROR,
-                'Error updating item',
-                [$e->getCode(), $e->getMessage()]
-            );
-
-            throw $e;
+            $this->handleException($e, ['class' => $className, 'id' => $id, 'data' => $data]);
         }
     }
 
@@ -371,25 +427,65 @@ class SoldoClient
     public function performTransfer($fromWalletId, $toWalletId, $amount, $currencyCode, $internalToken)
     {
         try {
-            $transfer = new InternalTransfer();
-            $transfer->fromWalletId = $fromWalletId;
-            $transfer->toWalletId = $toWalletId;
-            $transfer->amount = $amount;
-            $transfer->currency = $currencyCode;
+            $it = new InternalTransfer();
+            $it->fromWalletId = $fromWalletId;
+            $it->toWalletId = $toWalletId;
+            $it->amount = $amount;
+            $it->currency = $currencyCode;
 
-            $data = $this->transfer($transfer, $internalToken);
+            // get token, fingerprint and path
+            $access_token = $this->getAccessToken();
+            $fingerprint = $it->generateFingerPrint($internalToken);
+            $path = $it->getRemotePath();
 
-            return $transfer->fill($data);
+            // build guzzle options
+            $options = [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $access_token,
+                    'X-Soldo-Fingerprint' => $fingerprint,
+                ],
+                'form_params' => [
+                    'amount' => $it->amount,
+                    'currencyCode' => $it->currency,
+                ],
+            ];
+
+            // log
+            $this->log(
+                LogLevel::INFO,
+                'Start internal transfer',
+                $it->toArray()
+            );
+
+            // remote call
+            $response = $this->httpClient->request(
+                'POST',
+                self::API_ENTRY_POINT . $path,
+                $options
+            );
+
+            $data = $this->toArray($response->getBody());
+            return $it->fill($data);
+
+
         } catch (\Exception $e) {
 
             // log
             $this->log(
                 LogLevel::ERROR,
-                'Error performing transfer',
-                [$e->getCode(), $e->getMessage()]
+                'Error transferring money ['. $e->getMessage() . ']',
+                [
+                    'fromWalletId' => $fromWalletId,
+                    'toWalletId' => $toWalletId,
+                    'amount' => $amount,
+                    'currencyCode' => $currencyCode,
+                ]
             );
 
-            throw $e;
+            throw new SoldoInternalTransferException(
+                'Unable to authenticate user. '
+                . 'Check your credential'
+            );
         }
     }
 
@@ -412,63 +508,6 @@ class SoldoClient
         return $this->credential->access_token;
     }
 
-    /**
-     * @param InternalTransfer $internalTransfer
-     * @param string $internalToken
-     * @throws SoldoAuthenticationException
-     * @return array
-     */
-    private function transfer(InternalTransfer $internalTransfer, $internalToken)
-    {
-        try {
-
-            // get token, fingerprint and path
-            $access_token = $this->getAccessToken();
-            $fingerprint = $internalTransfer->generateFingerPrint($internalToken);
-            $path = $internalTransfer->getRemotePath();
-
-            // build authorization header
-            $options = [
-                'headers' => [
-                    'Authorization' => 'Bearer ' . $access_token,
-                    'X-Soldo-Fingerprint' => $fingerprint,
-                ],
-                'form_params' => [
-                    'amount' => $internalTransfer->amount,
-                    'currencyCode' => $internalTransfer->currency,
-                ],
-            ];
-
-            // log
-            $this->log(
-                LogLevel::INFO,
-                'SoldoClient transfer',
-                [$internalTransfer->toArray()]
-            );
-
-            // Soldo call
-            $response = $this->httpClient->request(
-                'POST',
-                self::API_ENTRY_POINT . $path,
-                $options
-            );
-
-            return $this->toArray($response->getBody());
-        } catch (\Exception $e) {
-
-            // log
-            $this->log(
-                LogLevel::ERROR,
-                'Error getting relationship',
-                [$e->getCode(), $e->getMessage(), $internalTransfer->toArray()]
-            );
-
-            throw new SoldoTransferException(
-                'Unable to transfer money. '
-                . $e->getMessage()
-            );
-        }
-    }
 
     /**
      * Perform a request to the /authorize endpoint
@@ -493,7 +532,7 @@ class SoldoClient
             // log
             $this->log(
                 LogLevel::INFO,
-                'SoldoClient authorize',
+                'Start authorizing user',
                 []
             );
 
@@ -503,8 +542,8 @@ class SoldoClient
             // log
             $this->log(
                 LogLevel::ERROR,
-                'Error authorizing user',
-                [$e->getCode(), $e->getMessage()]
+                'Error authorizing user [' . $e->getMessage() . ']',
+                []
             );
 
             throw new SoldoAuthenticationException(
