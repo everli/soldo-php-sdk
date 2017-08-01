@@ -153,4 +153,11 @@ class SoldoTest extends TestCase
         $this->assertEquals('Random Assignee', $expenseCentre->assignee);
     }
 
+    public function testUpdateExpenseCentreWithBlacklistedData()
+    {
+        $expenseCentre = self::$soldo->updateExpenseCentre(self::$expenseCentreId, ['assignee' => 'Another Random Assignee', 'a_not_whitelisted_key' => 'Random Value']);
+        $this->assertInstanceOf(ExpenseCentre::class, $expenseCentre);
+        $this->assertEquals('Another Random Assignee', $expenseCentre->assignee);
+    }
+
 }
