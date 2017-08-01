@@ -247,7 +247,6 @@ class SoldoClient
 
             return $object->buildRelationship($relationshipName, $data);
         } catch (\Exception $e) {
-
             $this->handleException($e, ['class' => $className, 'id' => $id, 'relationship' => $relationshipName]);
         }
     }
@@ -278,11 +277,9 @@ class SoldoClient
 
             return $collection->fill($data);
         } catch (\Exception $e) {
-
             $this->handleException($e, ['class' => $className, 'data' => $queryParameters]);
         }
     }
-
 
     /**
      * Throw exception and log error
@@ -298,7 +295,6 @@ class SoldoClient
      */
     private function handleException(\Exception $e, $data = [])
     {
-
         $code = $e->getCode();
         $message = $e->getMessage();
 
@@ -347,7 +343,6 @@ class SoldoClient
         }
     }
 
-
     /**
      * Build the resource starting from remote data
      *
@@ -374,9 +369,7 @@ class SoldoClient
 
             return $object->fill($data);
         } catch (\Exception $e) {
-
             $this->handleException($e, ['className' => $className, 'id' => $id, 'data' => $queryParameters]);
-
         }
     }
 
@@ -465,15 +458,14 @@ class SoldoClient
             );
 
             $data = $this->toArray($response->getBody());
+
             return $it->fill($data);
-
-
         } catch (\Exception $e) {
 
             // log
             $this->log(
                 LogLevel::ERROR,
-                'Error transferring money ['. $e->getMessage() . ']',
+                'Error transferring money [' . $e->getMessage() . ']',
                 [
                     'fromWalletId' => $fromWalletId,
                     'toWalletId' => $toWalletId,
@@ -507,7 +499,6 @@ class SoldoClient
 
         return $this->credential->access_token;
     }
-
 
     /**
      * Perform a request to the /authorize endpoint
