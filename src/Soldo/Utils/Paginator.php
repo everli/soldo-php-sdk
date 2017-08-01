@@ -3,8 +3,9 @@
 namespace Soldo\Utils;
 
 /**
- * Class SoldoAuthenticationException
- * @package Soldo\Exceptions
+ * Class Paginator
+ *
+ * @package Soldo\Utils
  */
 class Paginator
 {
