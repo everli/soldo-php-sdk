@@ -4,16 +4,22 @@ namespace Soldo\Tests;
 
 use GuzzleHttp\Exception\ClientException;
 use PHPUnit\Framework\TestCase;
+use Soldo\Exceptions\SoldoModelNotFoundException;
+use Soldo\Resources\ExpenseCentre;
 use Soldo\Resources\Wallet;
 use Soldo\Soldo;
 
-class SoldoTest extends TestCase {
+class SoldoTest extends TestCase
+{
 
     /** @var Soldo $soldo */
     private static $soldo;
 
     /** @var string $walletId */
     private static $walletId;
+
+    /** @var  string $expenseCentreId  */
+    private static $expenseCentreId;
 
     public static function setUpBeforeClass()
     {
@@ -53,13 +59,11 @@ class SoldoTest extends TestCase {
         $s = new Soldo(['client_id' => 'FOO']);
     }
 
-
     public function testConstructor()
     {
         $s = new Soldo(['client_id' => 'FOO', 'client_secret' => 'BAR']);
         $this->assertInstanceOf(Soldo::class, $s);
     }
-
 
     public function testGetWallets()
     {
@@ -79,8 +83,7 @@ class SoldoTest extends TestCase {
     }
 
     /**
-     * @expectedException \GuzzleHttp\Exception\ClientException
-     * @expectedExceptionCode 404
+     * @expectedException \Soldo\Exceptions\SoldoModelNotFoundException
      */
     public function testGetWalletsNotFound()
     {
@@ -95,5 +98,59 @@ class SoldoTest extends TestCase {
     }
 
 
+    public function testGetExpenseCentres()
+    {
+        $expenseCentres = self::$soldo->getExpenseCentres();
+        $this->assertInternalType('array', $expenseCentres);
+        $this->assertTrue(count($expenseCentres) > 0, 'There should be at least one Expense Centre');
+
+        /** @var ExpenseCentre $expenseCentre*/
+        $expenseCentre = $expenseCentres[0];
+        $this->assertInternalType('string', $expenseCentre->id);
+        self::$expenseCentreId = $expenseCentre->id;
+
+        foreach ($expenseCentres as $expenseCentre) {
+            /** @var ExpenseCentre $expenseCentre*/
+            $this->assertInstanceOf(ExpenseCentre::class, $expenseCentre);
+        }
+    }
+
+    /**
+     * @expectedException \Soldo\Exceptions\SoldoModelNotFoundException
+     */
+    public function testGetExpenseCentreNotFound()
+    {
+        $expenseCentre = self::$soldo->getExpenseCentre('A_NOT_EXISTING_EXPENSE_CENTRE_ID');
+    }
+
+    public function testGetExpenseCentre()
+    {
+        $expenseCentre = self::$soldo->getExpenseCentre(self::$expenseCentreId);
+        $this->assertInstanceOf(ExpenseCentre::class, $expenseCentre);
+        $this->assertEquals(self::$expenseCentreId, $expenseCentre->id);
+    }
+
+    /**
+     * @expectedException \Soldo\Exceptions\SoldoInternalServerErrorException
+     */
+    public function testUpdateExpenseCentreEmptyData()
+    {
+        $expenseCentre = self::$soldo->updateExpenseCentre(self::$expenseCentreId, []);
+    }
+
+    /**
+     * @expectedException \Soldo\Exceptions\SoldoInternalServerErrorException
+     */
+    public function testUpdateExpenseCentreBlacklistedData()
+    {
+        $expenseCentre = self::$soldo->updateExpenseCentre(self::$expenseCentreId, ['a_not_whitelisted_key' => 'Random Value']);
+    }
+
+    public function testUpdateExpenseCentre()
+    {
+        $expenseCentre = self::$soldo->updateExpenseCentre(self::$expenseCentreId, ['assignee' => 'Random Assignee']);
+        $this->assertInstanceOf(ExpenseCentre::class, $expenseCentre);
+        $this->assertEquals('Random Assignee', $expenseCentre->assignee);
+    }
 
 }
