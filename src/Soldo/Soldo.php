@@ -177,15 +177,20 @@ class Soldo
         return $collection->get();
     }
 
+
     /**
      * Return a single Transaction resource
      *
      * @param $id
-     * @param array $queryParameters
+     * @param bool $withDetails
      * @return Transaction
      */
-    public function getTransaction($id, $queryParameters = [])
+    public function getTransaction($id, $withDetails = false)
     {
+        $queryParameters = [];
+        if(true === $withDetails) {
+            $queryParameters['showDetails'] = 'true';
+        }
         $transaction = $this->client->getItem(Transaction::class, $id, $queryParameters);
 
         return $transaction;
