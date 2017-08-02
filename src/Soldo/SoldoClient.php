@@ -475,8 +475,9 @@ class SoldoClient
             );
 
             throw new SoldoInternalTransferException(
-                'Unable to authenticate user. '
-                . 'Check your credential'
+                'Unable to transferring money (' . $amount . ' ' . $currencyCode . ') from  '
+                . $fromWalletId . ' to '
+                . $toWalletId
             );
         }
     }
