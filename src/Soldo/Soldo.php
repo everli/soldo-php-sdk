@@ -5,6 +5,7 @@ namespace Soldo;
 use Psr\Log\LoggerInterface;
 use Soldo\Authentication\OAuthCredential;
 use Soldo\Exceptions\SoldoSDKException;
+use Soldo\Resources\InternalTransfer;
 use Soldo\Resources\Transaction;
 use Soldo\Resources\Transactions;
 use Soldo\Utils\Paginator;
@@ -33,7 +34,7 @@ class Soldo
     /**
      * Soldo constructor.
      * @param array $config
-     * @param null!LoggerInterface $logger
+     * @param LoggerInterface $logger
      * @throws SoldoSDKException
      */
     public function __construct(array $config = [], LoggerInterface $logger = null)
@@ -273,6 +274,7 @@ class Soldo
      * @param float $amount
      * @param string $internalToken
      * @param string $currencyCode
+     * @return InternalTransfer
      */
     public function transferMoney($fromWalletId, $toWalletId, $amount, $currencyCode, $internalToken)
     {
