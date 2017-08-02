@@ -366,8 +366,8 @@ class SoldoClient
         try {
             // fetch data and fill object
             $data = $this->call('GET', $remote_path, $queryParameters);
-            return $object->fill($data);
 
+            return $object->fill($data);
         } catch (\Exception $e) {
             $this->handleException($e, ['className' => $className, 'id' => $id, 'data' => $queryParameters]);
         }
@@ -395,7 +395,7 @@ class SoldoClient
 
         // keep only wanted data
         $update_data = $object->filterWhiteList($data);
-        if(empty($update_data)) {
+        if (empty($update_data)) {
             throw new \InvalidArgumentException(
                 '$data cannot be empty or filled '
                 . 'only with not whitelisted fields'
@@ -405,8 +405,8 @@ class SoldoClient
         try {
             // fetch data and update object
             $updated_data = $this->call('POST', $remote_path, $update_data);
-            return $object->fill($updated_data);
 
+            return $object->fill($updated_data);
         } catch (\Exception $e) {
             $this->handleException($e, ['class' => $className, 'id' => $id, 'data' => $data]);
         }

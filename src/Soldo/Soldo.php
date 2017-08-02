@@ -176,7 +176,6 @@ class Soldo
         return $employee;
     }
 
-
     /**
      * Return an array containing a list of Transaction
      *
@@ -193,7 +192,6 @@ class Soldo
         return $collection->get();
     }
 
-
     /**
      * Return a single Transaction resource
      *
@@ -204,7 +202,7 @@ class Soldo
     public function getTransaction($id, $withDetails = false)
     {
         $queryParameters = [];
-        if(true === $withDetails) {
+        if (true === $withDetails) {
             $queryParameters['showDetails'] = 'true';
         }
         $transaction = $this->client->getItem(Transaction::class, $id, $queryParameters);

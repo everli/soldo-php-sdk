@@ -97,7 +97,7 @@ class SoldoTest extends TestCase
 
             // store the id of a wallet with available amount greater than 0
             // so later I can test the transfer method
-            if($wallet->available_amount > 0 && $wallet->id != self::$walletId) {
+            if ($wallet->available_amount > 0 && $wallet->id != self::$walletId) {
                 self::$walletIdWithAvailableAmount = $wallet->id;
             }
         }
@@ -117,7 +117,6 @@ class SoldoTest extends TestCase
         $this->assertInstanceOf(Wallet::class, $wallet);
         $this->assertEquals(self::$walletId, $wallet->id);
     }
-
 
     public function testGetExpenseCentres()
     {
@@ -285,7 +284,6 @@ class SoldoTest extends TestCase
         $this->assertInternalType('array', $transaction->details);
     }
 
-
     public function testGetCards()
     {
         $cards = self::$soldo->getCards();
@@ -311,7 +309,6 @@ class SoldoTest extends TestCase
         $card = self::$soldo->getCard('A_NOT_EXISTING_CARD_ID');
     }
 
-
     public function testGetCard()
     {
         $card = self::$soldo->getCard(self::$cardId);
@@ -327,7 +324,6 @@ class SoldoTest extends TestCase
         $rules = self::$soldo->getCardRules('A_NOT_EXISTING_CARD_ID');
     }
 
-
     public function testGetCardRules()
     {
         $rules = self::$soldo->getCardRules(self::$cardId);
@@ -340,18 +336,17 @@ class SoldoTest extends TestCase
         }
     }
 
-
     public function testGetCompany()
     {
         $company = self::$soldo->getCompany();
         $this->assertInstanceOf(Company::class, $company);
     }
 
-
     /**
      * @expectedException \Soldo\Exceptions\SoldoInternalTransferException
      */
-    public function testPerformTransferToNotExistingWallet() {
+    public function testPerformTransferToNotExistingWallet()
+    {
         $transfer = self::$soldo->transferMoney(
             self::$walletIdWithAvailableAmount,
             'ANOTHER_NOT_EXISTING_WALLET',
@@ -364,7 +359,8 @@ class SoldoTest extends TestCase
     /**
      * @expectedException \Soldo\Exceptions\SoldoInternalTransferException
      */
-    public function testPerformTransferFromNotExistingWallet() {
+    public function testPerformTransferFromNotExistingWallet()
+    {
         $transfer = self::$soldo->transferMoney(
             self::$walletIdWithAvailableAmount,
             'ANOTHER_NOT_EXISTING_WALLET',
@@ -377,7 +373,8 @@ class SoldoTest extends TestCase
     /**
      * @expectedException \Soldo\Exceptions\SoldoInternalTransferException
      */
-    public function testPerformTransferWithInvalidAmount() {
+    public function testPerformTransferWithInvalidAmount()
+    {
         $transfer = self::$soldo->transferMoney(
             self::$walletIdWithAvailableAmount,
             self::$walletId,
@@ -387,11 +384,11 @@ class SoldoTest extends TestCase
         );
     }
 
-
     /**
      * @expectedException \Soldo\Exceptions\SoldoInternalTransferException
      */
-    public function testPerformTransferWithInvalidCurrencyCode() {
+    public function testPerformTransferWithInvalidCurrencyCode()
+    {
         $transfer = self::$soldo->transferMoney(
             self::$walletIdWithAvailableAmount,
             self::$walletId,
@@ -401,11 +398,11 @@ class SoldoTest extends TestCase
         );
     }
 
-
     /**
      * @expectedException \Soldo\Exceptions\SoldoInternalTransferException
      */
-    public function testPerformTransferWithInvalidInternalToken() {
+    public function testPerformTransferWithInvalidInternalToken()
+    {
         $transfer = self::$soldo->transferMoney(
             self::$walletIdWithAvailableAmount,
             self::$walletId,
@@ -415,9 +412,8 @@ class SoldoTest extends TestCase
         );
     }
 
-
-    public function testPerformTransfer() {
-
+    public function testPerformTransfer()
+    {
         $amountToTransfer = 1;
 
         $fromWallet = self::$soldo->getWallet(self::$walletIdWithAvailableAmount);
@@ -446,8 +442,5 @@ class SoldoTest extends TestCase
 
         $this->assertEquals($availableAmountOfFromWallet - $amountToTransfer, $fromWallet->available_amount);
         $this->assertEquals($availableAmountOfToWallet + $amountToTransfer, $toWallet->available_amount);
-
     }
-
-
 }
