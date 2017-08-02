@@ -152,7 +152,7 @@ class SoldoTest extends TestCase
     }
 
     /**
-     * @expectedException \Soldo\Exceptions\SoldoInternalServerErrorException
+     * @expectedException \InvalidArgumentException
      */
     public function testUpdateExpenseCentreEmptyData()
     {
@@ -160,7 +160,7 @@ class SoldoTest extends TestCase
     }
 
     /**
-     * @expectedException \Soldo\Exceptions\SoldoInternalServerErrorException
+     * @expectedException \InvalidArgumentException
      */
     public function testUpdateExpenseCentreBlacklistedData()
     {
@@ -214,7 +214,7 @@ class SoldoTest extends TestCase
     }
 
     /**
-     * @expectedException \Soldo\Exceptions\SoldoInternalServerErrorException
+     * @expectedException \InvalidArgumentException
      */
     public function testUpdateEmployeeeEmptyData()
     {
@@ -222,7 +222,7 @@ class SoldoTest extends TestCase
     }
 
     /**
-     * @expectedException \Soldo\Exceptions\SoldoInternalServerErrorException
+     * @expectedException \InvalidArgumentException
      */
     public function testUpdateEmployBlacklistedData()
     {

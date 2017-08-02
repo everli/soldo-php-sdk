@@ -9,12 +9,12 @@
  */
 namespace Soldo;
 
-use \GuzzleHttp\Client;
-use \Psr\Http\Message\StreamInterface;
+use GuzzleHttp\Client;
+use Psr\Http\Message\StreamInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
-use \Soldo\Authentication\OAuthCredential;
-use \Soldo\Exceptions\SoldoAuthenticationException;
+use Soldo\Authentication\OAuthCredential;
+use Soldo\Exceptions\SoldoAuthenticationException;
 use Soldo\Exceptions\SoldoBadRequestException;
 use Soldo\Exceptions\SoldoInternalServerErrorException;
 use Soldo\Exceptions\SoldoInternalTransferException;
@@ -354,20 +354,20 @@ class SoldoClient
      */
     public function getItem($className, $id = null, $queryParameters = [])
     {
+        $this->validateClassName($className);
+
+        /** @var SoldoResource $object */
+        $object = new $className();
+        $object->id = $id;
+
+        // get resource remote path
+        $remote_path = $object->getRemotePath();
+
         try {
-            $this->validateClassName($className);
-
-            /** @var SoldoResource $object */
-            $object = new $className();
-            $object->id = $id;
-
-            // get resource remote path
-            $remote_path = $object->getRemotePath();
-
             // fetch data and fill object
             $data = $this->call('GET', $remote_path, $queryParameters);
-
             return $object->fill($data);
+
         } catch (\Exception $e) {
             $this->handleException($e, ['className' => $className, 'id' => $id, 'data' => $queryParameters]);
         }
@@ -384,23 +384,29 @@ class SoldoClient
      */
     public function updateItem($className, $id, $data)
     {
+        $this->validateClassName($className);
+
+        /** @var SoldoResource $object */
+        $object = new $className();
+        $object->id = $id;
+
+        // get remote path
+        $remote_path = $object->getRemotePath();
+
+        // keep only wanted data
+        $update_data = $object->filterWhiteList($data);
+        if(empty($update_data)) {
+            throw new \InvalidArgumentException(
+                '$data cannot be empty or filled '
+                . 'only with not whitelisted fields'
+            );
+        }
+
         try {
-            $this->validateClassName($className);
-
-            /** @var SoldoResource $object */
-            $object = new $className();
-            $object->id = $id;
-
-            // get remote path
-            $remote_path = $object->getRemotePath();
-
-            // keep only wanted data
-            $update_data = $object->filterWhiteList($data);
-
             // fetch data and update object
             $updated_data = $this->call('POST', $remote_path, $update_data);
-
             return $object->fill($updated_data);
+
         } catch (\Exception $e) {
             $this->handleException($e, ['class' => $className, 'id' => $id, 'data' => $data]);
         }
