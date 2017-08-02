@@ -162,6 +162,21 @@ class Soldo
     }
 
     /**
+     * Update the Employee by id and return the resource up to date
+     *
+     * @param $id
+     * @param $data
+     * @return Employee
+     */
+    public function updateEmployee($id, $data)
+    {
+        $employee = $this->client->updateItem(Employee::class, $id, $data);
+
+        return $employee;
+    }
+
+
+    /**
      * Return an array containing a list of Transaction
      *
      * @param int $page
@@ -236,20 +251,6 @@ class Soldo
         $rules = $this->client->getRelationship(Card::class, $id, 'rules');
 
         return $rules;
-    }
-
-    /**
-     * Update the Employee by id and return the resource up to date
-     *
-     * @param $id
-     * @param $data
-     * @return Employee
-     */
-    public function updateEmployee($id, $data)
-    {
-        $employee = $this->client->updateItem(Employee::class, $id, $data);
-
-        return $employee;
     }
 
     /**
