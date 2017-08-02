@@ -274,7 +274,7 @@ class Soldo
      * @param string $internalToken
      * @param string $currencyCode
      */
-    public function transferMoney($fromWalletId, $toWalletId, $amount, $internalToken, $currencyCode = 'EUR')
+    public function transferMoney($fromWalletId, $toWalletId, $amount, $currencyCode, $internalToken)
     {
         $internal_transfer = $this->client->performTransfer($fromWalletId, $toWalletId, $amount, $currencyCode, $internalToken);
 
