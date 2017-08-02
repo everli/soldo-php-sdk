@@ -12,6 +12,10 @@ use Soldo\Resources\Transaction;
 use Soldo\Resources\Wallet;
 use Soldo\Soldo;
 
+/**
+ * Class SoldoTest
+ * @package Soldo\Tests
+ */
 class SoldoTest extends TestCase
 {
 
