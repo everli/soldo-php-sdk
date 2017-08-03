@@ -10,6 +10,7 @@
 namespace Soldo;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\TransferException;
 use Psr\Http\Message\StreamInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
@@ -153,7 +154,6 @@ class SoldoClient
      */
     private function call($method, $path, $data = [], Paginator $paginator = null)
     {
-
         // get access token
         $access_token = $this->getAccessToken();
 
@@ -222,66 +222,9 @@ class SoldoClient
     }
 
     /**
-     * Get an has many relationship
-     *
-     * @param $className
-     * @param $id
-     * @param $relationshipName
-     * @throws \Exception
-     * @return array
-     */
-    public function getRelationship($className, $id, $relationshipName)
-    {
-        // validate class name
-        $this->validateClassName($className);
-
-        /** @var SoldoResource $object */
-        $object = new $className();
-        $object->id = $id;
-
-        // get relationship remote path
-        $remote_path = $object->getRelationshipRemotePath($relationshipName);
-
-        try {
-            $data = $this->call('GET', $remote_path);
-            return $object->buildRelationship($relationshipName, $data);
-        } catch (\Exception $e) {
-            $this->handleException($e, ['class' => $className, 'id' => $id, 'relationship' => $relationshipName]);
-        }
-    }
-
-    /**
-     * Build and return a SoldoCollection starting from remote data
-     *
-     * @param string $className
-     * @param Paginator $paginator
-     * @param array $queryParameters
-     * @throws \Exception
-     * @return SoldoCollection
-     */
-    public function getCollection($className, Paginator $paginator = null, $queryParameters = [])
-    {
-        // validate class name
-        $this->validateClassName($className);
-
-        /** @var SoldoCollection $collection */
-        $collection = new $className();
-
-        // get collection remote path
-        $remote_path = $collection->getRemotePath();
-        try {
-            // make request and fill collection
-            $data = $this->call('GET', $remote_path, $queryParameters, $paginator);
-            return $collection->fill($data);
-        } catch (\Exception $e) {
-            $this->handleException($e, ['class' => $className, 'data' => $queryParameters]);
-        }
-    }
-
-    /**
      * Throw exception and log error
      *
-     * @param \Exception $e
+     * @param TransferException $e
      * @param array $data
      * @throws SoldoAuthenticationException
      * @throws SoldoBadRequestException
@@ -290,7 +233,7 @@ class SoldoClient
      * @throws SoldoModelNotFoundException
      * @throws SoldoSDKException
      */
-    private function handleException(\Exception $e, $data = [])
+    private function handleGuzzleException(TransferException $e, $data = [])
     {
         $code = $e->getCode();
         $message = $e->getMessage();
@@ -340,166 +283,6 @@ class SoldoClient
     }
 
     /**
-     * Build the resource starting from remote data
-     *
-     * @param string $className
-     * @param string $id
-     * @param array $queryParameters
-     * @throws \Exception
-     * @return SoldoResource
-     */
-    public function getItem($className, $id = null, $queryParameters = [])
-    {
-        $this->validateClassName($className);
-
-        /** @var SoldoResource $object */
-        $object = new $className();
-        $object->id = $id;
-
-        // get resource remote path
-        $remote_path = $object->getRemotePath();
-
-        try {
-            // fetch data and fill object
-            $data = $this->call('GET', $remote_path, $queryParameters);
-            return $object->fill($data);
-        } catch (\Exception $e) {
-            $this->handleException($e, ['className' => $className, 'id' => $id, 'data' => $queryParameters]);
-        }
-    }
-
-    /**
-     * Update the remote resource and return it
-     *
-     * @param string $className
-     * @param string $id
-     * @param array $data
-     * @throws \Exception
-     * @return SoldoResource
-     */
-    public function updateItem($className, $id, $data)
-    {
-        $this->validateClassName($className);
-
-        /** @var SoldoResource $object */
-        $object = new $className();
-        $object->id = $id;
-
-        // get remote path
-        $remote_path = $object->getRemotePath();
-
-        // keep only wanted data
-        $update_data = $object->filterWhiteList($data);
-        if (empty($update_data)) {
-            throw new \InvalidArgumentException(
-                '$data cannot be empty or filled '
-                . 'only with not whitelisted fields'
-            );
-        }
-
-        try {
-            // fetch data and update object
-            $updated_data = $this->call('POST', $remote_path, $update_data);
-            return $object->fill($updated_data);
-        } catch (\Exception $e) {
-            $this->handleException($e, ['class' => $className, 'id' => $id, 'data' => $data]);
-        }
-    }
-
-    /**
-     * Transfer money from a wallet to another.
-     *
-     * @param $fromWalletId
-     * @param $toWalletId
-     * @param $amount
-     * @param $currencyCode
-     * @param $internalToken
-     * @throws \Exception
-     * @return InternalTransfer
-     */
-    public function performTransfer($fromWalletId, $toWalletId, $amount, $currencyCode, $internalToken)
-    {
-        try {
-            $it = new InternalTransfer();
-            $it->fromWalletId = $fromWalletId;
-            $it->toWalletId = $toWalletId;
-            $it->amount = $amount;
-            $it->currency = $currencyCode;
-
-            // get token, fingerprint and path
-            $access_token = $this->getAccessToken();
-            $fingerprint = $it->generateFingerPrint($internalToken);
-            $path = $it->getRemotePath();
-
-            // build guzzle options
-            $options = [
-                'headers' => [
-                    'Authorization' => 'Bearer ' . $access_token,
-                    'X-Soldo-Fingerprint' => $fingerprint,
-                ],
-                'form_params' => [
-                    'amount' => $it->amount,
-                    'currencyCode' => $it->currency,
-                ],
-            ];
-
-            // log
-            $this->log(
-                LogLevel::INFO,
-                'Start internal transfer',
-                $it->toArray()
-            );
-
-            // remote call
-            $response = $this->httpClient->request(
-                'POST',
-                self::API_ENTRY_POINT . $path,
-                $options
-            );
-
-            $data = $this->toArray($response->getBody());
-            return $it->fill($data);
-        } catch (\Exception $e) {
-            // log
-            $this->log(
-                LogLevel::ERROR,
-                'Error transferring money [' . $e->getMessage() . ']',
-                [
-                    'fromWalletId' => $fromWalletId,
-                    'toWalletId' => $toWalletId,
-                    'amount' => $amount,
-                    'currencyCode' => $currencyCode,
-                ]
-            );
-
-            throw new SoldoInternalTransferException(
-                'Unable to transferring money (' . $amount . ' ' . $currencyCode . ') from  '
-                . $fromWalletId . ' to '
-                . $toWalletId
-            );
-        }
-    }
-
-    /**
-     * Get access token for authenticated request
-     *
-     * @return string
-     */
-    public function getAccessToken()
-    {
-        if ($this->credential->access_token === null) {
-            $auth_data = $this->authorize();
-            $this->credential->updateAuthenticationData($auth_data);
-        }
-
-        //TODO: handle token expiration
-        if ($this->credential->isTokenExpired()) {
-        }
-
-        return $this->credential->access_token;
-    }
-
-    /**
      * Perform a request to the /authorize endpoint
      *
      * @throws SoldoAuthenticationException
@@ -538,6 +321,225 @@ class SoldoClient
             throw new SoldoAuthenticationException(
                 'Unable to authenticate user. '
                 . 'Check your credential'
+            );
+        }
+    }
+
+    /**
+     * Get access token for authenticated request
+     *
+     * @return string
+     */
+    public function getAccessToken()
+    {
+        if ($this->credential->access_token === null) {
+            $auth_data = $this->authorize();
+            $this->credential->updateAuthenticationData($auth_data);
+        }
+
+        //TODO: handle token expiration
+        if ($this->credential->isTokenExpired()) {
+        }
+
+        return $this->credential->access_token;
+    }
+
+    /**
+     * Build and return a SoldoCollection starting from remote data
+     *
+     * @param string $className
+     * @param Paginator $paginator
+     * @param array $queryParameters
+     * @throws \Exception
+     * @return SoldoCollection
+     */
+    public function getCollection($className, Paginator $paginator = null, $queryParameters = [])
+    {
+        // validate class name
+        $this->validateClassName($className);
+
+        /** @var SoldoCollection $collection */
+        $collection = new $className();
+
+        // get collection remote path
+        $remote_path = $collection->getRemotePath();
+
+        try {
+            // make request and fill collection
+            $data = $this->call('GET', $remote_path, $queryParameters, $paginator);
+            return $collection->fill($data);
+        } catch (TransferException $e) {
+            $this->handleGuzzleException($e, ['class' => $className, 'data' => $queryParameters]);
+        }
+    }
+
+    /**
+     * Build the resource starting from remote data
+     *
+     * @param string $className
+     * @param string $id
+     * @param array $queryParameters
+     * @throws \Exception
+     * @return SoldoResource
+     */
+    public function getItem($className, $id = null, $queryParameters = [])
+    {
+        $this->validateClassName($className);
+
+        /** @var SoldoResource $object */
+        $object = new $className();
+        $object->id = $id;
+
+        // get resource remote path
+        $remote_path = $object->getRemotePath();
+
+        try {
+            // fetch data and fill object
+            $data = $this->call('GET', $remote_path, $queryParameters);
+            return $object->fill($data);
+        } catch (TransferException $e) {
+            $this->handleGuzzleException($e, ['className' => $className, 'id' => $id, 'data' => $queryParameters]);
+        }
+    }
+
+    /**
+     * Update the remote resource and return it
+     *
+     * @param string $className
+     * @param string $id
+     * @param array $data
+     * @throws \Exception
+     * @return SoldoResource
+     */
+    public function updateItem($className, $id, $data)
+    {
+        $this->validateClassName($className);
+
+        /** @var SoldoResource $object */
+        $object = new $className();
+        $object->id = $id;
+
+        // get remote path
+        $remote_path = $object->getRemotePath();
+
+        // keep only wanted data
+        $update_data = $object->filterWhiteList($data);
+        if (empty($update_data)) {
+            throw new \InvalidArgumentException(
+                '$data cannot be empty or filled '
+                . 'only with not whitelisted fields'
+            );
+        }
+
+        try {
+            // fetch data and update object
+            $updated_data = $this->call('POST', $remote_path, $update_data);
+            return $object->fill($updated_data);
+        } catch (TransferException $e) {
+            $this->handleGuzzleException($e, ['class' => $className, 'id' => $id, 'data' => $data]);
+        }
+    }
+
+    /**
+     * Get an has many relationship
+     *
+     * @param $className
+     * @param $id
+     * @param $relationshipName
+     * @return array
+     */
+    public function getRelationship($className, $id, $relationshipName)
+    {
+        // validate class name
+        $this->validateClassName($className);
+
+        /** @var SoldoResource $object */
+        $object = new $className();
+        $object->id = $id;
+
+        // get relationship remote path
+        $remote_path = $object->getRelationshipRemotePath($relationshipName);
+
+        try {
+            $data = $this->call('GET', $remote_path);
+            return $object->buildRelationship($relationshipName, $data);
+        }  catch (TransferException $e) {
+            $this->handleGuzzleException($e, ['class' => $className, 'id' => $id, 'relationship' => $relationshipName]);
+        }
+    }
+
+    /**
+     * Transfer money from a wallet to another.
+     *
+     * @param $fromWalletId
+     * @param $toWalletId
+     * @param $amount
+     * @param $currencyCode
+     * @param $internalToken
+     * @throws \Exception
+     * @return InternalTransfer
+     */
+    public function performTransfer($fromWalletId, $toWalletId, $amount, $currencyCode, $internalToken)
+    {
+        try {
+            // get token
+            $access_token = $this->getAccessToken();
+
+            $it = new InternalTransfer();
+            $it->fromWalletId = $fromWalletId;
+            $it->toWalletId = $toWalletId;
+            $it->amount = $amount;
+            $it->currency = $currencyCode;
+
+            // get fingerprint and remote path
+            $fingerprint = $it->generateFingerPrint($internalToken);
+            $path = $it->getRemotePath();
+
+            // build guzzle options
+            $options = [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $access_token,
+                    'X-Soldo-Fingerprint' => $fingerprint,
+                ],
+                'form_params' => [
+                    'amount' => $it->amount,
+                    'currencyCode' => $it->currency,
+                ],
+            ];
+
+            // log
+            $this->log(
+                LogLevel::INFO,
+                'Start internal transfer',
+                $it->toArray()
+            );
+
+            // remote call
+            $response = $this->httpClient->request(
+                'POST',
+                self::API_ENTRY_POINT . $path,
+                $options
+            );
+
+            $data = $this->toArray($response->getBody());
+            return $it->fill($data);
+        } catch (TransferException $e) {
+            // log
+            $this->log(
+                LogLevel::ERROR,
+                'Error transferring money [' . $e->getMessage() . ']',
+                [
+                    'fromWalletId' => $fromWalletId,
+                    'toWalletId' => $toWalletId,
+                    'amount' => $amount,
+                    'currencyCode' => $currencyCode,
+                ]
+            );
+
+            throw new SoldoInternalTransferException(
+                'Unable to transferring money (' . $amount . ' ' . $currencyCode . ') from  '
+                . $fromWalletId . ' to '
+                . $toWalletId
             );
         }
     }
