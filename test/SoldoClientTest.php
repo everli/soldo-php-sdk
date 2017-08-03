@@ -211,6 +211,26 @@ class SoldoClientTest extends TestCase
         }
     }
 
+    /**
+     * @expectedException \Soldo\Exceptions\SoldoAuthenticationException
+     */
+    public function testPerformTransferInvalidCredentials()
+    {
+        $sc = $this->getClientWithInvalidCredentials();
+        $access_token = $sc->performTransfer('from-wallet', 'to-wallet', 50, 'EUR', '123456');
+    }
+
+
+    /**
+     * @expectedException \Soldo\Exceptions\SoldoInternalTransferException
+     *
+     * I think this is enough since the real transfer is tested in SoldoTest
+     */
+    public function testPerformTransferInvalidParams()
+    {
+        $access_token = self::$soldoClient->performTransfer('from-wallet', 'to-wallet', 50, 'EUR', '123456');
+    }
+
 
 
 
