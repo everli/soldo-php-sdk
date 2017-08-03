@@ -232,19 +232,18 @@ class SoldoClient
      */
     public function getRelationship($className, $id, $relationshipName)
     {
+        // validate class name
+        $this->validateClassName($className);
+
+        /** @var SoldoResource $object */
+        $object = new $className();
+        $object->id = $id;
+
+        // get relationship remote path
+        $remote_path = $object->getRelationshipRemotePath($relationshipName);
+
         try {
-            // validate class name
-            $this->validateClassName($className);
-
-            /** @var SoldoResource $object */
-            $object = new $className();
-            $object->id = $id;
-
-            // get relationship remote path
-            $remote_path = $object->getRelationshipRemotePath($relationshipName);
-
             $data = $this->call('GET', $remote_path);
-
             return $object->buildRelationship($relationshipName, $data);
         } catch (\Exception $e) {
             $this->handleException($e, ['class' => $className, 'id' => $id, 'relationship' => $relationshipName]);
@@ -262,19 +261,17 @@ class SoldoClient
      */
     public function getCollection($className, Paginator $paginator = null, $queryParameters = [])
     {
+        // validate class name
+        $this->validateClassName($className);
+
+        /** @var SoldoCollection $collection */
+        $collection = new $className();
+
+        // get collection remote path
+        $remote_path = $collection->getRemotePath();
         try {
-            // validate class name
-            $this->validateClassName($className);
-
-            /** @var SoldoCollection $collection */
-            $collection = new $className();
-
-            // get collection remote path
-            $remote_path = $collection->getRemotePath();
-
             // make request and fill collection
             $data = $this->call('GET', $remote_path, $queryParameters, $paginator);
-
             return $collection->fill($data);
         } catch (\Exception $e) {
             $this->handleException($e, ['class' => $className, 'data' => $queryParameters]);
@@ -306,7 +303,6 @@ class SoldoClient
         );
 
         switch ($code) {
-
             case 400:
                 throw new SoldoBadRequestException(
                     'Your request is invalid'
@@ -366,7 +362,6 @@ class SoldoClient
         try {
             // fetch data and fill object
             $data = $this->call('GET', $remote_path, $queryParameters);
-
             return $object->fill($data);
         } catch (\Exception $e) {
             $this->handleException($e, ['className' => $className, 'id' => $id, 'data' => $queryParameters]);
@@ -405,7 +400,6 @@ class SoldoClient
         try {
             // fetch data and update object
             $updated_data = $this->call('POST', $remote_path, $update_data);
-
             return $object->fill($updated_data);
         } catch (\Exception $e) {
             $this->handleException($e, ['class' => $className, 'id' => $id, 'data' => $data]);
@@ -464,10 +458,8 @@ class SoldoClient
             );
 
             $data = $this->toArray($response->getBody());
-
             return $it->fill($data);
         } catch (\Exception $e) {
-
             // log
             $this->log(
                 LogLevel::ERROR,
@@ -536,7 +528,6 @@ class SoldoClient
 
             return $this->toArray($response->getBody());
         } catch (\Exception $e) {
-
             // log
             $this->log(
                 LogLevel::ERROR,
