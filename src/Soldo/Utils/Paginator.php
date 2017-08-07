@@ -65,6 +65,10 @@ class Paginator
         $this->perPage = $perPage > self::MAX_ALLOWED_ITEMS_PER_PAGE ?
             self::MAX_ALLOWED_ITEMS_PER_PAGE :
             $perPage;
+
+        $this->perPage = $this->perPage <= 0 ?
+            1 :
+            $this->perPage;
     }
 
     /**
