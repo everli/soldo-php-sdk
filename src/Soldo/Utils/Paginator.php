@@ -73,7 +73,7 @@ class Paginator
      *
      * @return array
      */
-    public function getQueryParameters()
+    public function toArray()
     {
         return [
             self::PAGE_KEY => $this->page,

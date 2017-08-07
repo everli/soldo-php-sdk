@@ -168,7 +168,7 @@ class SoldoClient
 
         // append pagination params to query
         if ($paginator !== null) {
-            $options['query'] = array_merge($options['query'], $paginator->getQueryParameters());
+            $options['query'] = array_merge($options['query'], $paginator->toArray());
         }
 
         // do different stuff for each method
