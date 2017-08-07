@@ -60,6 +60,9 @@ class OAuthCredentialTest extends TestCase
         $ad = $this->getAuthenticationData();
         $ad['access_token'] = null;
         self::$credential->updateAuthenticationData($ad);
+
+        $ad['access_token'] = '';
+        self::$credential->updateAuthenticationData($ad);
     }
 
     /**
@@ -79,6 +82,9 @@ class OAuthCredentialTest extends TestCase
     {
         $ad = $this->getAuthenticationData();
         $ad['refresh_token'] = null;
+        self::$credential->updateAuthenticationData($ad);
+
+        $ad['refresh_token'] = '';
         self::$credential->updateAuthenticationData($ad);
     }
 
@@ -100,6 +106,9 @@ class OAuthCredentialTest extends TestCase
         $ad = $this->getAuthenticationData();
         $ad['token_type'] = null;
         self::$credential->updateAuthenticationData($ad);
+
+        $ad['token_type'] = '';
+        self::$credential->updateAuthenticationData($ad);
     }
 
     /**
@@ -119,6 +128,9 @@ class OAuthCredentialTest extends TestCase
     {
         $ad = $this->getAuthenticationData();
         $ad['expires_in'] = null;
+        self::$credential->updateAuthenticationData($ad);
+
+        $ad['expires_in'] = '';
         self::$credential->updateAuthenticationData($ad);
     }
 
