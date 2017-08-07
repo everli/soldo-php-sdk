@@ -10,9 +10,6 @@ use Soldo\Utils\Paginator;
  */
 class PaginatorTest extends TestCase
 {
-    /** @var Paginator */
-    private static $paginator;
-    
     /**
      * @expectedException \InvalidArgumentException
      */
