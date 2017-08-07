@@ -1,6 +1,6 @@
 <?php
 
-namespace Soldo\Tests\OAuthCredentialTest;
+namespace Soldo\Tests\Authentication;
 
 use PHPUnit\Framework\TestCase;
 use Soldo\Authentication\OAuthCredential;
