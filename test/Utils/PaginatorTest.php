@@ -46,7 +46,6 @@ class PaginatorTest extends TestCase
         $this->assertEquals($expected, $p->toArray());
     }
 
-
     public function testContructorNegativePerPage()
     {
         $p = new Paginator(10, -1);
