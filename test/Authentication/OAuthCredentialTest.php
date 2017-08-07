@@ -31,11 +31,11 @@ class OAuthCredentialTest extends TestCase
             'access_token' => 'randomaccesstoken',
             'refresh_token' => 'randomrefreshtoken',
             'token_type' => 'bearer',
-            'expires_in' => 7200
+            'expires_in' => 7200,
         ];
+
         return $data;
     }
-
 
     public function testIsTokenExpired()
     {
@@ -166,10 +166,4 @@ class OAuthCredentialTest extends TestCase
         $this->assertInternalType('integer', self::$credential->expires_in);
         $this->assertEquals(7200, self::$credential->expires_in);
     }
-
-
-
-
-
-
 }

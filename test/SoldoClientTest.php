@@ -73,7 +73,6 @@ class SoldoClientTest extends TestCase
         self::$soldoClient->getCollection('INVALID_CLASS_NAME');
     }
 
-
     public function testGetCollection()
     {
         $collection = self::$soldoClient->getCollection(\Soldo\Resources\Employees::class);
@@ -146,7 +145,7 @@ class SoldoClientTest extends TestCase
      */
     public function testUpdateItemEmptyData()
     {
-        $item = self::$soldoClient->updateItem(\Soldo\Resources\Employee::class,  self::$itemId, []);
+        $item = self::$soldoClient->updateItem(\Soldo\Resources\Employee::class, self::$itemId, []);
     }
 
     /**
@@ -154,7 +153,7 @@ class SoldoClientTest extends TestCase
      */
     public function testUpdateItemNotWhitelisted()
     {
-        $item = self::$soldoClient->updateItem(\Soldo\Resources\Employee::class,  self::$itemId, ['random_key' => 'Random Value']);
+        $item = self::$soldoClient->updateItem(\Soldo\Resources\Employee::class, self::$itemId, ['random_key' => 'Random Value']);
     }
 
     public function testUpdateItem()
@@ -164,7 +163,6 @@ class SoldoClientTest extends TestCase
         $this->assertEquals(self::$itemId, $item->id);
         $this->assertEquals('A Department', $item->department);
     }
-
 
     /**
      * @expectedException \Soldo\Exceptions\SoldoAuthenticationException
@@ -199,7 +197,6 @@ class SoldoClientTest extends TestCase
         $relationship = self::$soldoClient->getRelationship(\Soldo\Resources\Card::class, 'fake-id', 'rules');
     }
 
-
     public function testGetRelationship()
     {
         $cards = self::$soldoClient->getCollection(\Soldo\Resources\Cards::class);
@@ -221,7 +218,6 @@ class SoldoClientTest extends TestCase
         $access_token = $sc->performTransfer('from-wallet', 'to-wallet', 50, 'EUR', '123456');
     }
 
-
     /**
      * @expectedException \Soldo\Exceptions\SoldoInternalTransferException
      *
@@ -231,9 +227,4 @@ class SoldoClientTest extends TestCase
     {
         $access_token = self::$soldoClient->performTransfer('from-wallet', 'to-wallet', 50, 'EUR', '123456');
     }
-
-
-
-
-
 }

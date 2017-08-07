@@ -367,6 +367,7 @@ class SoldoClient
         try {
             // make request and fill collection
             $data = $this->call('GET', $remote_path, $queryParameters, $paginator);
+
             return $collection->fill($data);
         } catch (TransferException $e) {
             $this->handleGuzzleException($e, ['class' => $className, 'data' => $queryParameters]);
@@ -396,6 +397,7 @@ class SoldoClient
         try {
             // fetch data and fill object
             $data = $this->call('GET', $remote_path, $queryParameters);
+
             return $object->fill($data);
         } catch (TransferException $e) {
             $this->handleGuzzleException($e, ['className' => $className, 'id' => $id, 'data' => $queryParameters]);
@@ -434,6 +436,7 @@ class SoldoClient
         try {
             // fetch data and update object
             $updated_data = $this->call('POST', $remote_path, $update_data);
+
             return $object->fill($updated_data);
         } catch (TransferException $e) {
             $this->handleGuzzleException($e, ['class' => $className, 'id' => $id, 'data' => $data]);
@@ -462,8 +465,9 @@ class SoldoClient
 
         try {
             $data = $this->call('GET', $remote_path);
+
             return $object->buildRelationship($relationshipName, $data);
-        }  catch (TransferException $e) {
+        } catch (TransferException $e) {
             $this->handleGuzzleException($e, ['class' => $className, 'id' => $id, 'relationship' => $relationshipName]);
         }
     }
@@ -522,6 +526,7 @@ class SoldoClient
             );
 
             $data = $this->toArray($response->getBody());
+
             return $it->fill($data);
         } catch (TransferException $e) {
             // log

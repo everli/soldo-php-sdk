@@ -79,7 +79,6 @@ class SoldoResource
         }
     }
 
-
     /**
      * @param array $data
      * @return $this
