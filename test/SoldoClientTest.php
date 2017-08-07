@@ -1,9 +1,10 @@
 <?php
 
+namespace Soldo\Tests;
+
 use PHPUnit\Framework\TestCase;
 use Soldo\Authentication\OAuthCredential;
 use Soldo\SoldoClient;
-use Soldo\Tests\SoldoTestCredentials;
 
 /**
  * Class SoldoClientTest
