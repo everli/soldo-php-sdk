@@ -134,7 +134,7 @@ abstract class SoldoResource
      */
     public function getRemotePath()
     {
-        return $this->basePath . '/' . $this->id;
+        return $this->basePath . '/' . urlencode($this->id);
     }
 
     /**
