@@ -10,6 +10,6 @@ namespace Soldo\Resources;
  * @property bool enabled
  * @property float amount
  */
-final class Rule extends SoldoResource
+class Rule extends SoldoResource
 {
 }

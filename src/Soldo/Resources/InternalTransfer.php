@@ -14,7 +14,7 @@ namespace Soldo\Resources;
  * @property Wallet from_wallet
  * @property Wallet to_wallet
  */
-final class InternalTransfer extends SoldoResource
+class InternalTransfer extends SoldoResource
 {
     /**
      * @var string

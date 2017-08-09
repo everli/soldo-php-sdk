@@ -6,7 +6,7 @@ namespace Soldo\Resources;
  * Class Cards
  * @package Soldo\Resources
  */
-final class Cards extends SoldoCollection
+class Cards extends SoldoCollection
 {
     /**
      * @var string

@@ -21,7 +21,7 @@ namespace Soldo\Resources;
  * @property string custom_reference_id
  * @property bool active
  */
-final class Card extends SoldoResource
+class Card extends SoldoResource
 {
 
     /**

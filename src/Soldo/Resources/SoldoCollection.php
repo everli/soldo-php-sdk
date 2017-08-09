@@ -6,7 +6,12 @@ use Psr\Log\InvalidArgumentException;
 use Respect\Validation\Validator;
 use Soldo\Exceptions\SoldoInvalidCollectionException;
 
-class SoldoCollection
+
+/**
+ * Class SoldoCollection
+ * @package Soldo\Resources
+ */
+abstract class SoldoCollection
 {
     /**
      * @var int

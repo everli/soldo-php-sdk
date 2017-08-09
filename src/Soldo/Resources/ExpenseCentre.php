@@ -13,7 +13,7 @@ namespace Soldo\Resources;
  * @property string status
  * @property boolean visible
  */
-final class ExpenseCentre extends SoldoResource
+class ExpenseCentre extends SoldoResource
 {
 
     /**

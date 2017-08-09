@@ -6,7 +6,7 @@ namespace Soldo\Resources;
  * Class ExpenseCentres
  * @package Soldo\Resources
  */
-final class ExpenseCentres extends SoldoCollection
+class ExpenseCentres extends SoldoCollection
 {
     /**
      * @var string

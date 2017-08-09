@@ -10,7 +10,7 @@ use Soldo\Exceptions\SoldoCastException;
  * Class SoldoResource
  * @package Soldo\Resources
  */
-class SoldoResource
+abstract class SoldoResource
 {
 
     /**

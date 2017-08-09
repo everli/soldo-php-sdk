@@ -10,7 +10,7 @@ namespace Soldo\Resources;
  * @property string vat_number
  * @property string company_account_id
  */
-final class Company extends SoldoResource
+class Company extends SoldoResource
 {
 
     /**
