@@ -17,7 +17,7 @@ class SoldoResourceTest extends TestCase
 
     public static function setUpBeforeClass()
     {
-        $r = new MockResource(['an_attribute' => 'a_value']);
+        $r = new MockResource(['foo' => 'bar']);
         self::$resource = $r;
     }
 
@@ -27,29 +27,168 @@ class SoldoResourceTest extends TestCase
         /** @var SoldoResource $resource */
         $resource = new MockResource([]);
 
-        $this->assertNull($resource->an_attribute);
+        $this->assertNull($resource->foo);
         $resource->fill([
-            'an_attribute' => 'a_value'
+            'foo' => 'bar',
+            'castable_attribute' => [
+                'foo' => 'bar',
+                'john' => 'doe',
+            ]
         ]);
 
-        $this->assertNotNull($resource->an_attribute);
-        $this->assertEquals('a_value', $resource->an_attribute);
+        $this->assertNotNull($resource->foo);
+        $this->assertEquals('bar', $resource->foo);
+
+        $this->assertNotNull($resource->castable_attribute);
+        $this->assertInternalType('array', $resource->castable_attribute);
+        $this->assertEquals([
+            'foo' => 'bar',
+            'john' => 'doe',
+        ], $resource->castable_attribute);
     }
 
-    public function testToArray()
+    /**
+     * @expectedException \Soldo\Exceptions\SoldoCastException
+     * @expectedExceptionMessage Could not cast castable_attribute. NotExistentClassName doesn't exist
+     */
+    public function testFillCastableInvalidClassName()
     {
+        /** @var SoldoResource $resource */
         $resource = new MockResource([]);
-        $this->assertEmpty($resource->toArray());
-
-        $resource->fill(
-            ['an_attribute' => 'a_value']
+        $resource->setCast(
+            ['castable_attribute' => 'NotExistentClassName']
         );
 
+        $resource->fill([
+            'castable_attribute' => [
+                'foo' => 'bar',
+                'john' => 'doe',
+            ]
+        ]);
+    }
+
+    /**
+     * @expectedException \Soldo\Exceptions\SoldoCastException
+     * @expectedExceptionMessage Could not cast castable_attribute. stdClass is not a SoldoResource child
+     */
+    public function testFillCastableNotChildOfSoldoResource()
+    {
+        /** @var SoldoResource $resource */
+        $resource = new MockResource([]);
+        $resource->setCast(
+            ['castable_attribute' => \stdClass::class]
+        );
+
+        $resource->fill([
+            'castable_attribute' => [
+                'foo' => 'bar',
+                'john' => 'doe',
+            ]
+        ]);
+    }
+
+    /**
+     * @expectedException \Soldo\Exceptions\SoldoCastException
+     * @expectedExceptionMessage Could not cast castable_attribute. $data is not a valid data set
+     */
+    public function testFillCastableNotValidDataset()
+    {
+        /** @var SoldoResource $resource */
+        $resource = new MockResource([]);
+        $resource->setCast(
+            ['castable_attribute' => MockResource::class]
+        );
+
+        $resource->fill(
+            ['castable_attribute' => 'not_an_array']
+        );
+    }
+
+    public function testFillWithCastableAttribute()
+    {
+        /** @var SoldoResource $resource */
+        $resource = new MockResource([]);
+        $resource->setCast(
+            ['castable_attribute' => MockResource::class]
+        );
+
+        $resource->fill([
+            'foo' => 'bar',
+            'castable_attribute' => [
+                'foo' => 'bar',
+                'john' => 'doe',
+            ]
+        ]);
+
+        $this->assertInstanceOf(MockResource::class, $resource->castable_attribute);
+        $this->assertEquals('bar', $resource->castable_attribute->foo);
+        $this->assertEquals('doe', $resource->castable_attribute->john);
+    }
+
+    public function testToArrayEmptyData()
+    {
+        $resource = new MockResource([]);
+        $this->assertInternalType('array', $resource->toArray());
+        $this->assertEmpty($resource->toArray());
+    }
+
+    public function testToArrayLinearData()
+    {
+        $data = ['foo' => 'bar'];
+        $resource = new MockResource($data);
         $this->assertEquals(
-            ['an_attribute' => 'a_value'],
+            $data,
             $resource->toArray()
         );
     }
+
+    public function testToArrayMultidimensionalArray()
+    {
+        $data = [
+            'foo' => 'bar',
+            'lorem_ipsum' => [
+                'foo' => 'bar',
+                'john' => 'doe',
+            ]
+        ];
+        $resource = new MockResource($data);
+        $this->assertEquals(
+            $data,
+            $resource->toArray()
+        );
+    }
+
+    public function testToArrayWithCastedAttributes()
+    {
+        $data = [
+            'foo' => 'bar',
+            'lorem_ipsum' => [
+                'foo' => 'bar',
+                'john' => 'doe',
+            ]
+        ];
+        $resource = new MockResource();
+        $resource->setCast(
+            [ 'lorem_ipsum' => MockResource::class ]
+        );
+        $resource->fill($data);
+
+        // no real need for testing this, it's just to be sure
+        $this->assertInstanceOf(MockResource::class, $resource->lorem_ipsum);
+        $this->assertNotNull($resource->foo);
+
+        $this->assertEquals(
+            [
+                'foo' => 'bar',
+                'lorem_ipsum' => [
+                    'foo' => 'bar',
+                    'john' => 'doe',
+                ]
+            ],
+            $resource->toArray()
+        );
+    }
+
 
     public function testGetRemotePath()
     {
