@@ -55,8 +55,6 @@ abstract class SoldoCollection
 
     /**
      * SoldoCollection constructor.
-     * @param $data
-     * @param $className
      */
     public function __construct()
     {
@@ -102,7 +100,6 @@ abstract class SoldoCollection
 
     /**
      * @param $items
-     * @param $className
      */
     private function build($items)
     {
@@ -113,8 +110,7 @@ abstract class SoldoCollection
     }
 
     /**
-     * @param $className
-     * @return bool
+     * @return boolean
      */
     private function validateItemType()
     {
