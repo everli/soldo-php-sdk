@@ -59,6 +59,7 @@ abstract class SoldoResource
      * @param $className
      * @param $attributeName
      * @param $data
+     * @return boolean
      * @throws SoldoCastException
      */
     private function validateResource($className, $attributeName, $data)
@@ -85,6 +86,8 @@ abstract class SoldoResource
                 . '$data is not a valid data set'
             );
         }
+
+        return true;
 
     }
 
@@ -181,6 +184,7 @@ abstract class SoldoResource
     /**
      * @param string $relationshipName
      * @param array $data
+     * @return boolean
      * @throws SoldoInvalidRelationshipException
      */
     private function validateRelationshipRawData($relationshipName, $data)
@@ -201,6 +205,8 @@ abstract class SoldoResource
                 );
             }
         }
+
+        return true;
     }
 
     /**
@@ -228,6 +234,7 @@ abstract class SoldoResource
      * and the value of the key must be a valid resource name
      *
      * @param $relationshipName
+     * @return boolean
      */
     private function validateRelationship($relationshipName)
     {
@@ -245,6 +252,8 @@ abstract class SoldoResource
                 . $className . ' doesn\'t exist'
             );
         }
+
+        return true;
     }
 
     /**
