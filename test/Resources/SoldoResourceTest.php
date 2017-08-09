@@ -300,6 +300,57 @@ class SoldoResourceTest extends TestCase
         }
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage There is no relationship mapped with "resources" name
+     */
+    public function testGetRelationshipRemotePathNotMappedRelationship()
+    {
+        $resource = new MockResource();
+        $resource->setRelationships([]);
+        $remotePath = $resource->getRelationshipRemotePath('resources');
+    }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Invalid resource class name InvalidClassName doesn't exist
+     */
+    public function testGetRelationshipRemotePathInvalidClassName()
+    {
+        $resource = new MockResource();
+        $resource->setRelationships(['resources' => 'InvalidClassName']);
+        $remotePath = $resource->getRelationshipRemotePath('resources');
+    }
+
+    public function testGetRelationshipRemotePath()
+    {
+        $resource = new MockResource(['id' => 1]);
+        $resource->setBasePath('/resource');
+        $resource->setRelationships(['resources' => MockResource::class]);
+        $remotePath = $resource->getRelationshipRemotePath('resources');
+
+        $this->assertEquals('/resource/1/resources', $remotePath);
+    }
+
+    public function testFilterWhiteList()
+    {
+        $resource = new MockResource();
+
+        $data = ['foo' => 'bar', 'john' => 'doe', 'lorem' => 'ipsum'];
+        $whitelistedData = $resource->filterWhiteList($data);
+        $this->assertEquals([], $whitelistedData);
+
+        $resource->setWhitelisted(['mos']);
+        $whitelistedData = $resource->filterWhiteList($data);
+        $this->assertEquals([], $whitelistedData);
+
+        $resource->setWhitelisted(['foo']);
+        $whitelistedData = $resource->filterWhiteList($data);
+        $this->assertEquals(['foo' => 'bar'], $whitelistedData);
+
+        $resource->setWhitelisted(['foo', 'john']);
+        $whitelistedData = $resource->filterWhiteList($data);
+        $this->assertEquals(['foo' => 'bar', 'john' => 'doe'], $whitelistedData);
+    }
 
 }
