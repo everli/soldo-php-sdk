@@ -2,7 +2,6 @@
 
 namespace Soldo\Resources;
 
-use Psr\Log\InvalidArgumentException;
 use Respect\Validation\Validator;
 use Soldo\Exceptions\SoldoInvalidCollectionException;
 
@@ -51,14 +50,29 @@ abstract class SoldoCollection
     /**
      * @var string
      */
-    protected $itemType = SoldoResource::class;
+    protected $itemType;
 
     /**
      * SoldoCollection constructor.
      */
     public function __construct()
     {
-        $this->validateItemType();
+    }
+
+    /**
+     * @param $path
+     */
+    protected function setPath($path)
+    {
+        $this->path = $path;
+    }
+
+    /**
+     * @param $itemType
+     */
+    protected function setItemType($itemType)
+    {
+        $this->itemType = $itemType;
     }
 
     /**
@@ -69,6 +83,7 @@ abstract class SoldoCollection
      */
     public function fill($data)
     {
+        $this->validateItemType($this->itemType);
         $this->validateRawData($data);
 
         $this->pages = $data['pages'];
@@ -110,14 +125,22 @@ abstract class SoldoCollection
     }
 
     /**
-     * @return boolean
+     * @param $itemType
+     * @return bool
      */
-    private function validateItemType()
+    private function validateItemType($itemType)
     {
-        if (class_exists($this->itemType) === false) {
-            throw new InvalidArgumentException(
+        if($itemType === null) {
+            throw new \InvalidArgumentException(
+                'Could not generate a Soldo collection. '
+                . '$itemType must be a valid SoldoResource child class name'
+            );
+        }
+
+        if (class_exists($itemType) === false) {
+            throw new \InvalidArgumentException(
                 'Could not generate a Soldo collection '
-                . $this->itemType . 'doesn\'t exist'
+                . $this->itemType . ' doesn\'t exist'
             );
         }
 
