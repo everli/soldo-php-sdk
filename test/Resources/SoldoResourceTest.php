@@ -3,6 +3,7 @@
 namespace Soldo\Tests\Resources;
 
 use PHPUnit\Framework\TestCase;
+use Soldo\Exceptions\SoldoInvalidRelationshipException;
 use Soldo\Resources\SoldoResource;
 use Soldo\Tests\Fixtures\MockResource;
 
@@ -25,7 +26,7 @@ class SoldoResourceTest extends TestCase
     public function testFill()
     {
         /** @var SoldoResource $resource */
-        $resource = new MockResource([]);
+        $resource = new MockResource();
 
         $this->assertNull($resource->foo);
         $resource->fill([
@@ -54,7 +55,7 @@ class SoldoResourceTest extends TestCase
     public function testFillCastableInvalidClassName()
     {
         /** @var SoldoResource $resource */
-        $resource = new MockResource([]);
+        $resource = new MockResource();
         $resource->setCast(
             ['castable_attribute' => 'NotExistentClassName']
         );
@@ -74,7 +75,7 @@ class SoldoResourceTest extends TestCase
     public function testFillCastableNotChildOfSoldoResource()
     {
         /** @var SoldoResource $resource */
-        $resource = new MockResource([]);
+        $resource = new MockResource();
         $resource->setCast(
             ['castable_attribute' => \stdClass::class]
         );
@@ -94,7 +95,7 @@ class SoldoResourceTest extends TestCase
     public function testFillCastableNotValidDataset()
     {
         /** @var SoldoResource $resource */
-        $resource = new MockResource([]);
+        $resource = new MockResource();
         $resource->setCast(
             ['castable_attribute' => MockResource::class]
         );
@@ -127,7 +128,7 @@ class SoldoResourceTest extends TestCase
 
     public function testToArrayEmptyData()
     {
-        $resource = new MockResource([]);
+        $resource = new MockResource();
         $this->assertInternalType('array', $resource->toArray());
         $this->assertEmpty($resource->toArray());
     }
@@ -192,7 +193,7 @@ class SoldoResourceTest extends TestCase
 
     public function testGetRemotePath()
     {
-        $resource = new MockResource([]);
+        $resource = new MockResource();
         $this->assertEquals('/', $resource->getRemotePath());
 
         $resource->id = null;
@@ -207,7 +208,7 @@ class SoldoResourceTest extends TestCase
         $resource->id = 'a string with spaces';
         $this->assertEquals('/a+string+with+spaces', $resource->getRemotePath());
 
-        $resource = new MockResource([]);
+        $resource = new MockResource();
         $resource->setBasePath('/paths');
         $this->assertEquals('/paths/', $resource->getRemotePath());
 
@@ -228,12 +229,75 @@ class SoldoResourceTest extends TestCase
 
     /**
      * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage There is no relationship mapped with \Soldo\Resources\Card name
+     * @expectedExceptionMessage There is no relationship mapped with "resources" name
      */
     public function testBuildRelationshipNotMappedRelationship()
     {
-        $resource = new MockResource([]);
-        $resource->buildRelationship('\Soldo\Resources\Card', []);
+        $resource = new MockResource();
+        $resources = $resource->buildRelationship('resources', []);
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Invalid resource class name InvalidClassName doesn't exist
+     */
+    public function testBuildRelationshipWithInvalidClassName()
+    {
+        /** @var MockResource $resource */
+        $resource = new MockResource();
+        $resource->setRelationships(['resources' => 'InvalidClassName']);
+        $resources = $resource->buildRelationship('resources', []);
+    }
+
+    /**
+     * @expectedException \Soldo\Exceptions\SoldoInvalidRelationshipException
+     */
+    public function testBuildRelationshipRawDataNotAnArray()
+    {
+        /** @var MockResource $resource */
+        $resource = new MockResource();
+        $resource->setRelationships(['resources' => MockResource::class]);
+        $resources = $resource->buildRelationship('resources', 'not-an-array');
+
+    }
+
+    /**
+     * @expectedException \Soldo\Exceptions\SoldoInvalidRelationshipException
+     */
+    public function testBuildRelationshipEmptyRowData()
+    {
+        /** @var MockResource $resource */
+        $resource = new MockResource();
+        $resource->setRelationships(['resources' => MockResource::class]);
+        $resources = $resource->buildRelationship('resources', []);
+
+    }
+
+    /**
+     * @expectedException \Soldo\Exceptions\SoldoInvalidRelationshipException
+     */
+    public function testBuildRelationshipNotAnArrayOfArray()
+    {
+        $resource = new MockResource();
+        $resource->setRelationships(['resources' => MockResource::class]);
+        $resources = $resource->buildRelationship('resources', ['resources' => ['foo' => 'bar']]);
+
+    }
+
+    public function testBuildRelationship()
+    {
+        $resource = new MockResource();
+        $resource->setRelationships(['resources' => MockResource::class]);
+        $resources = $resource->buildRelationship('resources', ['resources' => [
+            ['foo' => 'bar'],
+            ['lorem' => 'ipsum'],
+        ]]);
+
+        $this->assertCount(2, $resources);
+        foreach ($resources as $r) {
+            /** @var MockResource $r */
+            $this->assertInstanceOf(MockResource::class, $r);
+        }
     }
 
 

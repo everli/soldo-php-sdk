@@ -192,6 +192,15 @@ abstract class SoldoResource
                 . 'with the array provided'
             );
         }
+
+        foreach ($data[$relationshipName] as $singleRelationship) {
+            if(is_array($singleRelationship) === false) {
+                throw new SoldoInvalidRelationshipException(
+                    'Could not build ' . $relationshipName . ' relationship '
+                    . 'with the array provided'
+                );
+            }
+        }
     }
 
     /**
@@ -224,8 +233,8 @@ abstract class SoldoResource
     {
         if (!array_key_exists($relationshipName, $this->relationships)) {
             throw new \InvalidArgumentException(
-                'There is no relationship mapped with '
-                . $relationshipName . ' name'
+                'There is no relationship mapped with "'
+                . $relationshipName . '" name'
             );
         }
 
