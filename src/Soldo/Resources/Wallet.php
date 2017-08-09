@@ -16,7 +16,7 @@ namespace Soldo\Resources;
  * @property string custom_reference_id
  * @property boolean visible
  */
-final class Wallet extends SoldoResource
+class Wallet extends SoldoResource
 {
 
     /**
