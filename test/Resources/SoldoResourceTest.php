@@ -13,15 +13,6 @@ use Soldo\Tests\Fixtures\MockResource;
  */
 class SoldoResourceTest extends TestCase
 {
-    /** @var MockResource */
-    private static $resource;
-
-    public static function setUpBeforeClass()
-    {
-        $r = new MockResource(['foo' => 'bar']);
-        self::$resource = $r;
-    }
-
 
     public function testFill()
     {
