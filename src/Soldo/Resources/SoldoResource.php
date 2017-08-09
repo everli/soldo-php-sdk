@@ -58,25 +58,34 @@ abstract class SoldoResource
      *
      * @param $className
      * @param $attributeName
+     * @param $data
      * @throws SoldoCastException
      */
-    private function validateResource($className, $attributeName)
+    private function validateResource($className, $attributeName, $data)
     {
         if (class_exists($className) === false) {
             throw new SoldoCastException(
-                'Could not cast ' . $attributeName . '.'
+                'Could not cast ' . $attributeName . '. '
                 . $className . ' doesn\'t exist'
             );
         }
 
-        // create a dummy object and check if it is a SoldoResource
+        // create a dummy object and check if it is a SoldoResource child
         $dummy = new $className();
         if (is_a($dummy, '\Soldo\Resources\SoldoResource') === false) {
             throw new SoldoCastException(
-                'Could not cast ' . $attributeName . '.'
+                'Could not cast ' . $attributeName . '. '
                 . $className . ' is not a SoldoResource child'
             );
         }
+
+        if(is_array($data) === false || empty($data)) {
+            throw new SoldoCastException(
+                'Could not cast ' . $attributeName . '. '
+                . '$data is not a valid data set'
+            );
+        }
+
     }
 
     /**
@@ -88,7 +97,7 @@ abstract class SoldoResource
         foreach ($data as $key => $value) {
             if (array_key_exists($key, $this->cast)) {
                 $class = $this->cast[$key];
-                $this->validateResource($class, $key);
+                $this->validateResource($class, $key, $value);
                 $this->{$key} = new $class($value);
                 continue;
             }
@@ -126,7 +135,18 @@ abstract class SoldoResource
      */
     public function toArray()
     {
-        return $this->_attributes;
+        $attributes = [];
+        foreach ($this->_attributes as $key => $value)
+        {
+            /** @var SoldoResource $value */
+            if (array_key_exists($key, $this->cast)) {
+                $attributes[$key] = $value->toArray();
+                continue;
+            }
+
+            $attributes[$key] = $value;
+        }
+        return $attributes;
     }
 
     /**
