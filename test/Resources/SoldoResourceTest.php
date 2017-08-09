@@ -276,7 +276,7 @@ class SoldoResourceTest extends TestCase
     /**
      * @expectedException \Soldo\Exceptions\SoldoInvalidRelationshipException
      */
-    public function testBuildRelationshipNotAnArrayOfArray()
+    public function testBuildRelationshipNotAMultidimensionalArray()
     {
         $resource = new MockResource();
         $resource->setRelationships(['resources' => MockResource::class]);
