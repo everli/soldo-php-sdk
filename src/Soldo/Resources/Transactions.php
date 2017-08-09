@@ -6,7 +6,7 @@ namespace Soldo\Resources;
  * Class Transactions
  * @package Soldo\Resources
  */
-final class Transactions extends SoldoCollection
+class Transactions extends SoldoCollection
 {
     /**
      * @var string
