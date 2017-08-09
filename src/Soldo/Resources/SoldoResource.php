@@ -217,4 +217,36 @@ abstract class SoldoResource
             );
         }
     }
+
+    /**
+     * @param array $cast
+     */
+    protected function setCast($cast)
+    {
+        $this->cast = $cast;
+    }
+
+    /**
+     * @param $whiteListed
+     */
+    protected function setWhitelisted($whiteListed)
+    {
+        $this->whiteListed = $whiteListed;
+    }
+
+    /**
+     * @param $relationships
+     */
+    protected function setRelationships($relationships)
+    {
+        $this->relationships = $relationships;
+    }
+
+    /**
+     * @param $basePath
+     */
+    protected function setBasePath($basePath)
+    {
+        $this->basePath = $basePath;
+    }
 }
