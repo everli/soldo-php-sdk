@@ -134,7 +134,6 @@ class TransactionTest extends TestCase
         $resource->buildRelationship('invalid-resource-name', []);
     }
 
-
     /**
      * @expectedException \InvalidArgumentException
      */
@@ -143,7 +142,6 @@ class TransactionTest extends TestCase
         $resource = new Transaction();
         $remotePath = $resource->getRelationshipRemotePath('resources');
     }
-
 
     public function testFilterWhiteList()
     {

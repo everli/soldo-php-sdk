@@ -93,7 +93,6 @@ class EmployeeTest extends TestCase
         $resource->buildRelationship('invalid-resource-name', []);
     }
 
-
     /**
      * @expectedException \InvalidArgumentException
      */
@@ -102,7 +101,6 @@ class EmployeeTest extends TestCase
         $resource = new Employee();
         $remotePath = $resource->getRelationshipRemotePath('resources');
     }
-
 
     public function testFilterWhiteList()
     {

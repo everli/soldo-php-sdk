@@ -91,7 +91,6 @@ class ExpenseCentreTest extends TestCase
         $resource->buildRelationship('invalid-resource-name', []);
     }
 
-
     /**
      * @expectedException \InvalidArgumentException
      */
@@ -100,7 +99,6 @@ class ExpenseCentreTest extends TestCase
         $resource = new ExpenseCentre();
         $remotePath = $resource->getRelationshipRemotePath('resources');
     }
-
 
     public function testFilterWhiteList()
     {

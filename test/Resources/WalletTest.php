@@ -93,7 +93,6 @@ class WalletTest extends TestCase
         $resource->buildRelationship('invalid-resource-name', []);
     }
 
-
     /**
      * @expectedException \InvalidArgumentException
      */
@@ -102,7 +101,6 @@ class WalletTest extends TestCase
         $resource = new Wallet();
         $remotePath = $resource->getRelationshipRemotePath('resources');
     }
-
 
     public function testFilterWhiteList()
     {

@@ -78,7 +78,6 @@ class RuleTest extends TestCase
         $resource->buildRelationship('invalid-resource-name', []);
     }
 
-
     /**
      * @expectedException \InvalidArgumentException
      */
@@ -87,7 +86,6 @@ class RuleTest extends TestCase
         $resource = new Rule();
         $remotePath = $resource->getRelationshipRemotePath('resources');
     }
-
 
     public function testFilterWhiteList()
     {

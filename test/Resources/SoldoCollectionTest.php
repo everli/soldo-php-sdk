@@ -244,7 +244,5 @@ class SoldoCollectionTest extends TestCase
         $collection = new MockCollection();
         $collection->setPath('/path');
         $this->assertEquals('/path', $collection->getRemotePath());
-
-
     }
 }

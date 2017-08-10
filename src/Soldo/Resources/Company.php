@@ -26,6 +26,7 @@ class Company extends SoldoResource
     public function getRemotePath()
     {
         $this->validateBasePath();
+
         return $this->basePath;
     }
 }

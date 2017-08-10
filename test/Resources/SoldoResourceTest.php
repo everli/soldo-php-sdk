@@ -236,7 +236,6 @@ class SoldoResourceTest extends TestCase
 
         $resource->id = 'a string with spaces';
         $this->assertEquals('/foo/a+string+with+spaces', $resource->getRemotePath());
-
     }
 
     /**

@@ -104,7 +104,7 @@ class InternalTransferTest extends TestCase
         $remote_path = $resource->getRemotePath();
     }
 
-       public function testGetRemotePath()
+    public function testGetRemotePath()
     {
         $resource = new InternalTransfer();
         $resource->fromWalletId = 'from-wallet-id';
@@ -112,7 +112,6 @@ class InternalTransferTest extends TestCase
         $remote_path = $resource->getRemotePath();
         $this->assertEquals('/wallets/internalTransfer/from-wallet-id/to-wallet-id', $remote_path);
     }
-
 
     public function testToArray()
     {
@@ -133,7 +132,6 @@ class InternalTransferTest extends TestCase
         $resource->buildRelationship('invalid-resource-name', []);
     }
 
-
     /**
      * @expectedException \InvalidArgumentException
      */
@@ -142,7 +140,6 @@ class InternalTransferTest extends TestCase
         $resource = new InternalTransfer();
         $remotePath = $resource->getRelationshipRemotePath('resources');
     }
-
 
     public function testFilterWhiteList()
     {
@@ -160,7 +157,6 @@ class InternalTransferTest extends TestCase
         $hash_ref = hash('sha512', '123456');
         $fp = $resource->generateFingerPrint('123456');
         $this->assertEquals($hash_ref, $fp);
-
 
         $hash_ref = hash('sha512', '100123456');
         $resource->amount = 100;
@@ -187,6 +183,5 @@ class InternalTransferTest extends TestCase
         $resource->toWalletId = 'TO-ID';
         $fp = $resource->generateFingerPrint('123456');
         $this->assertEquals($hash_ref, $fp);
-
     }
 }

@@ -76,7 +76,6 @@ class CompanyTest extends TestCase
         $resource->buildRelationship('invalid-resource-name', []);
     }
 
-
     /**
      * @expectedException \InvalidArgumentException
      */
@@ -85,7 +84,6 @@ class CompanyTest extends TestCase
         $resource = new Company();
         $remotePath = $resource->getRelationshipRemotePath('resources');
     }
-
 
     public function testFilterWhiteList()
     {
