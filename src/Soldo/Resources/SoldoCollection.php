@@ -109,14 +109,21 @@ abstract class SoldoCollection
      */
     public function getRemotePath()
     {
-        if ($this->path === null) {
+       if ($this->path === null) {
             throw new \BadMethodCallException(
                 'Cannot retrieve remote path for ' . static::class . '.'
                 . ' "path" attribute is not defined.'
             );
         }
 
-        return urlencode($this->path);
+        if(preg_match('/^\/[\S]*$/', $this->path) === 0) {
+            throw new \BadMethodCallException(
+                'Cannot retrieve remote path for ' . static::class . '.'
+                . ' "path" seems to be not a valid path.'
+            );
+        }
+
+        return $this->path;
     }
 
     /**

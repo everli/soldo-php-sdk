@@ -228,13 +228,23 @@ class SoldoCollectionTest extends TestCase
         $collection->getRemotePath();
     }
 
+    /**
+     * @expectedException \BadMethodCallException
+     * @expectedExceptionMessage Cannot retrieve remote path for Soldo\Tests\Fixtures\MockCollection. "path" seems to be not a valid path.
+     */
+    public function testGetRemotePathInvalidPath()
+    {
+        $collection = new MockCollection();
+        $collection->setPath('/path with spaces');
+        $this->assertEquals('/path+with+spaces', $collection->getRemotePath());
+    }
+
     public function testGetRemotePath()
     {
         $collection = new MockCollection();
-        $collection->setPath('path');
-        $this->assertEquals('path', $collection->getRemotePath());
+        $collection->setPath('/path');
+        $this->assertEquals('/path', $collection->getRemotePath());
 
-        $collection->setPath('path with spaces');
-        $this->assertEquals('path+with+spaces', $collection->getRemotePath());
+
     }
 }

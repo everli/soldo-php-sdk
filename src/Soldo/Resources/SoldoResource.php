@@ -163,6 +163,20 @@ abstract class SoldoResource
             );
         }
 
+        if ($this->basePath === null) {
+            throw new \BadMethodCallException(
+                'Cannot retrieve remote path for ' . static::class . '.'
+                . ' "basePath" attribute is not defined.'
+            );
+        }
+
+        if(preg_match('/^\/[\S]+$/', $this->basePath) === 0) {
+            throw new \BadMethodCallException(
+                'Cannot retrieve remote path for ' . static::class . '.'
+                . ' "basePath" seems to be not a valid path.'
+            );
+        }
+
         return $this->basePath . '/' . urlencode($this->id);
     }
 

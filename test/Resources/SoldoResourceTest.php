@@ -192,29 +192,51 @@ class SoldoResourceTest extends TestCase
         $this->assertEquals('/', $resource->getRemotePath());
     }
 
-    public function testGetRemotePath()
+    /**
+     * @expectedException \BadMethodCallException
+     * @expectedExceptionMessage Cannot retrieve remote path for Soldo\Tests\Fixtures\MockResource. "basePath" attribute is not defined.
+     */
+    public function testGetRemotePathMissingBasePath()
     {
         $resource = new MockResource();
 
         $resource->id = 1;
         $this->assertEquals('/1', $resource->getRemotePath());
+    }
 
-        $resource->id = 'a-string';
-        $this->assertEquals('/a-string', $resource->getRemotePath());
-
-        $resource->id = 'a string with spaces';
-        $this->assertEquals('/a+string+with+spaces', $resource->getRemotePath());
-
+    /**
+     * @expectedException \BadMethodCallException
+     * @expectedExceptionMessage Cannot retrieve remote path for Soldo\Tests\Fixtures\MockResource. "basePath" seems to be not a valid path.
+     */
+    public function testGetRemotePathInvalidBasePath()
+    {
         $resource = new MockResource();
-        $resource->setBasePath('/paths');
         $resource->id = 1;
-        $this->assertEquals('/paths/1', $resource->getRemotePath());
+
+        $resource->setBasePath('/');
+        $this->assertEquals('base', $resource->getRemotePath());
+
+        $resource->setBasePath('foo');
+        $this->assertEquals('base', $resource->getRemotePath());
+
+        $resource->setBasePath('/foo and whitespaces');
+        $this->assertEquals('base', $resource->getRemotePath());
+    }
+
+    public function testGetRemotePath()
+    {
+        $resource = new MockResource();
+        $resource->setBasePath('/foo');
+
+        $resource->id = 1;
+        $this->assertEquals('/foo/1', $resource->getRemotePath());
 
         $resource->id = 'a-string';
-        $this->assertEquals('/paths/a-string', $resource->getRemotePath());
+        $this->assertEquals('/foo/a-string', $resource->getRemotePath());
 
         $resource->id = 'a string with spaces';
-        $this->assertEquals('/paths/a+string+with+spaces', $resource->getRemotePath());
+        $this->assertEquals('/foo/a+string+with+spaces', $resource->getRemotePath());
+
     }
 
     /**
