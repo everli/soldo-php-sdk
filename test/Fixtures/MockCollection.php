@@ -4,13 +4,11 @@ namespace Soldo\Tests\Fixtures;
 
 use Soldo\Resources\SoldoCollection;
 
-
 /**
  * Class MockColleciton
  */
 class MockCollection extends SoldoCollection
 {
-
     protected $itemType = MockResource::class;
 
     /**
@@ -28,5 +26,4 @@ class MockCollection extends SoldoCollection
     {
         parent::setItemType($itemType);
     }
-
 }

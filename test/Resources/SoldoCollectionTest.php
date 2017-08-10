@@ -7,7 +7,6 @@ use Soldo\Exceptions\SoldoInvalidCollectionException;
 use Soldo\Tests\Fixtures\MockCollection;
 use Soldo\Tests\Fixtures\MockResource;
 
-
 /**
  * Class SoldoCollectionTest
  */
@@ -24,7 +23,7 @@ class SoldoCollectionTest extends TestCase
             "page_size" => 25,
             "current_page" => 0,
             "results_size" => 25,
-            "results" => []
+            "results" => [],
         ];
 
         for ($i = 0; $i < 25; $i++) {
@@ -238,7 +237,4 @@ class SoldoCollectionTest extends TestCase
         $collection->setPath('path with spaces');
         $this->assertEquals('path+with+spaces', $collection->getRemotePath());
     }
-
-
-
 }

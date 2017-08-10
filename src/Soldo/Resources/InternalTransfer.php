@@ -36,14 +36,14 @@ class InternalTransfer extends SoldoResource
      */
     public function getRemotePath()
     {
-        if($this->fromWalletId === null) {
+        if ($this->fromWalletId === null) {
             throw new \BadMethodCallException(
                 'Cannot retrieve remote path for ' . static::class . '.'
                 . ' "fromWalletId" attribute is not defined.'
             );
         }
 
-        if($this->toWalletId === null) {
+        if ($this->toWalletId === null) {
             throw new \BadMethodCallException(
                 'Cannot retrieve remote path for ' . static::class . '.'
                 . ' "toWalletId" attribute is not defined.'

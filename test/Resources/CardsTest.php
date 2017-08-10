@@ -8,7 +8,6 @@ use Soldo\Resources\Cards;
 use Soldo\Tests\Fixtures\MockCollection;
 use Soldo\Tests\Fixtures\MockResource;
 
-
 /**
  * Class CardsTest
  */
@@ -88,6 +87,4 @@ class CardsTest extends TestCase
         $collection = new Cards();
         $this->assertEquals('/cards', $collection->getRemotePath());
     }
-
-
 }

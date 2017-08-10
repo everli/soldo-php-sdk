@@ -59,8 +59,8 @@ abstract class SoldoResource
      * @param $className
      * @param $attributeName
      * @param $data
-     * @return boolean
      * @throws SoldoCastException
+     * @return boolean
      */
     private function validateResource($className, $attributeName, $data)
     {
@@ -80,7 +80,7 @@ abstract class SoldoResource
             );
         }
 
-        if(is_array($data) === false || empty($data)) {
+        if (is_array($data) === false || empty($data)) {
             throw new SoldoCastException(
                 'Could not cast ' . $attributeName . '. '
                 . '$data is not a valid data set'
@@ -88,7 +88,6 @@ abstract class SoldoResource
         }
 
         return true;
-
     }
 
     /**
@@ -139,8 +138,7 @@ abstract class SoldoResource
     public function toArray()
     {
         $attributes = [];
-        foreach ($this->_attributes as $key => $value)
-        {
+        foreach ($this->_attributes as $key => $value) {
             /** @var SoldoResource $value */
             if (array_key_exists($key, $this->cast)) {
                 $attributes[$key] = $value->toArray();
@@ -149,6 +147,7 @@ abstract class SoldoResource
 
             $attributes[$key] = $value;
         }
+
         return $attributes;
     }
 
@@ -157,12 +156,13 @@ abstract class SoldoResource
      */
     public function getRemotePath()
     {
-        if($this->id === null) {
+        if ($this->id === null) {
             throw new \BadMethodCallException(
                 'Cannot retrieve remote path for ' . static::class . '.'
                 . ' "id" attribute is not defined.'
             );
         }
+
         return $this->basePath . '/' . urlencode($this->id);
     }
 
@@ -190,8 +190,8 @@ abstract class SoldoResource
     /**
      * @param string $relationshipName
      * @param array $data
-     * @return boolean
      * @throws SoldoInvalidRelationshipException
+     * @return boolean
      */
     private function validateRelationshipRawData($relationshipName, $data)
     {
@@ -204,7 +204,7 @@ abstract class SoldoResource
         }
 
         foreach ($data[$relationshipName] as $singleRelationship) {
-            if(is_array($singleRelationship) === false) {
+            if (is_array($singleRelationship) === false) {
                 throw new SoldoInvalidRelationshipException(
                     'Could not build ' . $relationshipName . ' relationship '
                     . 'with the array provided'
@@ -222,6 +222,7 @@ abstract class SoldoResource
     public function getRelationshipRemotePath($relationshipName)
     {
         $this->validateRelationship($relationshipName);
+
         return $this->getRemotePath() . '/' . $relationshipName;
     }
 

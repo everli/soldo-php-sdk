@@ -7,13 +7,11 @@ use Soldo\Exceptions\SoldoInvalidRelationshipException;
 use Soldo\Resources\SoldoResource;
 use Soldo\Tests\Fixtures\MockResource;
 
-
 /**
  * Class SoldoResourceTest
  */
 class SoldoResourceTest extends TestCase
 {
-
     public function testFill()
     {
         /** @var SoldoResource $resource */
@@ -25,7 +23,7 @@ class SoldoResourceTest extends TestCase
             'castable_attribute' => [
                 'foo' => 'bar',
                 'john' => 'doe',
-            ]
+            ],
         ]);
 
         $this->assertNotNull($resource->foo);
@@ -55,7 +53,7 @@ class SoldoResourceTest extends TestCase
             'castable_attribute' => [
                 'foo' => 'bar',
                 'john' => 'doe',
-            ]
+            ],
         ]);
     }
 
@@ -75,7 +73,7 @@ class SoldoResourceTest extends TestCase
             'castable_attribute' => [
                 'foo' => 'bar',
                 'john' => 'doe',
-            ]
+            ],
         ]);
     }
 
@@ -109,7 +107,7 @@ class SoldoResourceTest extends TestCase
             'castable_attribute' => [
                 'foo' => 'bar',
                 'john' => 'doe',
-            ]
+            ],
         ]);
 
         $this->assertInstanceOf(MockResource::class, $resource->castable_attribute);
@@ -141,7 +139,7 @@ class SoldoResourceTest extends TestCase
             'lorem_ipsum' => [
                 'foo' => 'bar',
                 'john' => 'doe',
-            ]
+            ],
         ];
         $resource = new MockResource($data);
         $this->assertEquals(
@@ -157,7 +155,7 @@ class SoldoResourceTest extends TestCase
             'lorem_ipsum' => [
                 'foo' => 'bar',
                 'john' => 'doe',
-            ]
+            ],
         ];
         $resource = new MockResource();
         $resource->setCast(
@@ -175,7 +173,7 @@ class SoldoResourceTest extends TestCase
                 'lorem_ipsum' => [
                     'foo' => 'bar',
                     'john' => 'doe',
-                ]
+                ],
             ],
             $resource->toArray()
         );
@@ -193,7 +191,6 @@ class SoldoResourceTest extends TestCase
         $resource->id = null;
         $this->assertEquals('/', $resource->getRemotePath());
     }
-
 
     public function testGetRemotePath()
     {
@@ -218,8 +215,6 @@ class SoldoResourceTest extends TestCase
 
         $resource->id = 'a string with spaces';
         $this->assertEquals('/paths/a+string+with+spaces', $resource->getRemotePath());
-
-
     }
 
     /**
@@ -253,7 +248,6 @@ class SoldoResourceTest extends TestCase
         $resource = new MockResource();
         $resource->setRelationships(['resources' => MockResource::class]);
         $resources = $resource->buildRelationship('resources', 'not-an-array');
-
     }
 
     /**
@@ -265,7 +259,6 @@ class SoldoResourceTest extends TestCase
         $resource = new MockResource();
         $resource->setRelationships(['resources' => MockResource::class]);
         $resources = $resource->buildRelationship('resources', []);
-
     }
 
     /**
@@ -276,7 +269,6 @@ class SoldoResourceTest extends TestCase
         $resource = new MockResource();
         $resource->setRelationships(['resources' => MockResource::class]);
         $resources = $resource->buildRelationship('resources', ['resources' => ['foo' => 'bar']]);
-
     }
 
     public function testBuildRelationship()
@@ -347,5 +339,4 @@ class SoldoResourceTest extends TestCase
         $whitelistedData = $resource->filterWhiteList($data);
         $this->assertEquals(['foo' => 'bar', 'john' => 'doe'], $whitelistedData);
     }
-
 }

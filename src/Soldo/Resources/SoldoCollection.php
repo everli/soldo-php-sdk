@@ -5,7 +5,6 @@ namespace Soldo\Resources;
 use Respect\Validation\Validator;
 use Soldo\Exceptions\SoldoInvalidCollectionException;
 
-
 /**
  * Class SoldoCollection
  * @package Soldo\Resources
@@ -110,12 +109,13 @@ abstract class SoldoCollection
      */
     public function getRemotePath()
     {
-        if($this->path === null) {
+        if ($this->path === null) {
             throw new \BadMethodCallException(
                 'Cannot retrieve remote path for ' . static::class . '.'
                 . ' "path" attribute is not defined.'
             );
         }
+
         return urlencode($this->path);
     }
 
@@ -136,7 +136,7 @@ abstract class SoldoCollection
      */
     private function validateItemType($itemType)
     {
-        if($itemType === null) {
+        if ($itemType === null) {
             throw new \InvalidArgumentException(
                 'Could not generate a Soldo collection. '
                 . '$itemType must be a valid SoldoResource child class name'

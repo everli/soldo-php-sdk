@@ -4,7 +4,6 @@ namespace Soldo\Tests\Fixtures;
 
 use Soldo\Resources\SoldoResource;
 
-
 /**
  * Class MockResource
  */
@@ -42,6 +41,4 @@ class MockResource extends SoldoResource
     {
         parent::setBasePath($basePath);
     }
-
-
 }

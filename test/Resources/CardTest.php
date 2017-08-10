@@ -200,12 +200,5 @@ class CardTest extends TestCase
         $data = ['foo' => 'bar', 'john' => 'doe', 'lorem' => 'ipsum'];
         $whitelistedData = $resource->filterWhiteList($data);
         $this->assertEquals([], $whitelistedData);
-
     }
-
-
-
-
-
-
 }
