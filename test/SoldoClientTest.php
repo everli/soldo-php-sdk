@@ -62,11 +62,11 @@ class SoldoClientTest extends TestCase
     public function testGetCollectionInvalidCredentials()
     {
         $sc = $this->getClientWithInvalidCredentials();
-        $sc->getCollection(\Soldo\Resources\Employee::class);
+        $sc->getCollection(\Soldo\Resources\Employees::class);
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      */
     public function testGetCollectionInvalidClass()
     {
@@ -89,11 +89,11 @@ class SoldoClientTest extends TestCase
     public function testGetItemInvalidCredentials()
     {
         $sc = $this->getClientWithInvalidCredentials();
-        $item = $sc->getItem(\Soldo\Resources\Employee::class);
+        $item = $sc->getItem(\Soldo\Resources\Employees::class);
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      */
     public function testGetItemInvalidClass()
     {
@@ -125,7 +125,7 @@ class SoldoClientTest extends TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      */
     public function testUpdateItemInvalidClass()
     {
@@ -141,7 +141,7 @@ class SoldoClientTest extends TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      */
     public function testUpdateItemEmptyData()
     {
@@ -149,7 +149,7 @@ class SoldoClientTest extends TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      */
     public function testUpdateItemNotWhitelisted()
     {
@@ -174,7 +174,7 @@ class SoldoClientTest extends TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      */
     public function testGetRelationshipInvalidClass()
     {
@@ -182,7 +182,7 @@ class SoldoClientTest extends TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      */
     public function testGetRelationshipInvalidRelationship()
     {
