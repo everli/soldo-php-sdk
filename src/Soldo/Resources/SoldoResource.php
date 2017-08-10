@@ -157,6 +157,12 @@ abstract class SoldoResource
      */
     public function getRemotePath()
     {
+        if($this->id === null) {
+            throw new \BadMethodCallException(
+                'Cannot retrieve remote path for ' . static::class . '.'
+                . ' "id" attribute is not defined.'
+            );
+        }
         return $this->basePath . '/' . urlencode($this->id);
     }
 
@@ -216,7 +222,6 @@ abstract class SoldoResource
     public function getRelationshipRemotePath($relationshipName)
     {
         $this->validateRelationship($relationshipName);
-
         return $this->getRemotePath() . '/' . $relationshipName;
     }
 

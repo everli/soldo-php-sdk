@@ -181,14 +181,23 @@ class SoldoResourceTest extends TestCase
         );
     }
 
-
-    public function testGetRemotePath()
+    /**
+     * @expectedException \BadMethodCallException
+     * @expectedExceptionMessage Cannot retrieve remote path for Soldo\Tests\Fixtures\MockResource. "id" attribute is not defined.
+     */
+    public function testGetRemotePathMissingId()
     {
         $resource = new MockResource();
         $this->assertEquals('/', $resource->getRemotePath());
 
         $resource->id = null;
         $this->assertEquals('/', $resource->getRemotePath());
+    }
+
+
+    public function testGetRemotePath()
+    {
+        $resource = new MockResource();
 
         $resource->id = 1;
         $this->assertEquals('/1', $resource->getRemotePath());
@@ -201,11 +210,6 @@ class SoldoResourceTest extends TestCase
 
         $resource = new MockResource();
         $resource->setBasePath('/paths');
-        $this->assertEquals('/paths/', $resource->getRemotePath());
-
-        $resource->id = null;
-        $this->assertEquals('/paths/', $resource->getRemotePath());
-
         $resource->id = 1;
         $this->assertEquals('/paths/1', $resource->getRemotePath());
 
