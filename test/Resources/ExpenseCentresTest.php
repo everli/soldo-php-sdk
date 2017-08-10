@@ -57,7 +57,7 @@ class ExpenseCentresTest extends TestCase
         $items = $collection->fill($collectionData)->get();
 
         foreach ($items as $key => $item) {
-            /** @var  $item  Employee */
+            /** @var  $item  ExpenseCentre */
             $this->assertInstanceOf(ExpenseCentre::class, $item);
             $this->assertEquals($collectionData['results'][$key], $item->toArray());
         }
