@@ -3,8 +3,6 @@
 namespace Soldo\Tests\Resources;
 
 use PHPUnit\Framework\TestCase;
-use Soldo\Resources\Card;
-use Soldo\Resources\Cards;
 use Soldo\Resources\Employee;
 use Soldo\Resources\Employees;
 
