@@ -5,8 +5,6 @@ namespace Soldo\Tests\Resources;
 use PHPUnit\Framework\TestCase;
 use Soldo\Resources\Card;
 use Soldo\Resources\Cards;
-use Soldo\Tests\Fixtures\MockCollection;
-use Soldo\Tests\Fixtures\MockResource;
 
 /**
  * Class CardsTest

@@ -3,7 +3,6 @@
 namespace Soldo\Tests\Resources;
 
 use PHPUnit\Framework\TestCase;
-use Soldo\Authentication\OAuthCredential;
 use Soldo\Resources\Card;
 use Soldo\Resources\Rule;
 
@@ -106,7 +105,6 @@ class CardTest extends TestCase
 
     /**
      * @expectedException \BadMethodCallException
-     * @expectedExceptionMessage Cannot retrieve remote path for Soldo\Resources\Card. "id" attribute is not defined.
      */
     public function testGetRemotePathMissingId()
     {
@@ -178,7 +176,6 @@ class CardTest extends TestCase
 
     /**
      * @expectedException \BadMethodCallException
-     * @expectedExceptionMessage Cannot retrieve remote path for Soldo\Resources\Card. "id" attribute is not defined.
      */
     public function testGetRelationshipRemotePathMissingId()
     {
