@@ -152,17 +152,10 @@ abstract class SoldoResource
     }
 
     /**
-     * @return string
+     * @throws \BadMethodCallException
      */
-    public function getRemotePath()
+    protected function validateBasePath()
     {
-        if ($this->id === null) {
-            throw new \BadMethodCallException(
-                'Cannot retrieve remote path for ' . static::class . '.'
-                . ' "id" attribute is not defined.'
-            );
-        }
-
         if ($this->basePath === null) {
             throw new \BadMethodCallException(
                 'Cannot retrieve remote path for ' . static::class . '.'
@@ -170,12 +163,34 @@ abstract class SoldoResource
             );
         }
 
-        if(preg_match('/^\/[\S]+$/', $this->basePath) === 0) {
+        if (preg_match('/^\/[\S]+$/', $this->basePath) === 0) {
             throw new \BadMethodCallException(
                 'Cannot retrieve remote path for ' . static::class . '.'
                 . ' "basePath" seems to be not a valid path.'
             );
         }
+    }
+
+    /**
+     * @throws \BadMethodCallException
+     */
+    protected function validateId()
+    {
+        if ($this->id === null) {
+            throw new \BadMethodCallException(
+                'Cannot retrieve remote path for ' . static::class . '.'
+                . ' "id" attribute is not defined.'
+            );
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function getRemotePath()
+    {
+        $this->validateId();
+        $this->validateBasePath();
 
         return $this->basePath . '/' . urlencode($this->id);
     }

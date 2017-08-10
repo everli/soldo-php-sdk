@@ -30,11 +30,9 @@ class InternalTransfer extends SoldoResource
     ];
 
     /**
-     * Override method since this is an exception
-     *
-     * @return string
+     * @throws \BadMethodCallException
      */
-    public function getRemotePath()
+    private function validateWalletsId()
     {
         if ($this->fromWalletId === null) {
             throw new \BadMethodCallException(
@@ -49,8 +47,19 @@ class InternalTransfer extends SoldoResource
                 . ' "toWalletId" attribute is not defined.'
             );
         }
+    }
 
-        return $this->basePath . '/' . $this->fromWalletId . '/' . $this->toWalletId;
+    /**
+     * Override method since this is an exception
+     *
+     * @return string
+     */
+    public function getRemotePath()
+    {
+        $this->validateWalletsId();
+        $this->validateBasePath();
+
+        return $this->basePath . '/' . urlencode($this->fromWalletId) . '/' . urlencode($this->toWalletId);
     }
 
     /**
