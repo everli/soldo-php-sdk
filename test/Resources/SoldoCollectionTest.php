@@ -204,20 +204,39 @@ class SoldoCollectionTest extends TestCase
         $collection->fill($data);
     }
 
-    public function testFill()
+    public function testFillAndGet()
     {
         $data = $this->getCollectionData();
         $collection = new MockCollection();
-        $collection->fill($data);
+        $items = $collection->fill($data)->get();
 
         $itemsArray = [];
-        $items = $collection->get();
         foreach ($items as $item) {
             /** @var $item MockResource */
             $this->assertInstanceOf(MockResource::class, $item);
             $itemsArray[] = $item->toArray();
         }
         $this->assertEquals($data['results'], $itemsArray);
+    }
+
+    /**
+     * @expectedException \BadMethodCallException
+     * @expectedExceptionMessage Cannot retrieve remote path for Soldo\Tests\Fixtures\MockCollection. "path" attribute is not defined.
+     */
+    public function testGetRemotePathMissingPath()
+    {
+        $collection = new MockCollection();
+        $collection->getRemotePath();
+    }
+
+    public function testGetRemotePath()
+    {
+        $collection = new MockCollection();
+        $collection->setPath('path');
+        $this->assertEquals('path', $collection->getRemotePath());
+
+        $collection->setPath('path with spaces');
+        $this->assertEquals('path+with+spaces', $collection->getRemotePath());
     }
 
 
