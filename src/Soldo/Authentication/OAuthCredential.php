@@ -37,8 +37,6 @@ class OAuthCredential extends SoldoResource
      * Return true if token was generated before expires_in seconds
      * Add a buffer just to not risk
      *
-     * TODO: ask Soldo how to generate a new token starting from refresh_token
-     *
      * @return bool
      */
     public function isTokenExpired()
@@ -73,7 +71,6 @@ class OAuthCredential extends SoldoResource
             ->key('token_type', Validator::notEmpty())
             ->key('expires_in', Validator::intVal());
 
-        // TODO: verify exception type and messages
         if ($validator->validate($authData) === false) {
             throw new SoldoAuthenticationException(
                 'Unable to authenticate user. '

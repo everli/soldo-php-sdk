@@ -337,10 +337,6 @@ class SoldoClient
             $this->credential->updateAuthenticationData($auth_data);
         }
 
-        //TODO: handle token expiration
-        if ($this->credential->isTokenExpired()) {
-        }
-
         return $this->credential->access_token;
     }
 
