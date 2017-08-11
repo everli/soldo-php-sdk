@@ -50,14 +50,7 @@ abstract class Collection
      * @var string
      */
     protected $itemType;
-
-    /**
-     * Collection constructor.
-     */
-    public function __construct()
-    {
-    }
-
+    
     /**
      * @param $path
      */
