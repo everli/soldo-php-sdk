@@ -5,6 +5,6 @@
  */
 namespace Soldo\Exceptions;
 
-class SoldoModelNotFoundException extends SoldoSDKException
+class SoldoModelNotFoundException extends SoldoException
 {
 }

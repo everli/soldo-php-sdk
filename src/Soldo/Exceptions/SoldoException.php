@@ -5,9 +5,9 @@ namespace Soldo\Exceptions;
 use \Exception;
 
 /**
- * Class SoldoSDKException
+ * Class SoldoException
  * @package Soldo\Exceptions
  */
-class SoldoSDKException extends Exception
+class SoldoException extends Exception
 {
 }

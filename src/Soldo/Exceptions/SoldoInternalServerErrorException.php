@@ -6,6 +6,6 @@ namespace Soldo\Exceptions;
  * Class SoldoInternalServerErrorException
  * @package Soldo\Exceptions
  */
-class SoldoInternalServerErrorException extends SoldoSDKException
+class SoldoInternalServerErrorException extends SoldoException
 {
 }

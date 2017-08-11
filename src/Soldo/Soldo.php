@@ -4,7 +4,7 @@ namespace Soldo;
 
 use Psr\Log\LoggerInterface;
 use Soldo\Authentication\OAuthCredential;
-use Soldo\Exceptions\SoldoSDKException;
+use Soldo\Exceptions\SoldoException;
 use Soldo\Resources\InternalTransfer;
 use Soldo\Resources\Transaction;
 use Soldo\Resources\Transactions;
@@ -35,7 +35,7 @@ class Soldo
      * Soldo constructor.
      * @param array $config
      * @param LoggerInterface $logger
-     * @throws SoldoSDKException
+     * @throws SoldoException
      */
     public function __construct(array $config = [], LoggerInterface $logger = null)
     {
@@ -47,11 +47,11 @@ class Soldo
         );
 
         if (!array_key_exists('client_id', $config)) {
-            throw new SoldoSDKException('Required "client_id" key is missing in config');
+            throw new SoldoException('Required "client_id" key is missing in config');
         }
 
         if (!array_key_exists('client_secret', $config)) {
-            throw new SoldoSDKException('Required "client_secret" key is missing in config');
+            throw new SoldoException('Required "client_secret" key is missing in config');
         }
 
         $this->client = new SoldoClient(

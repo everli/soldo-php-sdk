@@ -21,7 +21,7 @@ use Soldo\Exceptions\SoldoInternalServerErrorException;
 use Soldo\Exceptions\SoldoInternalTransferException;
 use Soldo\Exceptions\SoldoMethodNotAllowedException;
 use Soldo\Exceptions\SoldoModelNotFoundException;
-use Soldo\Exceptions\SoldoSDKException;
+use Soldo\Exceptions\SoldoException;
 use Soldo\Exceptions\SoldoUnauthorizedException;
 use Soldo\Resources\InternalTransfer;
 use Soldo\Utils\Paginator;
@@ -231,7 +231,7 @@ class SoldoClient
      * @throws SoldoInternalServerErrorException
      * @throws SoldoMethodNotAllowedException
      * @throws SoldoModelNotFoundException
-     * @throws SoldoSDKException
+     * @throws SoldoException
      */
     private function handleGuzzleException(TransferException $e, $data = [])
     {
@@ -277,7 +277,7 @@ class SoldoClient
                 break;
 
             default:
-                throw new SoldoSDKException($message);
+                throw new SoldoException($message);
                 break;
         }
     }

@@ -52,7 +52,7 @@ class SoldoTest extends TestCase
     }
 
     /**
-     * @expectedException \Soldo\Exceptions\SoldoSDKException
+     * @expectedException \Soldo\Exceptions\SoldoException
      * @expectedExceptionMessage Required "client_id" key is missing in config
      */
     public function testConstructorWithoutConfig()
@@ -61,7 +61,7 @@ class SoldoTest extends TestCase
     }
 
     /**
-     * @expectedException \Soldo\Exceptions\SoldoSDKException
+     * @expectedException \Soldo\Exceptions\SoldoException
      * @expectedExceptionMessage Required "client_id" key is missing in config
      */
     public function testConstructorWithoutClientIdParam()
@@ -70,7 +70,7 @@ class SoldoTest extends TestCase
     }
 
     /**
-     * @expectedException \Soldo\Exceptions\SoldoSDKException
+     * @expectedException \Soldo\Exceptions\SoldoException
      * @expectedExceptionMessage Required "client_secret" key is missing in config
      */
     public function testConstructorWithoutClientSecretParam()

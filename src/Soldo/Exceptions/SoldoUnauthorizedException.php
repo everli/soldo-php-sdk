@@ -5,6 +5,6 @@
  */
 namespace Soldo\Exceptions;
 
-class SoldoUnauthorizedException extends SoldoSDKException
+class SoldoUnauthorizedException extends SoldoException
 {
 }

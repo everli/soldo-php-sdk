@@ -5,6 +5,6 @@
  */
 namespace Soldo\Exceptions;
 
-class SoldoMethodNotAllowedException extends SoldoSDKException
+class SoldoMethodNotAllowedException extends SoldoException
 {
 }

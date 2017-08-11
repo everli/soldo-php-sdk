@@ -6,6 +6,6 @@ namespace Soldo\Exceptions;
  * Class SoldoInvalidCollectionException
  * @package Soldo\Exceptions
  */
-class SoldoInvalidCollectionException extends SoldoSDKException
+class SoldoInvalidCollectionException extends SoldoException
 {
 }
