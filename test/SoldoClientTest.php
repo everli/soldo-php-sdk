@@ -4,6 +4,8 @@ namespace Soldo\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Soldo\Authentication\OAuthCredential;
+use Soldo\Resources\Employee;
+use Soldo\Resources\Employees;
 use Soldo\SoldoClient;
 
 /**
@@ -62,7 +64,7 @@ class SoldoClientTest extends TestCase
     public function testGetCollectionInvalidCredentials()
     {
         $sc = $this->getClientWithInvalidCredentials();
-        $sc->getCollection(\Soldo\Resources\Employees::class);
+        $sc->getCollection(Employees::class);
     }
 
     /**
@@ -75,10 +77,10 @@ class SoldoClientTest extends TestCase
 
     public function testGetCollection()
     {
-        $collection = self::$soldoClient->getCollection(\Soldo\Resources\Employees::class);
-        $this->assertInstanceOf(\Soldo\Resources\Employees::class, $collection);
+        $collection = self::$soldoClient->getCollection(Employees::class);
+        $this->assertInstanceOf(Employees::class, $collection);
         foreach ($collection->get() as $item) {
-            $this->assertInstanceOf(\Soldo\Resources\Employee::class, $item);
+            $this->assertInstanceOf(Employee::class, $item);
         }
         self::$itemId = $collection->get()[0]->id;
     }
@@ -89,7 +91,7 @@ class SoldoClientTest extends TestCase
     public function testGetItemInvalidCredentials()
     {
         $sc = $this->getClientWithInvalidCredentials();
-        $item = $sc->getItem(\Soldo\Resources\Employees::class);
+        $item = $sc->getItem(Employees::class);
     }
 
     /**
@@ -105,14 +107,14 @@ class SoldoClientTest extends TestCase
      */
     public function testGetItemNotFound()
     {
-        $item = self::$soldoClient->getItem(\Soldo\Resources\Employee::class, 'NOT_EXISTING_ID');
+        $item = self::$soldoClient->getItem(Employee::class, 'NOT_EXISTING_ID');
     }
 
     public function testGetItem()
     {
-        $item = self::$soldoClient->getItem(\Soldo\Resources\Employee::class, self::$itemId);
+        $item = self::$soldoClient->getItem(Employee::class, self::$itemId);
         $this->assertNotNull($item);
-        $this->assertInstanceOf(\Soldo\Resources\Employee::class, $item);
+        $this->assertInstanceOf(Employee::class, $item);
     }
 
     /**
@@ -121,7 +123,7 @@ class SoldoClientTest extends TestCase
     public function testUpdateItemInvalidCredentials()
     {
         $sc = $this->getClientWithInvalidCredentials();
-        $item = $sc->updateItem(\Soldo\Resources\Employee::class, self::$itemId, ['department' => 'A Depertament']);
+        $item = $sc->updateItem(Employee::class, self::$itemId, ['department' => 'A Depertament']);
     }
 
     /**
@@ -137,7 +139,7 @@ class SoldoClientTest extends TestCase
      */
     public function testUpdateItemNotFound()
     {
-        $item = self::$soldoClient->updateItem(\Soldo\Resources\Employee::class, 'A_NOT_EXISTING_ID', ['department' => 'A Depertament']);
+        $item = self::$soldoClient->updateItem(Employee::class, 'A_NOT_EXISTING_ID', ['department' => 'A Depertament']);
     }
 
     /**
@@ -145,7 +147,7 @@ class SoldoClientTest extends TestCase
      */
     public function testUpdateItemEmptyData()
     {
-        $item = self::$soldoClient->updateItem(\Soldo\Resources\Employee::class, self::$itemId, []);
+        $item = self::$soldoClient->updateItem(Employee::class, self::$itemId, []);
     }
 
     /**
@@ -153,13 +155,14 @@ class SoldoClientTest extends TestCase
      */
     public function testUpdateItemNotWhitelisted()
     {
-        $item = self::$soldoClient->updateItem(\Soldo\Resources\Employee::class, self::$itemId, ['random_key' => 'Random Value']);
+        $item = self::$soldoClient->updateItem(Employee::class, self::$itemId, ['random_key' => 'Random Value']);
     }
 
     public function testUpdateItem()
     {
-        $item = self::$soldoClient->updateItem(\Soldo\Resources\Employee::class, self::$itemId, ['department' => 'A Department']);
-        $this->assertInstanceOf(\Soldo\Resources\Employee::class, $item);
+        /** @var Employee $item */
+        $item = self::$soldoClient->updateItem(Employee::class, self::$itemId, ['department' => 'A Department']);
+        $this->assertInstanceOf(Employee::class, $item);
         $this->assertEquals(self::$itemId, $item->id);
         $this->assertEquals('A Department', $item->department);
     }
