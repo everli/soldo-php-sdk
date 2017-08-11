@@ -17,7 +17,7 @@ use Respect\Validation\Validator;
  * @property string token_type
  * @property int expires_in
  */
-final class OAuthCredential extends SoldoResource
+class OAuthCredential extends SoldoResource
 {
 
     /**
