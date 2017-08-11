@@ -73,6 +73,6 @@ class InternalTransfer extends SoldoResource
         return hash(
             'sha512',
             $this->amount . $this->currency . $this->fromWalletId . $this->toWalletId . $internalToken
-            );
+        );
     }
 }
