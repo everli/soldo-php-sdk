@@ -108,11 +108,11 @@ class SoldoClient
     /**
      * Log stuff if a logger is provided
      *
-     * @param $level
-     * @param $message
-     * @param $context
+     * @param string $level
+     * @param string $message
+     * @param array $context
      */
-    private function log($level, $message, $context)
+    private function log($level, $message, $context = [])
     {
         if ($this->logger !== null) {
             $this->logger->log($level, $message, $context);
@@ -305,8 +305,7 @@ class SoldoClient
             // log
             $this->log(
                 LogLevel::INFO,
-                'Start authorizing user',
-                []
+                'Start authorizing user'
             );
 
             return $this->toArray($response->getBody());
@@ -314,8 +313,7 @@ class SoldoClient
             // log
             $this->log(
                 LogLevel::ERROR,
-                'Error authorizing user [' . $e->getMessage() . ']',
-                []
+                'Error authorizing user [' . $e->getMessage() . ']'
             );
 
             throw new SoldoAuthenticationException(
