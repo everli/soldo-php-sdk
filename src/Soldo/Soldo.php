@@ -80,7 +80,7 @@ class Soldo
     /**
      * Return a single Wallet resource
      *
-     * @param $id
+     * @param string $id
      * @return Wallet
      */
     public function getWallet($id)
