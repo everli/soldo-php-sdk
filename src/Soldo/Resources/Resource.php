@@ -97,18 +97,12 @@ abstract class Resource
     public function fill(array $data)
     {
         foreach ($data as $key => $value) {
-            if (array_key_exists($key, $this->cast)) {
-                $class = $this->cast[$key];
-                $this->validateAttributeCast($class, $key, $value);
-                $this->{$key} = new $class($value);
-                continue;
-            }
-
             $this->{$key} = $value;
         }
 
         return $this;
     }
+
 
     /**
      * @param $name
@@ -116,6 +110,16 @@ abstract class Resource
      */
     public function __set($name, $value)
     {
+        if (array_key_exists($name, $this->cast)) {
+            $class = $this->cast[$name];
+
+            if ($value instanceof $class === false) {
+                $this->validateAttributeCast($class, $name, $value);
+                $this->attributes[$name] = new $class($value);
+                return;
+            }
+        }
+
         $this->attributes[$name] = $value;
     }
 
@@ -144,7 +148,6 @@ abstract class Resource
                 $attributes[$key] = $value->toArray();
                 continue;
             }
-
             $attributes[$key] = $value;
         }
 
