@@ -11,15 +11,12 @@ use Soldo\Authentication\OAuthCredential;
 class OAuthCredentialTest extends TestCase
 {
     /** @var OAuthCredential */
-    private static $credential;
+    private $credential;
 
-    public static function setUpBeforeClass()
+
+    protected function setUp()
     {
-        $credential = new OAuthCredential(
-            'client_id',
-            'client_secret'
-        );
-        self::$credential = $credential;
+        $this->credential = new OAuthCredential('client_id', 'client_secret');
     }
 
     /**
@@ -39,7 +36,7 @@ class OAuthCredentialTest extends TestCase
 
     public function testIsTokenExpired()
     {
-        $this->assertFalse(self::$credential->isTokenExpired());
+        $this->assertFalse($this->credential->isTokenExpired());
     }
 
     /**
@@ -49,7 +46,7 @@ class OAuthCredentialTest extends TestCase
     {
         $ad = $this->getAuthenticationData();
         unset($ad['access_token']);
-        self::$credential->updateAuthenticationData($ad);
+        $this->credential->updateAuthenticationData($ad);
     }
 
     /**
@@ -59,10 +56,10 @@ class OAuthCredentialTest extends TestCase
     {
         $ad = $this->getAuthenticationData();
         $ad['access_token'] = null;
-        self::$credential->updateAuthenticationData($ad);
+        $this->credential->updateAuthenticationData($ad);
 
         $ad['access_token'] = '';
-        self::$credential->updateAuthenticationData($ad);
+        $this->credential->updateAuthenticationData($ad);
     }
 
     /**
@@ -72,7 +69,7 @@ class OAuthCredentialTest extends TestCase
     {
         $ad = $this->getAuthenticationData();
         unset($ad['refresh_token']);
-        self::$credential->updateAuthenticationData($ad);
+        $this->credential->updateAuthenticationData($ad);
     }
 
     /**
@@ -82,10 +79,10 @@ class OAuthCredentialTest extends TestCase
     {
         $ad = $this->getAuthenticationData();
         $ad['refresh_token'] = null;
-        self::$credential->updateAuthenticationData($ad);
+        $this->credential->updateAuthenticationData($ad);
 
         $ad['refresh_token'] = '';
-        self::$credential->updateAuthenticationData($ad);
+        $this->credential->updateAuthenticationData($ad);
     }
 
     /**
@@ -95,7 +92,7 @@ class OAuthCredentialTest extends TestCase
     {
         $ad = $this->getAuthenticationData();
         unset($ad['token_type']);
-        self::$credential->updateAuthenticationData($ad);
+        $this->credential->updateAuthenticationData($ad);
     }
 
     /**
@@ -105,10 +102,10 @@ class OAuthCredentialTest extends TestCase
     {
         $ad = $this->getAuthenticationData();
         $ad['token_type'] = null;
-        self::$credential->updateAuthenticationData($ad);
+        $this->credential->updateAuthenticationData($ad);
 
         $ad['token_type'] = '';
-        self::$credential->updateAuthenticationData($ad);
+        $this->credential->updateAuthenticationData($ad);
     }
 
     /**
@@ -118,7 +115,7 @@ class OAuthCredentialTest extends TestCase
     {
         $ad = $this->getAuthenticationData();
         unset($ad['expires_in']);
-        self::$credential->updateAuthenticationData($ad);
+        $this->credential->updateAuthenticationData($ad);
     }
 
     /**
@@ -128,10 +125,10 @@ class OAuthCredentialTest extends TestCase
     {
         $ad = $this->getAuthenticationData();
         $ad['expires_in'] = null;
-        self::$credential->updateAuthenticationData($ad);
+        $this->credential->updateAuthenticationData($ad);
 
         $ad['expires_in'] = '';
-        self::$credential->updateAuthenticationData($ad);
+        $this->credential->updateAuthenticationData($ad);
     }
 
     /**
@@ -141,29 +138,29 @@ class OAuthCredentialTest extends TestCase
     {
         $ad = $this->getAuthenticationData();
         $ad['expires_in'] = 'FOO';
-        self::$credential->updateAuthenticationData($ad);
+        $this->credential->updateAuthenticationData($ad);
     }
 
     public function testUpdateAuthenticationData()
     {
         $ad = $this->getAuthenticationData();
-        self::$credential->updateAuthenticationData($ad);
+        $this->credential->updateAuthenticationData($ad);
 
-        $this->assertNotNull(self::$credential->access_token);
-        $this->assertNotEmpty(self::$credential->access_token);
-        $this->assertEquals('randomaccesstoken', self::$credential->access_token);
+        $this->assertNotNull($this->credential->access_token);
+        $this->assertNotEmpty($this->credential->access_token);
+        $this->assertEquals('randomaccesstoken', $this->credential->access_token);
 
-        $this->assertNotNull(self::$credential->refresh_token);
-        $this->assertNotEmpty(self::$credential->refresh_token);
-        $this->assertEquals('randomrefreshtoken', self::$credential->refresh_token);
+        $this->assertNotNull($this->credential->refresh_token);
+        $this->assertNotEmpty($this->credential->refresh_token);
+        $this->assertEquals('randomrefreshtoken', $this->credential->refresh_token);
 
-        $this->assertNotNull(self::$credential->token_type);
-        $this->assertNotEmpty(self::$credential->token_type);
-        $this->assertEquals('bearer', self::$credential->token_type);
+        $this->assertNotNull($this->credential->token_type);
+        $this->assertNotEmpty($this->credential->token_type);
+        $this->assertEquals('bearer', $this->credential->token_type);
 
-        $this->assertNotNull(self::$credential->expires_in);
-        $this->assertNotEmpty(self::$credential->expires_in);
-        $this->assertInternalType('integer', self::$credential->expires_in);
-        $this->assertEquals(7200, self::$credential->expires_in);
+        $this->assertNotNull($this->credential->expires_in);
+        $this->assertNotEmpty($this->credential->expires_in);
+        $this->assertInternalType('integer', $this->credential->expires_in);
+        $this->assertEquals(7200, $this->credential->expires_in);
     }
 }
