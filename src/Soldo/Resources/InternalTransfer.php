@@ -2,6 +2,8 @@
 
 namespace Soldo\Resources;
 
+use Soldo\Exceptions\SoldoInternalTransferException;
+
 /**
  * Class ExpenseCentre
  * @package Soldo\Resources
@@ -30,19 +32,19 @@ class InternalTransfer extends Resource
     ];
 
     /**
-     * @throws \BadMethodCallException
+     * @throws SoldoInternalTransferException
      */
     private function validateWalletsId()
     {
         if ($this->fromWalletId === null) {
-            throw new \BadMethodCallException(
+            throw new SoldoInternalTransferException(
                 'Cannot retrieve remote path for ' . static::class . '.'
                 . ' "fromWalletId" attribute is not defined.'
             );
         }
 
         if ($this->toWalletId === null) {
-            throw new \BadMethodCallException(
+            throw new SoldoInternalTransferException(
                 'Cannot retrieve remote path for ' . static::class . '.'
                 . ' "toWalletId" attribute is not defined.'
             );
