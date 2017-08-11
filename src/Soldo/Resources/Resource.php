@@ -62,7 +62,7 @@ abstract class Resource
      * @throws SoldoCastException
      * @return boolean
      */
-    private function validateResource($className, $attributeName, $data)
+    private function validateAttributeCast($className, $attributeName, $data)
     {
         if (class_exists($className) === false) {
             throw new SoldoCastException(
@@ -99,7 +99,7 @@ abstract class Resource
         foreach ($data as $key => $value) {
             if (array_key_exists($key, $this->cast)) {
                 $class = $this->cast[$key];
-                $this->validateResource($class, $key, $value);
+                $this->validateAttributeCast($class, $key, $value);
                 $this->{$key} = new $class($value);
                 continue;
             }
