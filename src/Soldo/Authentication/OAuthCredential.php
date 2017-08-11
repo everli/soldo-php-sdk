@@ -45,7 +45,7 @@ class OAuthCredential extends SoldoResource
     }
 
     /**
-     * @param $authData
+     * @param array $authData
      */
     public function updateAuthenticationData($authData)
     {
@@ -60,7 +60,7 @@ class OAuthCredential extends SoldoResource
     /**
      * Manually validate data since this is a crucial point.
      *
-     * @param $authData
+     * @param array $authData
      * @throws SoldoAuthenticationException
      * @return bool
      */
