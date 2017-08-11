@@ -16,7 +16,7 @@ namespace Soldo\Resources;
  * @property string custom_reference_id
  * @property string status
  */
-class Employee extends SoldoResource
+class Employee extends Resource
 {
 
     /**

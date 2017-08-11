@@ -6,10 +6,10 @@ use Respect\Validation\Validator;
 use Soldo\Exceptions\SoldoInvalidCollectionException;
 
 /**
- * Class SoldoCollection
+ * Class Collection
  * @package Soldo\Resources
  */
-abstract class SoldoCollection
+abstract class Collection
 {
     /**
      * @var int
@@ -52,7 +52,7 @@ abstract class SoldoCollection
     protected $itemType;
 
     /**
-     * SoldoCollection constructor.
+     * Collection constructor.
      */
     public function __construct()
     {
@@ -154,7 +154,7 @@ abstract class SoldoCollection
         if ($itemType === null) {
             throw new \InvalidArgumentException(
                 'Could not generate a Soldo collection. '
-                . '$itemType must be a valid SoldoResource child class name'
+                . '$itemType must be a valid Resource child class name'
             );
         }
 

@@ -3,7 +3,7 @@
 namespace Soldo\Authentication;
 
 use Soldo\Exceptions\SoldoAuthenticationException;
-use Soldo\Resources\SoldoResource;
+use Soldo\Resources\Resource;
 use Respect\Validation\Validator;
 
 /**
@@ -17,7 +17,7 @@ use Respect\Validation\Validator;
  * @property string token_type
  * @property int expires_in
  */
-class OAuthCredential extends SoldoResource
+class OAuthCredential extends Resource
 {
 
     /**

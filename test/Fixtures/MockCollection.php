@@ -2,12 +2,12 @@
 
 namespace Soldo\Tests\Fixtures;
 
-use Soldo\Resources\SoldoCollection;
+use Soldo\Resources\Collection;
 
 /**
  * Class MockColleciton
  */
-class MockCollection extends SoldoCollection
+class MockCollection extends Collection
 {
     protected $itemType = MockResource::class;
 

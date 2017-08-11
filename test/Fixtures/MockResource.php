@@ -2,12 +2,12 @@
 
 namespace Soldo\Tests\Fixtures;
 
-use Soldo\Resources\SoldoResource;
+use Soldo\Resources\Resource;
 
 /**
  * Class MockResource
  */
-class MockResource extends SoldoResource
+class MockResource extends Resource
 {
 
     /**

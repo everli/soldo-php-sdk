@@ -34,7 +34,7 @@ namespace Soldo\Resources;
  * @property string custom_reference_id
  * @property array details
  */
-class Transaction extends SoldoResource
+class Transaction extends Resource
 {
 
     /**

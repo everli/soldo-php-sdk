@@ -6,7 +6,7 @@ namespace Soldo\Resources;
  * Class Employees
  * @package Soldo\Resources
  */
-class Employees extends SoldoCollection
+class Employees extends Collection
 {
     /**
      * @var string

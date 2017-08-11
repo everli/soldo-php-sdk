@@ -25,8 +25,8 @@ use Soldo\Exceptions\SoldoSDKException;
 use Soldo\Exceptions\SoldoUnauthorizedException;
 use Soldo\Resources\InternalTransfer;
 use Soldo\Utils\Paginator;
-use Soldo\Resources\SoldoCollection;
-use Soldo\Resources\SoldoResource;
+use Soldo\Resources\Collection;
+use Soldo\Resources\Resource;
 
 /**
  * Class SoldoClient
@@ -341,20 +341,20 @@ class SoldoClient
     }
 
     /**
-     * Build and return a SoldoCollection starting from remote data
+     * Build and return a Collection starting from remote data
      *
      * @param string $className
      * @param Paginator $paginator
      * @param array $queryParameters
      * @throws \Exception
-     * @return SoldoCollection
+     * @return Collection
      */
     public function getCollection($className, Paginator $paginator = null, $queryParameters = [])
     {
         // validate class name
         $this->validateClassName($className);
 
-        /** @var SoldoCollection $collection */
+        /** @var Collection $collection */
         $collection = new $className();
 
         // get collection remote path
@@ -377,13 +377,13 @@ class SoldoClient
      * @param string $id
      * @param array $queryParameters
      * @throws \Exception
-     * @return SoldoResource
+     * @return Resource
      */
     public function getItem($className, $id = null, $queryParameters = [])
     {
         $this->validateClassName($className);
 
-        /** @var SoldoResource $object */
+        /** @var Resource $object */
         $object = new $className();
         $object->id = $id;
 
@@ -407,13 +407,13 @@ class SoldoClient
      * @param string $id
      * @param array $data
      * @throws \Exception
-     * @return SoldoResource
+     * @return Resource
      */
     public function updateItem($className, $id, $data)
     {
         $this->validateClassName($className);
 
-        /** @var SoldoResource $object */
+        /** @var Resource $object */
         $object = new $className();
         $object->id = $id;
 
@@ -452,7 +452,7 @@ class SoldoClient
         // validate class name
         $this->validateClassName($className);
 
-        /** @var SoldoResource $object */
+        /** @var Resource $object */
         $object = new $className();
         $object->id = $id;
 

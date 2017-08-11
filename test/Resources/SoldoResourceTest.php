@@ -4,7 +4,7 @@ namespace Soldo\Tests\Resources;
 
 use PHPUnit\Framework\TestCase;
 use Soldo\Exceptions\SoldoInvalidRelationshipException;
-use Soldo\Resources\SoldoResource;
+use Soldo\Resources\Resource;
 use Soldo\Tests\Fixtures\MockResource;
 
 /**
@@ -14,7 +14,7 @@ class SoldoResourceTest extends TestCase
 {
     public function testFill()
     {
-        /** @var SoldoResource $resource */
+        /** @var Resource $resource */
         $resource = new MockResource();
 
         $this->assertNull($resource->foo);
@@ -43,7 +43,7 @@ class SoldoResourceTest extends TestCase
      */
     public function testFillCastableInvalidClassName()
     {
-        /** @var SoldoResource $resource */
+        /** @var Resource $resource */
         $resource = new MockResource();
         $resource->setCast(
             ['castable_attribute' => 'NotExistentClassName']
@@ -59,11 +59,11 @@ class SoldoResourceTest extends TestCase
 
     /**
      * @expectedException \Soldo\Exceptions\SoldoCastException
-     * @expectedExceptionMessage Could not cast castable_attribute. stdClass is not a SoldoResource child
+     * @expectedExceptionMessage Could not cast castable_attribute. stdClass is not a Resource child
      */
     public function testFillCastableNotChildOfSoldoResource()
     {
-        /** @var SoldoResource $resource */
+        /** @var Resource $resource */
         $resource = new MockResource();
         $resource->setCast(
             ['castable_attribute' => \stdClass::class]
@@ -83,7 +83,7 @@ class SoldoResourceTest extends TestCase
      */
     public function testFillCastableNotValidDataset()
     {
-        /** @var SoldoResource $resource */
+        /** @var Resource $resource */
         $resource = new MockResource();
         $resource->setCast(
             ['castable_attribute' => MockResource::class]
@@ -96,7 +96,7 @@ class SoldoResourceTest extends TestCase
 
     public function testFillWithCastableAttribute()
     {
-        /** @var SoldoResource $resource */
+        /** @var Resource $resource */
         $resource = new MockResource([]);
         $resource->setCast(
             ['castable_attribute' => MockResource::class]

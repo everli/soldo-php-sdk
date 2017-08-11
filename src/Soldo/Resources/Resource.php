@@ -7,10 +7,10 @@ use Soldo\Exceptions\SoldoInvalidRelationshipException;
 use Soldo\Exceptions\SoldoCastException;
 
 /**
- * Class SoldoResource
+ * Class Resource
  * @package Soldo\Resources
  */
-abstract class SoldoResource
+abstract class Resource
 {
 
     /**
@@ -33,7 +33,7 @@ abstract class SoldoResource
 
     /**
      * An array containing the list of attributes that need to be casted
-     * into a SoldoResource or one of its child class (e.g. a Wallet)
+     * into a Resource or one of its child class (e.g. a Wallet)
      *
      * @var array
      */
@@ -45,7 +45,7 @@ abstract class SoldoResource
     protected $basePath;
 
     /**
-     * SoldoResource constructor.
+     * Resource constructor.
      * @param array $data
      */
     public function __construct($data = [])
@@ -54,7 +54,7 @@ abstract class SoldoResource
     }
 
     /**
-     * Validate that className is a valid class and that it is of type SoldoResource
+     * Validate that className is a valid class and that it is of type Resource
      *
      * @param $className
      * @param $attributeName
@@ -71,12 +71,12 @@ abstract class SoldoResource
             );
         }
 
-        // create a dummy object and check if it is a SoldoResource child
+        // create a dummy object and check if it is a Resource child
         $dummy = new $className();
-        if (is_a($dummy, '\Soldo\Resources\SoldoResource') === false) {
+        if (is_a($dummy, '\Soldo\Resources\Resource') === false) {
             throw new SoldoCastException(
                 'Could not cast ' . $attributeName . '. '
-                . $className . ' is not a SoldoResource child'
+                . $className . ' is not a Resource child'
             );
         }
 
@@ -139,7 +139,7 @@ abstract class SoldoResource
     {
         $attributes = [];
         foreach ($this->attributes as $key => $value) {
-            /** @var SoldoResource $value */
+            /** @var Resource $value */
             if (array_key_exists($key, $this->cast)) {
                 $attributes[$key] = $value->toArray();
                 continue;
