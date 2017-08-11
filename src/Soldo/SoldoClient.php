@@ -100,7 +100,7 @@ class SoldoClient
             [
                 'base_uri' => $base_uri,
                 'timeout' => self::TIMEOUT,
-                'verify' => false,
+                'verify' => true,
             ]
         );
     }
