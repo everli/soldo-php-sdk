@@ -15,7 +15,7 @@ class MockResource extends Resource
      */
     public function setCast($cast)
     {
-        parent::setCast($cast);
+        $this->cast = $cast;
     }
 
     /**
@@ -23,7 +23,7 @@ class MockResource extends Resource
      */
     public function setWhitelisted($whiteListed)
     {
-        parent::setWhitelisted($whiteListed);
+        $this->whiteListed = $whiteListed;
     }
 
     /**
@@ -31,7 +31,7 @@ class MockResource extends Resource
      */
     public function setRelationships($relationships)
     {
-        parent::setRelationships($relationships);
+        $this->relationships = $relationships;
     }
 
     /**
@@ -39,6 +39,6 @@ class MockResource extends Resource
      */
     public function setBasePath($basePath)
     {
-        parent::setBasePath($basePath);
+        $this->basePath = $basePath;
     }
 }

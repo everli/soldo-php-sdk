@@ -12,18 +12,18 @@ class MockCollection extends Collection
     protected $itemType = MockResource::class;
 
     /**
-     * @param string $path
+     * @param $path
      */
     public function setPath($path)
     {
-        parent::setPath($path);
+        $this->path = $path;
     }
 
     /**
-     * @param string $itemType
+     * @param $itemType
      */
     public function setItemType($itemType)
     {
-        parent::setItemType($itemType);
+        $this->itemType = $itemType;
     }
 }

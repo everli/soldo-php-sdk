@@ -50,22 +50,6 @@ abstract class Collection
      * @var string
      */
     protected $itemType;
-    
-    /**
-     * @param $path
-     */
-    protected function setPath($path)
-    {
-        $this->path = $path;
-    }
-
-    /**
-     * @param $itemType
-     */
-    protected function setItemType($itemType)
-    {
-        $this->itemType = $itemType;
-    }
 
     /**
      * Fill collection starting from raw data
