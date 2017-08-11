@@ -16,7 +16,7 @@ abstract class SoldoResource
     /**
      * @var array
      */
-    protected $_attributes = [];
+    protected $attributes = [];
 
     /**
      * @var array
@@ -116,7 +116,7 @@ abstract class SoldoResource
      */
     public function __set($name, $value)
     {
-        $this->_attributes[$name] = $value;
+        $this->attributes[$name] = $value;
     }
 
     /**
@@ -125,8 +125,8 @@ abstract class SoldoResource
      */
     public function __get($name)
     {
-        if (array_key_exists($name, $this->_attributes)) {
-            return $this->_attributes[$name];
+        if (array_key_exists($name, $this->attributes)) {
+            return $this->attributes[$name];
         }
 
         return null;
@@ -138,7 +138,7 @@ abstract class SoldoResource
     public function toArray()
     {
         $attributes = [];
-        foreach ($this->_attributes as $key => $value) {
+        foreach ($this->attributes as $key => $value) {
             /** @var SoldoResource $value */
             if (array_key_exists($key, $this->cast)) {
                 $attributes[$key] = $value->toArray();
