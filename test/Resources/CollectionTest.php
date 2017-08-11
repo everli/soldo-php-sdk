@@ -8,9 +8,9 @@ use Soldo\Tests\Fixtures\MockCollection;
 use Soldo\Tests\Fixtures\MockResource;
 
 /**
- * Class SoldoCollectionTest
+ * Class CollectionTest
  */
-class SoldoCollectionTest extends TestCase
+class CollectionTest extends TestCase
 {
     /**
      * @return array

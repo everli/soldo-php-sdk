@@ -8,9 +8,9 @@ use Soldo\Resources\Resource;
 use Soldo\Tests\Fixtures\MockResource;
 
 /**
- * Class SoldoResourceTest
+ * Class ResourceTest
  */
-class SoldoResourceTest extends TestCase
+class ResourceTest extends TestCase
 {
     public function testFill()
     {
