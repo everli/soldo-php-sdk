@@ -4,7 +4,6 @@ namespace Soldo\Tests\Resources;
 
 use PHPUnit\Framework\TestCase;
 use Soldo\Resources\Transaction;
-use Soldo\Resources\Transactions;
 use Soldo\Resources\Wallet;
 use Soldo\Resources\Wallets;
 
