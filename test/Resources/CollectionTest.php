@@ -4,11 +4,14 @@ namespace Soldo\Tests\Resources;
 
 use PHPUnit\Framework\TestCase;
 use Soldo\Exceptions\SoldoInvalidCollectionException;
+use Soldo\Resources\Collection;
 use Soldo\Tests\Fixtures\MockCollection;
 use Soldo\Tests\Fixtures\MockResource;
 
 /**
  * Class CollectionTest
+ *
+ * @backupStaticAttributes enabled
  */
 class CollectionTest extends TestCase
 {
@@ -41,9 +44,9 @@ class CollectionTest extends TestCase
      */
     public function testFillNullItemType()
     {
-        $collection = new MockCollection();
-        $collection->setItemType(null);
-        $collection->fill([]);
+        $collection = new Collection(null);
+        //$collection->setItemType(null);
+        //$collection->fill([]);
     }
 
     /**
@@ -52,9 +55,7 @@ class CollectionTest extends TestCase
      */
     public function testFillInvalidItemType()
     {
-        $collection = new MockCollection();
-        $collection->setItemType('InvalidClassName');
-        $collection->fill([]);
+        $collection = new Collection('InvalidClassName');
     }
 
     /**
@@ -62,7 +63,7 @@ class CollectionTest extends TestCase
      */
     public function testFillEmptyData()
     {
-        $collection = new MockCollection();
+        $collection = new Collection(MockResource::class);
         $collection->fill([]);
     }
 
@@ -73,7 +74,7 @@ class CollectionTest extends TestCase
     {
         $data = $this->getCollectionData();
         unset($data['pages']);
-        $collection = new MockCollection();
+        $collection = new Collection(MockResource::class);
         $collection->fill($data);
     }
 
@@ -84,7 +85,7 @@ class CollectionTest extends TestCase
     {
         $data = $this->getCollectionData();
         $data['pages'] = 'FOO';
-        $collection = new MockCollection();
+        $collection = new Collection(MockResource::class);
         $collection->fill($data);
     }
 
@@ -95,7 +96,7 @@ class CollectionTest extends TestCase
     {
         $data = $this->getCollectionData();
         unset($data['total']);
-        $collection = new MockCollection();
+        $collection = new Collection(MockResource::class);
         $collection->fill($data);
     }
 
@@ -106,7 +107,7 @@ class CollectionTest extends TestCase
     {
         $data = $this->getCollectionData();
         $data['total'] = 'FOO';
-        $collection = new MockCollection();
+        $collection = new Collection(MockResource::class);
         $collection->fill($data);
     }
 
@@ -117,7 +118,7 @@ class CollectionTest extends TestCase
     {
         $data = $this->getCollectionData();
         unset($data['page_size']);
-        $collection = new MockCollection();
+        $collection = new Collection(MockResource::class);
         $collection->fill($data);
     }
 
@@ -128,7 +129,7 @@ class CollectionTest extends TestCase
     {
         $data = $this->getCollectionData();
         $data['page_size'] = 'FOO';
-        $collection = new MockCollection();
+        $collection = new Collection(MockResource::class);
         $collection->fill($data);
     }
 
@@ -139,7 +140,7 @@ class CollectionTest extends TestCase
     {
         $data = $this->getCollectionData();
         unset($data['current_page']);
-        $collection = new MockCollection();
+        $collection = new Collection(MockResource::class);
         $collection->fill($data);
     }
 
@@ -150,7 +151,7 @@ class CollectionTest extends TestCase
     {
         $data = $this->getCollectionData();
         $data['current_page'] = 'FOO';
-        $collection = new MockCollection();
+        $collection = new Collection(MockResource::class);
         $collection->fill($data);
     }
 
@@ -161,7 +162,7 @@ class CollectionTest extends TestCase
     {
         $data = $this->getCollectionData();
         unset($data['results_size']);
-        $collection = new MockCollection();
+        $collection = new Collection(MockResource::class);
         $collection->fill($data);
     }
 
@@ -172,7 +173,7 @@ class CollectionTest extends TestCase
     {
         $data = $this->getCollectionData();
         $data['results_size'] = 'FOO';
-        $collection = new MockCollection();
+        $collection = new Collection(MockResource::class);
         $collection->fill($data);
     }
 
@@ -183,7 +184,7 @@ class CollectionTest extends TestCase
     {
         $data = $this->getCollectionData();
         unset($data['results']);
-        $collection = new MockCollection();
+        $collection = new Collection(MockResource::class);
         $collection->fill($data);
     }
 
@@ -194,19 +195,19 @@ class CollectionTest extends TestCase
     {
         $data = $this->getCollectionData();
         $data['results_size'] = 'FOO';
-        $collection = new MockCollection();
+        $collection = new Collection(MockResource::class);
         $collection->fill($data);
 
         $data = $this->getCollectionData();
         $data['results_size'] = 1;
-        $collection = new MockCollection();
+        $collection = new Collection(MockResource::class);
         $collection->fill($data);
     }
 
     public function testFillAndGet()
     {
         $data = $this->getCollectionData();
-        $collection = new MockCollection();
+        $collection = new Collection(MockResource::class);
         $items = $collection->fill($data)->get();
 
         $itemsArray = [];
@@ -218,31 +219,9 @@ class CollectionTest extends TestCase
         $this->assertEquals($data['results'], $itemsArray);
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidPathException
-     * @expectedExceptionMessage Cannot retrieve remote path for Soldo\Tests\Fixtures\MockCollection. "path" attribute is not defined.
-     */
-    public function testGetRemotePathMissingPath()
-    {
-        $collection = new MockCollection();
-        $collection->getRemotePath();
-    }
-
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidPathException
-     * @expectedExceptionMessage Cannot retrieve remote path for Soldo\Tests\Fixtures\MockCollection. "path" seems to be not a valid path.
-     */
-    public function testGetRemotePathInvalidPath()
-    {
-        $collection = new MockCollection();
-        $collection->setPath('/path with spaces');
-        $this->assertEquals('/path+with+spaces', $collection->getRemotePath());
-    }
-
     public function testGetRemotePath()
     {
-        $collection = new MockCollection();
-        $collection->setPath('/path');
-        $this->assertEquals('/path', $collection->getRemotePath());
+        $collection = new Collection(MockResource::class);
+        $this->assertEquals('/resources', $collection->getRemotePath());
     }
 }

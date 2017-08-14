@@ -95,7 +95,7 @@ class InternalTransferTest extends TestCase
 
     /**
      * @expectedException \Soldo\Exceptions\SoldoInvalidPathException
-     * @expectedExceptionMessage Cannot retrieve remote path for Soldo\Resources\InternalTransfer. "toWalletId" attribute is not defined.
+     * @expectedExceptionMessage The attribute "toWalletId" of Soldo\Resources\InternalTransfer is not defined
      */
     public function testGetRemotePathMissingToWalletId()
     {

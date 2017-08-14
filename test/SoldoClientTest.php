@@ -4,8 +4,9 @@ namespace Soldo\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Soldo\Authentication\OAuthCredential;
+use Soldo\Resources\Collection;
 use Soldo\Resources\Employee;
-use Soldo\Resources\Employees;
+use Soldo\Resources\Card;
 use Soldo\SoldoClient;
 
 /**
@@ -45,7 +46,7 @@ class SoldoClientTest extends TestCase
      */
     private function getItemId()
     {
-        $collection = $this->soldoClient->getCollection(Employees::class);
+        $collection = $this->soldoClient->getCollection(Employee::class);
         return $collection->get()[0]->id;
     }
 
@@ -71,7 +72,7 @@ class SoldoClientTest extends TestCase
     public function testGetCollectionInvalidCredentials()
     {
         $sc = $this->getClientWithInvalidCredentials();
-        $sc->getCollection(Employees::class);
+        $sc->getCollection(Employee::class);
     }
 
     /**
@@ -84,8 +85,8 @@ class SoldoClientTest extends TestCase
 
     public function testGetCollection()
     {
-        $collection = $this->soldoClient->getCollection(Employees::class);
-        $this->assertInstanceOf(Employees::class, $collection);
+        $collection = $this->soldoClient->getCollection(Employee::class);
+        $this->assertInstanceOf(Collection::class, $collection);
         foreach ($collection->get() as $item) {
             $this->assertInstanceOf(Employee::class, $item);
         }
@@ -97,7 +98,7 @@ class SoldoClientTest extends TestCase
     public function testGetItemInvalidCredentials()
     {
         $sc = $this->getClientWithInvalidCredentials();
-        $item = $sc->getItem(Employees::class);
+        $item = $sc->getItem(Employee::class, 'a-valid-id');
     }
 
     /**
@@ -185,7 +186,7 @@ class SoldoClientTest extends TestCase
     public function testGetRelationshipInvalidCredentials()
     {
         $sc = $this->getClientWithInvalidCredentials();
-        $relationship = $sc->getRelationship(\Soldo\Resources\Card::class, 'fake-id', 'rules');
+        $relationship = $sc->getRelationship(Card::class, 'fake-id', 'rules');
     }
 
     /**
@@ -201,7 +202,7 @@ class SoldoClientTest extends TestCase
      */
     public function testGetRelationshipInvalidRelationship()
     {
-        $relationship = $this->soldoClient->getRelationship(\Soldo\Resources\Card::class, 'fake-id', 'not-mapped-relationship');
+        $relationship = $this->soldoClient->getRelationship(Card::class, 'fake-id', 'not-mapped-relationship');
     }
 
     /**
@@ -209,15 +210,15 @@ class SoldoClientTest extends TestCase
      */
     public function testGetRelationshipNotFound()
     {
-        $relationship = $this->soldoClient->getRelationship(\Soldo\Resources\Card::class, 'fake-id', 'rules');
+        $relationship = $this->soldoClient->getRelationship(Card::class, 'fake-id', 'rules');
     }
 
     public function testGetRelationship()
     {
-        $cards = $this->soldoClient->getCollection(\Soldo\Resources\Cards::class);
+        $cards = $this->soldoClient->getCollection(Card::class);
         $card_id = $cards->get()[0]->id;
 
-        $relationship = $this->soldoClient->getRelationship(\Soldo\Resources\Card::class, $card_id, 'rules');
+        $relationship = $this->soldoClient->getRelationship(Card::class, $card_id, 'rules');
         $this->assertInternalType('array', $relationship);
         foreach ($relationship as $r) {
             $this->assertInstanceOf(\Soldo\Resources\Rule::class, $r);
