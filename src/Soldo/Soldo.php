@@ -72,7 +72,7 @@ class Soldo
     public function getWallets($page = 0, $perPage = Paginator::MAX_ALLOWED_ITEMS_PER_PAGE, $searchFields = [])
     {
         $paginator = new Paginator($page, $perPage);
-        $collection = $this->client->getCollection(Wallets::class, $paginator, $searchFields);
+        $collection = $this->client->getCollection(Wallet::class, $paginator, $searchFields);
 
         return $collection->get();
     }
@@ -101,7 +101,7 @@ class Soldo
     public function getExpenseCentres($page = 0, $perPage = Paginator::MAX_ALLOWED_ITEMS_PER_PAGE, $searchFields = [])
     {
         $paginator = new Paginator($page, $perPage);
-        $collection = $this->client->getCollection(ExpenseCentres::class, $paginator, $searchFields);
+        $collection = $this->client->getCollection(ExpenseCentre::class, $paginator, $searchFields);
 
         return $collection->get();
     }
@@ -144,7 +144,7 @@ class Soldo
     public function getEmployees($page = 0, $perPage = Paginator::MAX_ALLOWED_ITEMS_PER_PAGE, $searchFields = [])
     {
         $paginator = new Paginator($page, $perPage);
-        $collection = $this->client->getCollection(Employees::class, $paginator, $searchFields);
+        $collection = $this->client->getCollection(Employee::class, $paginator, $searchFields);
 
         return $collection->get();
     }
@@ -187,7 +187,7 @@ class Soldo
     public function getTransactions($page = 0, $perPage = Paginator::MAX_ALLOWED_ITEMS_PER_PAGE, $searchFields = [])
     {
         $paginator = new Paginator($page, $perPage);
-        $collection = $this->client->getCollection(Transactions::class, $paginator, $searchFields);
+        $collection = $this->client->getCollection(Transaction::class, $paginator, $searchFields);
 
         return $collection->get();
     }
@@ -221,7 +221,7 @@ class Soldo
     public function getCards($page = 0, $perPage = Paginator::MAX_ALLOWED_ITEMS_PER_PAGE, $searchFields = [])
     {
         $paginator = new Paginator($page, $perPage);
-        $collection = $this->client->getCollection(Cards::class, $paginator, $searchFields);
+        $collection = $this->client->getCollection(Card::class, $paginator, $searchFields);
 
         return $collection->get();
     }

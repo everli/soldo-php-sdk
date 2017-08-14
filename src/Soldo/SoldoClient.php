@@ -352,15 +352,12 @@ class SoldoClient
         // validate class name
         $this->validateClassName($className);
 
-        /** @var Collection $collection */
-        $collection = new $className();
-
-        // get collection remote path
-        $remote_path = $collection->getRemotePath();
+        // instantiate a new collection
+        $collection = new Collection($className);
 
         try {
             // make request and fill collection
-            $data = $this->call('GET', $remote_path, $queryParameters, $paginator);
+            $data = $this->call('GET', $collection->getRemotePath(), $queryParameters, $paginator);
 
             return $collection->fill($data);
         } catch (TransferException $e) {
