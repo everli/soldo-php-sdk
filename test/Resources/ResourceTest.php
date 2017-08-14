@@ -14,7 +14,7 @@ class ResourceTest extends TestCase
 {
     public function testFill()
     {
-        /** @var Resource $resource */
+        /** @var MockResource $resource */
         $resource = new MockResource();
 
         $this->assertNull($resource->foo);
@@ -43,7 +43,7 @@ class ResourceTest extends TestCase
      */
     public function testFillCastableInvalidClassName()
     {
-        /** @var Resource $resource */
+        /** @var MockResource $resource */
         $resource = new MockResource();
         $resource->setCast(
             ['castable_attribute' => 'NotExistentClassName']
@@ -63,7 +63,7 @@ class ResourceTest extends TestCase
      */
     public function testFillCastableNotChildOfSoldoResource()
     {
-        /** @var Resource $resource */
+        /** @var MockResource $resource */
         $resource = new MockResource();
         $resource->setCast(
             ['castable_attribute' => \stdClass::class]
@@ -83,7 +83,7 @@ class ResourceTest extends TestCase
      */
     public function testFillCastableNotValidDataset()
     {
-        /** @var Resource $resource */
+        /** @var MockResource $resource */
         $resource = new MockResource();
         $resource->setCast(
             ['castable_attribute' => MockResource::class]
@@ -96,7 +96,7 @@ class ResourceTest extends TestCase
 
     public function testFillWithCastableAttribute()
     {
-        /** @var Resource $resource */
+        /** @var MockResource $resource */
         $resource = new MockResource([]);
         $resource->setCast(
             ['castable_attribute' => MockResource::class]
