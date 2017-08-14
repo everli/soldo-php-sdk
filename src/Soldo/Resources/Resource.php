@@ -3,6 +3,7 @@
 namespace Soldo\Resources;
 
 use Respect\Validation\Validator;
+use Soldo\Exceptions\SoldoInvalidPathException;
 use Soldo\Exceptions\SoldoInvalidRelationshipException;
 use Soldo\Exceptions\SoldoCastException;
 
@@ -155,34 +156,37 @@ abstract class Resource
     }
 
     /**
-     * @throws \BadMethodCallException
+     * @throws SoldoInvalidPathException
      */
     protected function validateBasePath()
     {
         if ($this->basePath === null) {
-            throw new \BadMethodCallException(
+            throw new SoldoInvalidPathException(
                 'Cannot retrieve remote path for ' . static::class . '.'
                 . ' "basePath" attribute is not defined.'
             );
         }
 
         if (preg_match('/^\/[\S]+$/', $this->basePath) === 0) {
-            throw new \BadMethodCallException(
+            throw new SoldoInvalidPathException(
                 'Cannot retrieve remote path for ' . static::class . '.'
                 . ' "basePath" seems to be not a valid path.'
             );
         }
     }
 
+
     /**
-     * @throws \BadMethodCallException
+     * @param $attribute
+     *
+     * @throws SoldoInvalidPathException
      */
-    protected function validateId()
+    protected function validateAttribute($attribute)
     {
-        if ($this->id === null) {
-            throw new \BadMethodCallException(
+        if ($this->{$attribute} === null) {
+            throw new SoldoInvalidPathException(
                 'Cannot retrieve remote path for ' . static::class . '.'
-                . ' "id" attribute is not defined.'
+                . ' "'. $attribute .'" attribute is not defined.'
             );
         }
     }
@@ -192,10 +196,14 @@ abstract class Resource
      */
     public function getRemotePath()
     {
-        $this->validateId();
         $this->validateBasePath();
-
-        return $this->basePath . '/' . urlencode($this->id);
+        $remote_path = $this->basePath;
+        preg_match_all('/\{(\S+?)\}/', $this->basePath, $variables);
+        foreach ($variables[1] as $key => $attribute) {
+            $this->validateAttribute($attribute);
+            $remote_path = str_replace($variables[0][$key], urlencode($this->{$attribute}), $remote_path);
+        }
+        return $remote_path;
     }
 
     /**

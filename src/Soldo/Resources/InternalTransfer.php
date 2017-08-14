@@ -21,7 +21,7 @@ class InternalTransfer extends Resource
     /**
      * @var string
      */
-    protected $basePath = '/wallets/internalTransfer';
+    protected $basePath = '/wallets/internalTransfer/{fromWalletId}/{toWalletId}';
 
     /**
      * @var array
@@ -30,39 +30,6 @@ class InternalTransfer extends Resource
         'from_wallet' => Wallet::class,
         'to_wallet' => Wallet::class,
     ];
-
-    /**
-     * @throws SoldoInternalTransferException
-     */
-    private function validateWalletsId()
-    {
-        if ($this->fromWalletId === null) {
-            throw new SoldoInternalTransferException(
-                'Cannot retrieve remote path for ' . static::class . '.'
-                . ' "fromWalletId" attribute is not defined.'
-            );
-        }
-
-        if ($this->toWalletId === null) {
-            throw new SoldoInternalTransferException(
-                'Cannot retrieve remote path for ' . static::class . '.'
-                . ' "toWalletId" attribute is not defined.'
-            );
-        }
-    }
-
-    /**
-     * Override method since this is an exception
-     *
-     * @return string
-     */
-    public function getRemotePath()
-    {
-        $this->validateWalletsId();
-        $this->validateBasePath();
-
-        return $this->basePath . '/' . urlencode($this->fromWalletId) . '/' . urlencode($this->toWalletId);
-    }
 
     /**
      * Generate a transfer fingerprint

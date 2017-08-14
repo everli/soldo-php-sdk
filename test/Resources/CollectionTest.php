@@ -219,7 +219,7 @@ class CollectionTest extends TestCase
     }
 
     /**
-     * @expectedException \BadMethodCallException
+     * @expectedException \Soldo\Exceptions\SoldoInvalidPathException
      * @expectedExceptionMessage Cannot retrieve remote path for Soldo\Tests\Fixtures\MockCollection. "path" attribute is not defined.
      */
     public function testGetRemotePathMissingPath()
@@ -229,7 +229,7 @@ class CollectionTest extends TestCase
     }
 
     /**
-     * @expectedException \BadMethodCallException
+     * @expectedException \Soldo\Exceptions\SoldoInvalidPathException
      * @expectedExceptionMessage Cannot retrieve remote path for Soldo\Tests\Fixtures\MockCollection. "path" seems to be not a valid path.
      */
     public function testGetRemotePathInvalidPath()

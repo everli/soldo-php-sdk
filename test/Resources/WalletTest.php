@@ -55,7 +55,7 @@ class WalletTest extends TestCase
     }
 
     /**
-     * @expectedException \BadMethodCallException
+     * @expectedException \Soldo\Exceptions\SoldoInvalidPathException
      */
     public function testGetRemotePathMissingId()
     {

@@ -22,5 +22,5 @@ class Wallet extends Resource
     /**
      * @var string
      */
-    protected $basePath = '/wallets';
+    protected $basePath = '/wallets/{id}';
 }

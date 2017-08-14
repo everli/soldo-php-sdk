@@ -180,53 +180,45 @@ class ResourceTest extends TestCase
     }
 
     /**
-     * @expectedException \BadMethodCallException
-     * @expectedExceptionMessage Cannot retrieve remote path for Soldo\Tests\Fixtures\MockResource. "id" attribute is not defined.
-     */
-    public function testGetRemotePathMissingId()
-    {
-        $resource = new MockResource();
-        $this->assertEquals('/', $resource->getRemotePath());
-
-        $resource->id = null;
-        $this->assertEquals('/', $resource->getRemotePath());
-    }
-
-    /**
-     * @expectedException \BadMethodCallException
+     * @expectedException \Soldo\Exceptions\SoldoInvalidPathException
      * @expectedExceptionMessage Cannot retrieve remote path for Soldo\Tests\Fixtures\MockResource. "basePath" attribute is not defined.
      */
     public function testGetRemotePathMissingBasePath()
     {
         $resource = new MockResource();
-
-        $resource->id = 1;
-        $this->assertEquals('/1', $resource->getRemotePath());
+        $resource->getRemotePath();
     }
 
     /**
-     * @expectedException \BadMethodCallException
+     * @expectedException \Soldo\Exceptions\SoldoInvalidPathException
+     * @expectedExceptionMessage Cannot retrieve remote path for Soldo\Tests\Fixtures\MockResource. "id" attribute is not defined.
+     */
+    public function testGetRemotePathMissingId()
+    {
+        $resource = new MockResource();
+        $resource->setBasePath('/{id}');
+        $resource->getRemotePath();
+    }
+
+    /**
+     * @expectedException \Soldo\Exceptions\SoldoInvalidPathException
      * @expectedExceptionMessage Cannot retrieve remote path for Soldo\Tests\Fixtures\MockResource. "basePath" seems to be not a valid path.
      */
     public function testGetRemotePathInvalidBasePath()
     {
         $resource = new MockResource();
-        $resource->id = 1;
 
-        $resource->setBasePath('/');
-        $this->assertEquals('base', $resource->getRemotePath());
-
-        $resource->setBasePath('foo');
-        $this->assertEquals('base', $resource->getRemotePath());
+        $resource->setBasePath('path-without-slash');
+        $resource->getRemotePath();
 
         $resource->setBasePath('/foo and whitespaces');
-        $this->assertEquals('base', $resource->getRemotePath());
+        $resource->getRemotePath();
     }
 
     public function testGetRemotePath()
     {
         $resource = new MockResource();
-        $resource->setBasePath('/foo');
+        $resource->setBasePath('/foo/{id}');
 
         $resource->id = 1;
         $this->assertEquals('/foo/1', $resource->getRemotePath());
@@ -333,7 +325,7 @@ class ResourceTest extends TestCase
     public function testGetRelationshipRemotePath()
     {
         $resource = new MockResource(['id' => 1]);
-        $resource->setBasePath('/resource');
+        $resource->setBasePath('/resource/{id}');
         $resource->setRelationships(['resources' => MockResource::class]);
         $remotePath = $resource->getRelationshipRemotePath('resources');
 

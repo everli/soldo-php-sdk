@@ -3,6 +3,7 @@
 namespace Soldo\Tests\Resources;
 
 use PHPUnit\Framework\TestCase;
+use Soldo\Exceptions\SoldoInvalidPathException;
 use Soldo\Resources\Card;
 use Soldo\Resources\Rule;
 
@@ -104,7 +105,7 @@ class CardTest extends TestCase
     }
 
     /**
-     * @expectedException \BadMethodCallException
+     * @expectedException \Soldo\Exceptions\SoldoInvalidPathException
      */
     public function testGetRemotePathMissingId()
     {
@@ -175,7 +176,7 @@ class CardTest extends TestCase
     }
 
     /**
-     * @expectedException \BadMethodCallException
+     * @expectedException \Soldo\Exceptions\SoldoInvalidPathException
      */
     public function testGetRelationshipRemotePathMissingId()
     {

@@ -4,6 +4,7 @@ namespace Soldo\Resources;
 
 use Respect\Validation\Validator;
 use Soldo\Exceptions\SoldoInvalidCollectionException;
+use Soldo\Exceptions\SoldoInvalidPathException;
 
 /**
  * Class Collection
@@ -82,19 +83,19 @@ abstract class Collection
     }
 
     /**
-     * @throws \BadMethodCallException
+     * @throws SoldoInvalidPathException
      */
     protected function validatePath()
     {
         if ($this->path === null) {
-            throw new \BadMethodCallException(
+            throw new SoldoInvalidPathException(
                 'Cannot retrieve remote path for ' . static::class . '.'
                 . ' "path" attribute is not defined.'
             );
         }
 
         if (preg_match('/^\/[\S]*$/', $this->path) === 0) {
-            throw new \BadMethodCallException(
+            throw new SoldoInvalidPathException(
                 'Cannot retrieve remote path for ' . static::class . '.'
                 . ' "path" seems to be not a valid path.'
             );

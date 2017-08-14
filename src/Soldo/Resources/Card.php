@@ -27,7 +27,7 @@ class Card extends Resource
     /**
      * @var string
      */
-    protected $basePath = '/cards';
+    protected $basePath = '/cards/{id}';
 
     /**
      * @var array

@@ -18,15 +18,4 @@ class Company extends Resource
      */
     protected $basePath = '/company';
 
-    /**
-     * Override method to avoid appending id since it is not expected by Soldo API
-     *
-     * @return string
-     */
-    public function getRemotePath()
-    {
-        $this->validateBasePath();
-
-        return $this->basePath;
-    }
 }

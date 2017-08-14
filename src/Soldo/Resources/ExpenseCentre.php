@@ -19,7 +19,7 @@ class ExpenseCentre extends Resource
     /**
      * @var string
      */
-    protected $basePath = '/expensecentres';
+    protected $basePath = '/expensecentres/{id}';
 
     /**
      * @var array
