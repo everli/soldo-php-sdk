@@ -10,7 +10,7 @@ use Soldo\Exceptions\SoldoInvalidPathException;
  * Class Collection
  * @package Soldo\Resources
  */
-abstract class Collection
+class Collection
 {
     /**
      * @var int
@@ -53,6 +53,17 @@ abstract class Collection
     protected $itemType;
 
     /**
+     * Collection constructor.
+     * @param $itemType
+     */
+    public function __construct($itemType)
+    {
+        $this->validateItemType($itemType);
+        $this->itemType = $itemType;
+        $this->path =  call_user_func([$itemType, 'getBasePath']);
+    }
+
+    /**
      * Fill collection starting from raw data
      *
      * @param $data
@@ -60,7 +71,6 @@ abstract class Collection
      */
     public function fill($data)
     {
-        $this->validateItemType($this->itemType);
         $this->validateRawData($data);
 
         $this->pages = $data['pages'];
@@ -83,32 +93,10 @@ abstract class Collection
     }
 
     /**
-     * @throws SoldoInvalidPathException
-     */
-    protected function validatePath()
-    {
-        if ($this->path === null) {
-            throw new SoldoInvalidPathException(
-                'Cannot retrieve remote path for ' . static::class . '.'
-                . ' "path" attribute is not defined.'
-            );
-        }
-
-        if (preg_match('/^\/[\S]*$/', $this->path) === 0) {
-            throw new SoldoInvalidPathException(
-                'Cannot retrieve remote path for ' . static::class . '.'
-                . ' "path" seems to be not a valid path.'
-            );
-        }
-    }
-
-    /**
      * @return string
      */
     public function getRemotePath()
     {
-        $this->validatePath();
-
         return $this->path;
     }
 
@@ -139,7 +127,16 @@ abstract class Collection
         if (class_exists($itemType) === false) {
             throw new \InvalidArgumentException(
                 'Could not generate a Soldo collection '
-                . $this->itemType . ' doesn\'t exist'
+                . $itemType . ' doesn\'t exist'
+            );
+        }
+
+        // create a dummy object and check if it is a Resource child
+        $dummy = new $itemType();
+        if (is_a($dummy, '\Soldo\Resources\Resource') === false) {
+            throw new \InvalidArgumentException(
+                'Could not generate a Soldo collection '
+                . $itemType . ' is not a Resource child'
             );
         }
 
