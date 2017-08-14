@@ -14,19 +14,16 @@ use Soldo\SoldoClient;
 class SoldoClientTest extends TestCase
 {
     /** @var SoldoClient */
-    private static $soldoClient;
+    private $soldoClient;
 
-    /** @var string */
-    private static $itemId;
-
-    public static function setUpBeforeClass()
+    public function setUp()
     {
         $credential = new OAuthCredential(
             SoldoTestCredentials::CLIENT_ID,
             SoldoTestCredentials::CLIENT_SECRET
         );
         $environment = 'demo';
-        self::$soldoClient = new SoldoClient($credential, $environment);
+        $this->soldoClient = new SoldoClient($credential, $environment);
     }
 
     /**
@@ -38,8 +35,18 @@ class SoldoClientTest extends TestCase
             new OAuthCredential(
                 'client_id',
                 'client_secret'
-            )
+            ),
+            'demo'
         );
+    }
+
+    /**
+     * @return mixed
+     */
+    private function getItemId()
+    {
+        $collection = $this->soldoClient->getCollection(Employees::class);
+        return $collection->get()[0]->id;
     }
 
     /**
@@ -53,7 +60,7 @@ class SoldoClientTest extends TestCase
 
     public function testGetAccessToken()
     {
-        $access_token = self::$soldoClient->getAccessToken();
+        $access_token = $this->soldoClient->getAccessToken();
         $this->assertNotNull($access_token);
         $this->assertInternalType('string', $access_token);
     }
@@ -72,17 +79,16 @@ class SoldoClientTest extends TestCase
      */
     public function testGetCollectionInvalidClass()
     {
-        self::$soldoClient->getCollection('INVALID_CLASS_NAME');
+        $this->soldoClient->getCollection('INVALID_CLASS_NAME');
     }
 
     public function testGetCollection()
     {
-        $collection = self::$soldoClient->getCollection(Employees::class);
+        $collection = $this->soldoClient->getCollection(Employees::class);
         $this->assertInstanceOf(Employees::class, $collection);
         foreach ($collection->get() as $item) {
             $this->assertInstanceOf(Employee::class, $item);
         }
-        self::$itemId = $collection->get()[0]->id;
     }
 
     /**
@@ -99,7 +105,7 @@ class SoldoClientTest extends TestCase
      */
     public function testGetItemInvalidClass()
     {
-        $item = self::$soldoClient->getItem('INVALID_CLASS_NAME');
+        $item = $this->soldoClient->getItem('INVALID_CLASS_NAME');
     }
 
     /**
@@ -107,12 +113,13 @@ class SoldoClientTest extends TestCase
      */
     public function testGetItemNotFound()
     {
-        $item = self::$soldoClient->getItem(Employee::class, 'NOT_EXISTING_ID');
+        $item = $this->soldoClient->getItem(Employee::class, 'NOT_EXISTING_ID');
     }
 
     public function testGetItem()
     {
-        $item = self::$soldoClient->getItem(Employee::class, self::$itemId);
+        $itemId = $this->getItemId();
+        $item = $this->soldoClient->getItem(Employee::class, $itemId);
         $this->assertNotNull($item);
         $this->assertInstanceOf(Employee::class, $item);
     }
@@ -122,8 +129,9 @@ class SoldoClientTest extends TestCase
      */
     public function testUpdateItemInvalidCredentials()
     {
+        $itemId = $this->getItemId();
         $sc = $this->getClientWithInvalidCredentials();
-        $item = $sc->updateItem(Employee::class, self::$itemId, ['department' => 'A Depertament']);
+        $item = $sc->updateItem(Employee::class, $itemId, ['department' => 'A Depertament']);
     }
 
     /**
@@ -131,7 +139,8 @@ class SoldoClientTest extends TestCase
      */
     public function testUpdateItemInvalidClass()
     {
-        $item = self::$soldoClient->updateItem('INVALID_CLASS_NAME', self::$itemId, ['department' => 'A Depertament']);
+        $itemId = $this->getItemId();
+        $item = $this->soldoClient->updateItem('INVALID_CLASS_NAME', $itemId, ['department' => 'A Depertament']);
     }
 
     /**
@@ -139,7 +148,7 @@ class SoldoClientTest extends TestCase
      */
     public function testUpdateItemNotFound()
     {
-        $item = self::$soldoClient->updateItem(Employee::class, 'A_NOT_EXISTING_ID', ['department' => 'A Depertament']);
+        $item = $this->soldoClient->updateItem(Employee::class, 'A_NOT_EXISTING_ID', ['department' => 'A Depertament']);
     }
 
     /**
@@ -147,7 +156,8 @@ class SoldoClientTest extends TestCase
      */
     public function testUpdateItemEmptyData()
     {
-        $item = self::$soldoClient->updateItem(Employee::class, self::$itemId, []);
+        $itemId = $this->getItemId();
+        $item = $this->soldoClient->updateItem(Employee::class, $itemId, []);
     }
 
     /**
@@ -155,15 +165,17 @@ class SoldoClientTest extends TestCase
      */
     public function testUpdateItemNotWhitelisted()
     {
-        $item = self::$soldoClient->updateItem(Employee::class, self::$itemId, ['random_key' => 'Random Value']);
+        $itemId = $this->getItemId();
+        $item = $this->soldoClient->updateItem(Employee::class, $itemId, ['random_key' => 'Random Value']);
     }
 
     public function testUpdateItem()
     {
+        $itemId = $this->getItemId();
         /** @var Employee $item */
-        $item = self::$soldoClient->updateItem(Employee::class, self::$itemId, ['department' => 'A Department']);
+        $item = $this->soldoClient->updateItem(Employee::class, $itemId, ['department' => 'A Department']);
         $this->assertInstanceOf(Employee::class, $item);
-        $this->assertEquals(self::$itemId, $item->id);
+        $this->assertEquals($itemId, $item->id);
         $this->assertEquals('A Department', $item->department);
     }
 
@@ -181,7 +193,7 @@ class SoldoClientTest extends TestCase
      */
     public function testGetRelationshipInvalidClass()
     {
-        $relationship = self::$soldoClient->getRelationship('INVALID_CLASS_NAME', 'fake-id', 'rules');
+        $relationship = $this->soldoClient->getRelationship('INVALID_CLASS_NAME', 'fake-id', 'rules');
     }
 
     /**
@@ -189,7 +201,7 @@ class SoldoClientTest extends TestCase
      */
     public function testGetRelationshipInvalidRelationship()
     {
-        $relationship = self::$soldoClient->getRelationship(\Soldo\Resources\Card::class, 'fake-id', 'not-mapped-relationship');
+        $relationship = $this->soldoClient->getRelationship(\Soldo\Resources\Card::class, 'fake-id', 'not-mapped-relationship');
     }
 
     /**
@@ -197,15 +209,15 @@ class SoldoClientTest extends TestCase
      */
     public function testGetRelationshipNotFound()
     {
-        $relationship = self::$soldoClient->getRelationship(\Soldo\Resources\Card::class, 'fake-id', 'rules');
+        $relationship = $this->soldoClient->getRelationship(\Soldo\Resources\Card::class, 'fake-id', 'rules');
     }
 
     public function testGetRelationship()
     {
-        $cards = self::$soldoClient->getCollection(\Soldo\Resources\Cards::class);
+        $cards = $this->soldoClient->getCollection(\Soldo\Resources\Cards::class);
         $card_id = $cards->get()[0]->id;
 
-        $relationship = self::$soldoClient->getRelationship(\Soldo\Resources\Card::class, $card_id, 'rules');
+        $relationship = $this->soldoClient->getRelationship(\Soldo\Resources\Card::class, $card_id, 'rules');
         $this->assertInternalType('array', $relationship);
         foreach ($relationship as $r) {
             $this->assertInstanceOf(\Soldo\Resources\Rule::class, $r);
@@ -228,6 +240,6 @@ class SoldoClientTest extends TestCase
      */
     public function testPerformTransferInvalidParams()
     {
-        $access_token = self::$soldoClient->performTransfer('from-wallet', 'to-wallet', 50, 'EUR', '123456');
+        $access_token = $this->soldoClient->performTransfer('from-wallet', 'to-wallet', 50, 'EUR', '123456');
     }
 }
