@@ -13,6 +13,10 @@ use Soldo\Exceptions\SoldoCastException;
  */
 abstract class Resource
 {
+    /**
+     * @var string
+     */
+    protected static $basePath;
 
     /**
      * @var array
@@ -39,11 +43,6 @@ abstract class Resource
      * @var array
      */
     protected $cast = [];
-
-    /**
-     * @var string
-     */
-    protected $basePath;
 
     /**
      * Resource constructor.
@@ -156,21 +155,37 @@ abstract class Resource
     }
 
     /**
+     * @param $basePath
      * @throws SoldoInvalidPathException
      */
-    protected function validateBasePath()
+    private function validateBasePath($basePath)
     {
-        if ($this->basePath === null) {
+        if ($basePath === null) {
             throw new SoldoInvalidPathException(
-                'Cannot retrieve remote path for ' . static::class . '.'
-                . ' "basePath" attribute is not defined.'
+                'Static property ' . static::class . '::$basePath'
+                . ' cannot be null'
             );
         }
 
-        if (preg_match('/^\/[\S]+$/', $this->basePath) === 0) {
+        if (preg_match('/^\/[\S]+$/', $basePath) === 0) {
             throw new SoldoInvalidPathException(
-                'Cannot retrieve remote path for ' . static::class . '.'
-                . ' "basePath" seems to be not a valid path.'
+                'Static property ' . static::class . '::$basePath'
+                . ' seems to be not a valid path'
+            );
+        }
+    }
+
+
+    /**
+     * @param $path
+     * @throws SoldoInvalidPathException
+     */
+    protected function validatePath($path)
+    {
+        if (preg_match('/^\/[\S]+$/', $path) === 0) {
+            throw new SoldoInvalidPathException(
+                'The attribute $path of ' . static::class . '.'
+                . ' seems to be not a valid path.'
             );
         }
     }
@@ -185,8 +200,8 @@ abstract class Resource
     {
         if ($this->{$attribute} === null) {
             throw new SoldoInvalidPathException(
-                'Cannot retrieve remote path for ' . static::class . '.'
-                . ' "'. $attribute .'" attribute is not defined.'
+                'The attribute "' . $attribute . '" of ' . static::class
+                . ' is not defined'
             );
         }
     }
@@ -194,16 +209,24 @@ abstract class Resource
     /**
      * @return string
      */
-    public function getRemotePath()
+    public final function getRemotePath()
     {
-        $this->validateBasePath();
-        $remote_path = $this->basePath;
-        preg_match_all('/\{(\S+?)\}/', $this->basePath, $variables);
+        $basePath = self::getBasePath();
+        $this->validateBasePath($basePath);
+
+        // immediately return base path if path is not defined
+        if($this->path === null) {
+            return static::$basePath;
+        }
+
+        $this->validatePath($this->path);
+        $remote_path = $this->path;
+        preg_match_all('/\{(\S+?)\}/', $this->path, $variables);
         foreach ($variables[1] as $key => $attribute) {
             $this->validateAttribute($attribute);
             $remote_path = str_replace($variables[0][$key], urlencode($this->{$attribute}), $remote_path);
         }
-        return $remote_path;
+        return $basePath . $remote_path;
     }
 
     /**
@@ -274,6 +297,16 @@ abstract class Resource
     {
         return array_intersect_key($data, array_flip($this->whiteListed));
     }
+
+    /**
+     * @return string
+     */
+    final static public function getBasePath()
+    {
+        return static::$basePath;
+    }
+
+
 
     /**
      * Validate a relationship: the $this->relationship must contain a $relationshipName key

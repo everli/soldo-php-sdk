@@ -10,6 +10,8 @@ use Soldo\Resources\Resource;
 class MockResource extends Resource
 {
 
+    protected static $basePath = '/resources';
+
     /**
      * @param array $cast
      */
@@ -35,10 +37,18 @@ class MockResource extends Resource
     }
 
     /**
+     * @param $path
+     */
+    public function setPath($path)
+    {
+        $this->path = $path;
+    }
+
+    /**
      * @param $basePath
      */
-    public function setBasePath($basePath)
+    public static function setBasePath($basePath)
     {
-        $this->basePath = $basePath;
+        self::$basePath = $basePath;
     }
 }
