@@ -22,7 +22,12 @@ class Employee extends Resource
     /**
      * @var string
      */
-    protected $basePath = '/employees/{id}';
+    protected static $basePath = '/employees';
+
+    /**
+     * @var string
+     */
+    protected $path = '/{id}';
 
     /**
      * @var array

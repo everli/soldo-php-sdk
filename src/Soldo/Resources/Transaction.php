@@ -40,5 +40,10 @@ class Transaction extends Resource
     /**
      * @var string
      */
-    protected $basePath = '/transactions/{id}';
+    protected static $basePath = '/transactions';
+
+    /**
+     * @var string
+     */
+    protected $path = '/{id}';
 }

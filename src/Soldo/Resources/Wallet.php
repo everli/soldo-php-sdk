@@ -18,9 +18,13 @@ namespace Soldo\Resources;
  */
 class Wallet extends Resource
 {
+    /**
+     * @var string
+     */
+    protected static $basePath = '/wallets';
 
     /**
      * @var string
      */
-    protected $basePath = '/wallets/{id}';
+    protected $path = '/{id}';
 }

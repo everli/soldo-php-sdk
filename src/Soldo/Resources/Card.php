@@ -23,11 +23,15 @@ namespace Soldo\Resources;
  */
 class Card extends Resource
 {
+    /**
+     * @var string
+     */
+    protected static $basePath = '/cards';
 
     /**
      * @var string
      */
-    protected $basePath = '/cards/{id}';
+    protected $path = '/{id}';
 
     /**
      * @var array

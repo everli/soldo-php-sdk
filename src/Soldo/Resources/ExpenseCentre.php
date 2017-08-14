@@ -15,11 +15,15 @@ namespace Soldo\Resources;
  */
 class ExpenseCentre extends Resource
 {
+    /**
+     * @var string
+     */
+    protected static $basePath = '/expensecentres';
 
     /**
      * @var string
      */
-    protected $basePath = '/expensecentres/{id}';
+    protected $path = '/{id}';
 
     /**
      * @var array

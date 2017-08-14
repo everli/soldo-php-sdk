@@ -21,7 +21,12 @@ class InternalTransfer extends Resource
     /**
      * @var string
      */
-    protected $basePath = '/wallets/internalTransfer/{fromWalletId}/{toWalletId}';
+    protected static $basePath = '/wallets/internalTransfer';
+
+    /**
+     * @var string
+     */
+    protected $path = '/{fromWalletId}/{toWalletId}';
 
     /**
      * @var array
