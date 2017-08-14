@@ -9,6 +9,8 @@ use Soldo\Tests\Fixtures\MockResource;
 
 /**
  * Class ResourceTest
+ *
+ * @backupStaticAttributes enabled
  */
 class ResourceTest extends TestCase
 {
