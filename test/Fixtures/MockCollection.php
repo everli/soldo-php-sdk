@@ -18,12 +18,4 @@ class MockCollection extends Collection
     {
         $this->path = $path;
     }
-
-    /**
-     * @param $itemType
-     */
-    public function setItemType($itemType)
-    {
-        $this->itemType = $itemType;
-    }
 }
