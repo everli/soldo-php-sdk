@@ -78,7 +78,6 @@ trait ValidatorTrait
     protected function validateAgainstRequired($value)
     {
         return $value !== null &&
-            $value !== '' &&
-            $value !== false;
+            $value !== '';
     }
 }
