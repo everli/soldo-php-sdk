@@ -90,7 +90,7 @@ abstract class Resource
     /**
      * Return true if the attribute need to be casted
      *
-     * @param $attributeName
+     * @param string $attributeName
      * @return bool
      */
     private function shouldCast($attributeName)
@@ -102,8 +102,8 @@ abstract class Resource
      * Set attribute with the name and value provided
      * Attributes cast happens here
      *
-     * @param $name
-     * @param $value
+     * @param string $name
+     * @param mixed $value
      * @throws SoldoInvalidResourceException
      */
     public function __set($name, $value)
@@ -123,7 +123,7 @@ abstract class Resource
     /**
      * Return a given attribute
      *
-     * @param $name
+     * @param string $name
      * @return mixed|null
      */
     public function __get($name)
@@ -178,8 +178,8 @@ abstract class Resource
     /**
      * Extract an array of resources data from the rawData returned by the API
      *
-     * @param $rawData
-     * @param $relationshipName
+     * @param array $rawData
+     * @param string $relationshipName
      * @throws SoldoInvalidRelationshipException
      * @return mixed
      */
@@ -197,8 +197,8 @@ abstract class Resource
     /**
      * Build and return an array of Resource
      *
-     * @param $relationshipName
-     * @param $rawData
+     * @param string $relationshipName
+     * @param array $rawData
      * @return array
      */
     public function buildRelationship($relationshipName, $rawData)
@@ -219,7 +219,7 @@ abstract class Resource
     /**
      * Get relationship class given the relationship name
      *
-     * @param $relationshipName
+     * @param string $relationshipName
      * @throws SoldoInvalidRelationshipException
      * @return mixed
      */

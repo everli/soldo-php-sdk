@@ -50,7 +50,7 @@ class OAuthCredential extends Resource
     /**
      * Validate raw data end fill resources with array provided
      *
-     * @param $data
+     * @param array $data
      * @throws SoldoAuthenticationException
      */
     public function updateAuthenticationData($data)

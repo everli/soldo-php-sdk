@@ -14,7 +14,7 @@ trait ResourceValidatorTrait
     /**
      * Check that given class exists and extends Resource class
      *
-     * @param $className
+     * @param string $className
      * @throws SoldoInvalidResourceException
      */
     protected function validateClassName($className)

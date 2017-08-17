@@ -63,21 +63,22 @@ class SoldoClient
     const AUTHORIZE_URL = '/oauth/authorize';
 
     /**
+     * Guzzle client
+     *
      * @var Client
      */
     protected $httpClient;
 
     /**
-     * @var string
-     */
-    protected $endpoint;
-
-    /**
+     * OAuthCredential instance
+     *
      * @var OAuthCredential
      */
     protected $credential;
 
     /**
+     * PSR-3 compliant Logger instance
+     *
      * @var LoggerInterface
      */
     protected $logger;
@@ -423,9 +424,9 @@ class SoldoClient
     /**
      * Get an has many relationship
      *
-     * @param $className
-     * @param $id
-     * @param $relationshipName
+     * @param string $className
+     * @param mixed $id
+     * @param string $relationshipName
      * @return array
      */
     public function getRelationship($className, $id, $relationshipName)
@@ -451,11 +452,11 @@ class SoldoClient
     /**
      * Transfer money from a wallet to another.
      *
-     * @param $fromWalletId
-     * @param $toWalletId
-     * @param $amount
-     * @param $currencyCode
-     * @param $internalToken
+     * @param mixed $fromWalletId
+     * @param mixed $toWalletId
+     * @param float $amount
+     * @param string $currencyCode
+     * @param string $internalToken
      * @throws \Exception
      * @return InternalTransfer
      */

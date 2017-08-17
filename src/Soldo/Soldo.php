@@ -6,19 +6,13 @@ use Psr\Log\LoggerInterface;
 use Soldo\Authentication\OAuthCredential;
 use Soldo\Exceptions\SoldoException;
 use Soldo\Resources\InternalTransfer;
-use Soldo\Resources\Resource;
 use Soldo\Resources\Transaction;
-use Soldo\Resources\Transactions;
 use Soldo\Utils\Paginator;
 use Soldo\Resources\Card;
-use Soldo\Resources\Cards;
 use Soldo\Resources\Company;
 use Soldo\Resources\Employee;
-use Soldo\Resources\Employees;
 use Soldo\Resources\ExpenseCentre;
-use Soldo\Resources\ExpenseCentres;
 use Soldo\Resources\Wallet;
-use Soldo\Resources\Wallets;
 
 /**
  * Class Soldo
@@ -110,7 +104,7 @@ class Soldo
     /**
      * Return a single ExpenseCentre resource
      *
-     * @param $id
+     * @param mixed $id
      * @return \Soldo\Resources\Resource
      */
     public function getExpenseCentre($id)
@@ -123,8 +117,8 @@ class Soldo
     /**
      * Update the ExpenseCentre by id and return the resource up to date
      *
-     * @param $id
-     * @param $data
+     * @param mixed $id
+     * @param array $data
      * @return \Soldo\Resources\Resource
      */
     public function updateExpenseCentre($id, $data)
@@ -153,7 +147,7 @@ class Soldo
     /**
      * Return a single Employee resource
      *
-     * @param $id
+     * @param mixed $id
      * @return \Soldo\Resources\Resource
      */
     public function getEmployee($id)
@@ -166,8 +160,8 @@ class Soldo
     /**
      * Update the Employee by id and return the resource up to date
      *
-     * @param $id
-     * @param $data
+     * @param mixed $id
+     * @param array $data
      * @return \Soldo\Resources\Resource
      */
     public function updateEmployee($id, $data)
@@ -196,8 +190,8 @@ class Soldo
     /**
      * Return a single Transaction resource
      *
-     * @param $id
-     * @param bool $withDetails
+     * @param mixed $id
+     * @param boolean $withDetails
      * @return \Soldo\Resources\Resource
      */
     public function getTransaction($id, $withDetails = false)
@@ -230,7 +224,7 @@ class Soldo
     /**
      * Return a single Card resource
      *
-     * @param $id
+     * @param mixed $id
      * @return \Soldo\Resources\Resource
      */
     public function getCard($id)
@@ -243,7 +237,7 @@ class Soldo
     /**
      * Return an array containing the list of Rule for the card.
      *
-     * @param $id
+     * @param mixed $id
      * @return array
      */
     public function getCardRules($id)

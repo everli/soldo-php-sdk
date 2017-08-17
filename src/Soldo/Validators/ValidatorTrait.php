@@ -72,7 +72,7 @@ trait ValidatorTrait
      * Validate against required
      * The value must be not null, not empty string and not false
      *
-     * @param $value
+     * @param mixed $value
      * @return bool
      */
     protected function validateAgainstRequired($value)

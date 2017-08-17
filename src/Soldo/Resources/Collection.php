@@ -16,48 +16,64 @@ class Collection
     use ValidatorTrait, ResourceValidatorTrait;
 
     /**
+     * Number of available pages
+     *
      * @var int
      */
     protected $pages;
 
     /**
+     * Number of total available items
+     *
      * @var int
      */
     protected $total;
 
     /**
+     * The number of elements per page
+     *
      * @var int
      */
     protected $pageSize;
 
     /**
+     * The current page 0 based
+     *
      * @var int
      */
     protected $currentPage;
 
     /**
+     * The number of the returned items
+     *
      * @var int
      */
     protected $resultsSize;
 
     /**
+     * Array containing all collection items
+     *
      * @var array
      */
     protected $items = [];
 
     /**
+     * Collection remote path
+     *
      * @var string
      */
     protected $path;
 
     /**
+     * A valid Soldo resource class name (e.g Soldo\Resources\Card)
+     *
      * @var string
      */
     protected $itemType;
 
     /**
      * Collection constructor.
-     * @param $itemType
+     * @param string $itemType
      * @throws SoldoInvalidResourceException
      */
     public function __construct($itemType)
@@ -71,7 +87,7 @@ class Collection
     /**
      * Validate rawData, build the resources and populate the collection
      *
-     * @param $data
+     * @param array $data
      * @throws SoldoInvalidCollectionException
      * @return $this
      */
@@ -126,7 +142,7 @@ class Collection
     /**
      * Populate $this->items with the list of resources
      *
-     * @param $items
+     * @param array $items
      */
     private function build($items)
     {
