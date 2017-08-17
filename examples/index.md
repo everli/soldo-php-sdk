@@ -1,4 +1,6 @@
-### Adding a Logger
+# Soldo SDK for PHP
+
+## Adding a Logger
 
 You can pass a PSR-3 compliant Logger to the `Soldo` constructor to enable the logging capabilities that is an out of the box feature.
 
