@@ -22,8 +22,8 @@ $soldo = new \Soldo\Soldo([
 
 ### Examples
 - **Configuration**
-    - [Adding a Logger](#)
-    - [Going live!](#)
+    - [Adding a Logger](./examples/configuration.md#adding-a-logger)
+    - [Going live!](./examples/configuration.md#going-live)
 
 - **Retrieve collections**
     - [Obtaining the Employees list](#)
