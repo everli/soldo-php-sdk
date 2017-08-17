@@ -203,7 +203,7 @@ class Soldo
     public function getTransaction($id, $withDetails = false)
     {
         $queryParameters = [];
-        if (true === $withDetails) {
+        if ($withDetails) {
             $queryParameters['showDetails'] = 'true';
         }
         $transaction = $this->client->getItem(Transaction::class, $id, $queryParameters);
