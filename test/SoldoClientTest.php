@@ -4,6 +4,7 @@ namespace Soldo\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Soldo\Authentication\OAuthCredential;
+use Soldo\Exceptions\SoldoInvalidResourceException;
 use Soldo\Resources\Collection;
 use Soldo\Resources\Employee;
 use Soldo\Resources\Card;
@@ -76,7 +77,7 @@ class SoldoClientTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
+     * @expectedException \Soldo\Exceptions\SoldoInvalidResourceException
      */
     public function testGetCollectionInvalidClass()
     {
@@ -102,7 +103,7 @@ class SoldoClientTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
+     * @expectedException \Soldo\Exceptions\SoldoInvalidResourceException
      */
     public function testGetItemInvalidClass()
     {
@@ -136,7 +137,7 @@ class SoldoClientTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
+     * @expectedException \Soldo\Exceptions\SoldoInvalidResourceException
      */
     public function testUpdateItemInvalidClass()
     {
@@ -190,7 +191,7 @@ class SoldoClientTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
+     * @expectedException \Soldo\Exceptions\SoldoInvalidResourceException
      */
     public function testGetRelationshipInvalidClass()
     {
@@ -198,7 +199,7 @@ class SoldoClientTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
+     * @expectedException \Soldo\Exceptions\SoldoInvalidRelationshipException
      */
     public function testGetRelationshipInvalidRelationship()
     {

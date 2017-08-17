@@ -2,9 +2,10 @@
 
 namespace Soldo\Resources;
 
-use Respect\Validation\Validator;
 use Soldo\Exceptions\SoldoInvalidCollectionException;
-use Soldo\Exceptions\SoldoInvalidPathException;
+use Soldo\Exceptions\SoldoInvalidResourceException;
+use Soldo\Validators\ResourceValidatorTrait;
+use Soldo\Validators\ValidatorTrait;
 
 /**
  * Class Collection
@@ -12,6 +13,9 @@ use Soldo\Exceptions\SoldoInvalidPathException;
  */
 class Collection
 {
+
+    use ValidatorTrait, ResourceValidatorTrait;
+
     /**
      * @var int
      */
@@ -52,26 +56,43 @@ class Collection
      */
     protected $itemType;
 
+
     /**
      * Collection constructor.
      * @param $itemType
+     * @throws SoldoInvalidResourceException
      */
     public function __construct($itemType)
     {
-        $this->validateItemType($itemType);
+        $this->validateClassName($itemType);
+
         $this->itemType = $itemType;
-        $this->path =  call_user_func([$itemType, 'getBasePath']);
+        $this->path = call_user_func([$itemType, 'getBasePath']);
     }
 
     /**
-     * Fill collection starting from raw data
+     * Validate rawData, build the resources and populate the collection
      *
      * @param $data
      * @return $this
+     * @throws SoldoInvalidCollectionException
      */
     public function fill($data)
     {
-        $this->validateRawData($data);
+        $rules = [
+            'pages' => 'integer',
+            'total' => 'integer',
+            'page_size' => 'integer',
+            'current_page' => 'integer',
+            'results_size' => 'integer',
+            'results' => 'array',
+        ];
+
+        if(!$this->validateRawData($data, $rules)) {
+            throw new SoldoInvalidCollectionException(
+                'Could not generate a collection with data provided'
+            );
+        }
 
         $this->pages = $data['pages'];
         $this->total = $data['total'];
@@ -85,6 +106,8 @@ class Collection
     }
 
     /**
+     * Return array of resources
+     *
      * @return array
      */
     public function get()
@@ -93,6 +116,8 @@ class Collection
     }
 
     /**
+     * Get the collection remote path
+     *
      * @return string
      */
     public function getRemotePath()
@@ -101,69 +126,14 @@ class Collection
     }
 
     /**
+     * Populate $this->items with the list of resources
+     *
      * @param $items
      */
     private function build($items)
     {
-        $item_class_name = $this->itemType;
         foreach ($items as $item) {
-            $this->items[] = new $item_class_name($item);
+            $this->items[] = new $this->itemType($item);
         }
-    }
-
-    /**
-     * @param $itemType
-     * @return bool
-     */
-    private function validateItemType($itemType)
-    {
-        if ($itemType === null) {
-            throw new \InvalidArgumentException(
-                'Could not generate a Soldo collection. '
-                . '$itemType must be a valid Resource child class name'
-            );
-        }
-
-        if (class_exists($itemType) === false) {
-            throw new \InvalidArgumentException(
-                'Could not generate a Soldo collection '
-                . $itemType . ' doesn\'t exist'
-            );
-        }
-
-        // create a dummy object and check if it is a Resource child
-        $dummy = new $itemType();
-        if (is_a($dummy, '\Soldo\Resources\Resource') === false) {
-            throw new \InvalidArgumentException(
-                'Could not generate a Soldo collection '
-                . $itemType . ' is not a Resource child'
-            );
-        }
-
-        return true;
-    }
-
-    /**
-     * @param $data
-     * @throws SoldoInvalidCollectionException
-     * @return bool
-     */
-    private function validateRawData($data)
-    {
-        $validator = Validator::key('pages', Validator::intVal())
-            ->key('total', Validator::intVal())
-            ->key('page_size', Validator::intVal())
-            ->key('current_page', Validator::intVal())
-            ->key('results_size', Validator::intVal())
-            ->key('results', Validator::arrayType());
-
-        if ($validator->validate($data) === false) {
-            throw new SoldoInvalidCollectionException(
-                'Could not generate a Soldo collection '
-                . 'with the array provided'
-            );
-        }
-
-        return true;
     }
 }

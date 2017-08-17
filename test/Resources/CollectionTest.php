@@ -40,18 +40,15 @@ class CollectionTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
+     * @expectedException \Soldo\Exceptions\SoldoInvalidResourceException
      */
     public function testFillNullItemType()
     {
         $collection = new Collection(null);
-        //$collection->setItemType(null);
-        //$collection->fill([]);
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Could not generate a Soldo collection InvalidClassName doesn't exist
+     * @expectedException \Soldo\Exceptions\SoldoInvalidResourceException
      */
     public function testFillInvalidItemType()
     {

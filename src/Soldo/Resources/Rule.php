@@ -12,4 +12,8 @@ namespace Soldo\Resources;
  */
 class Rule extends Resource
 {
+    /**
+     * @var string
+     */
+    protected static $basePath = '/rules';
 }

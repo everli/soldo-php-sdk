@@ -126,7 +126,7 @@ class TransactionTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
+     * @expectedException \Soldo\Exceptions\SoldoInvalidRelationshipException
      */
     public function testBuildRelationshipNotMappedRelationship()
     {
@@ -135,7 +135,7 @@ class TransactionTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
+     * @expectedException \Soldo\Exceptions\SoldoInvalidRelationshipException
      */
     public function testGetRelationshipRemotePathNotMappedRelationship()
     {

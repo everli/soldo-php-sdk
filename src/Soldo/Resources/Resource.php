@@ -2,10 +2,12 @@
 
 namespace Soldo\Resources;
 
-use Respect\Validation\Validator;
 use Soldo\Exceptions\SoldoInvalidPathException;
 use Soldo\Exceptions\SoldoInvalidRelationshipException;
-use Soldo\Exceptions\SoldoCastException;
+use Soldo\Exceptions\SoldoInvalidResourceException;
+use Soldo\Validators\ResourceValidatorTrait;
+
+//use Soldo\Utils\Validator;
 
 /**
  * Class Resource
@@ -13,32 +15,46 @@ use Soldo\Exceptions\SoldoCastException;
  */
 abstract class Resource
 {
+
+    use ResourceValidatorTrait;
+
     /**
+     * Remote path of resource list
+     *
      * @var string
      */
     protected static $basePath;
 
     /**
+     * Remote path of the single resources
+     *
+     * @var string
+     */
+    protected $path;
+
+    /**
+     * List of resource attributes
+     *
      * @var array
      */
     protected $attributes = [];
 
     /**
+     * List of attributes that can be updated
+     *
      * @var array
      */
     protected $whiteListed = [];
 
     /**
      * An array containing a map of the resource relationships
-     * The key represents also the path of the child resource(s)
      *
      * @var array
      */
     protected $relationships = [];
 
     /**
-     * An array containing the list of attributes that need to be casted
-     * into a Resource or one of its child class (e.g. a Wallet)
+     * An array containing the list of attributes that need to be casted into a Resource
      *
      * @var array
      */
@@ -54,76 +70,61 @@ abstract class Resource
     }
 
     /**
-     * Validate that className is a valid class and that it is of type Resource
+     * Populate resource attribute with the array provided
      *
-     * @param $className
-     * @param $attributeName
-     * @param $data
-     * @throws SoldoCastException
-     * @return boolean
-     */
-    private function validateAttributeCast($className, $attributeName, $data)
-    {
-        if (class_exists($className) === false) {
-            throw new SoldoCastException(
-                'Could not cast ' . $attributeName . '. '
-                . $className . ' doesn\'t exist'
-            );
-        }
-
-        // create a dummy object and check if it is a Resource child
-        $dummy = new $className();
-        if (is_a($dummy, '\Soldo\Resources\Resource') === false) {
-            throw new SoldoCastException(
-                'Could not cast ' . $attributeName . '. '
-                . $className . ' is not a Resource child'
-            );
-        }
-
-        if (is_array($data) === false || empty($data)) {
-            throw new SoldoCastException(
-                'Could not cast ' . $attributeName . '. '
-                . '$data is not a valid data set'
-            );
-        }
-
-        return true;
-    }
-
-    /**
      * @param array $data
      * @return $this
      */
-    public function fill(array $data)
+    public function fill($data)
     {
+        if (!is_array($data)) {
+            throw new \InvalidArgumentException(
+                'Trying to fill resource with malformed data'
+            );
+        }
+
         foreach ($data as $key => $value) {
             $this->{$key} = $value;
         }
-
         return $this;
     }
 
+    /**
+     * Return true if the attribute need to be casted
+     *
+     * @param $attributeName
+     * @return bool
+     */
+    private function hasToCast($attributeName)
+    {
+        return array_key_exists($attributeName, $this->cast);
+    }
 
     /**
+     * Set attribute with the name and value provided
+     * Attributes cast happens here
+     *
      * @param $name
      * @param $value
+     * @throws SoldoInvalidResourceException
      */
     public function __set($name, $value)
     {
-        if (array_key_exists($name, $this->cast)) {
-            $class = $this->cast[$name];
+        if ($this->hasToCast($name)) {
 
-            if ($value instanceof $class === false) {
-                $this->validateAttributeCast($class, $name, $value);
-                $this->attributes[$name] = new $class($value);
-                return;
-            }
+            $className = $this->cast[$name];
+            $this->validateClassName($className);
+
+            $this->attributes[$name] = new $className($value);
+            return;
         }
 
         $this->attributes[$name] = $value;
     }
 
     /**
+     * Return a given attribute
+     *
      * @param $name
      * @return mixed|null
      */
@@ -137,6 +138,9 @@ abstract class Resource
     }
 
     /**
+     * Build an array representation of the resource
+     * Also call toArray on casted attributes
+     *
      * @return array
      */
     public function toArray()
@@ -155,141 +159,103 @@ abstract class Resource
     }
 
     /**
-     * @param $basePath
-     * @throws SoldoInvalidPathException
-     */
-    private function validateBasePath($basePath)
-    {
-        if ($basePath === null) {
-            throw new SoldoInvalidPathException(
-                'Static property ' . static::class . '::$basePath'
-                . ' cannot be null'
-            );
-        }
-
-        if (preg_match('/^\/[\S]+$/', $basePath) === 0) {
-            throw new SoldoInvalidPathException(
-                'Static property ' . static::class . '::$basePath'
-                . ' seems to be not a valid path'
-            );
-        }
-    }
-
-
-    /**
-     * @param $path
-     * @throws SoldoInvalidPathException
-     */
-    protected function validatePath($path)
-    {
-        if (preg_match('/^\/[\S]+$/', $path) === 0) {
-            throw new SoldoInvalidPathException(
-                'The attribute $path of ' . static::class . '.'
-                . ' seems to be not a valid path.'
-            );
-        }
-    }
-
-
-    /**
-     * @param $attribute
+     * Get full remote path of the single resource
      *
-     * @throws SoldoInvalidPathException
-     */
-    protected function validateAttribute($attribute)
-    {
-        if ($this->{$attribute} === null) {
-            throw new SoldoInvalidPathException(
-                'The attribute "' . $attribute . '" of ' . static::class
-                . ' is not defined'
-            );
-        }
-    }
-
-    /**
      * @return string
+     * @throws SoldoInvalidPathException
      */
     public final function getRemotePath()
     {
         $basePath = self::getBasePath();
-        $this->validateBasePath($basePath);
 
-        // immediately return base path if path is not defined
-        if($this->path === null) {
-            return static::$basePath;
+        if ($this->path === null) {
+            return $basePath;
         }
 
-        $this->validatePath($this->path);
-        $remote_path = $this->path;
-        preg_match_all('/\{(\S+?)\}/', $this->path, $variables);
-        foreach ($variables[1] as $key => $attribute) {
-            $this->validateAttribute($attribute);
-            $remote_path = str_replace($variables[0][$key], urlencode($this->{$attribute}), $remote_path);
-        }
-        return $basePath . $remote_path;
+        $resourcePath = $this->getResourcePath();
+
+        return $basePath . $resourcePath;
     }
 
     /**
-     * Get an array of child resource.
+     * Extract an array of resources data from the rawData returned by the API
+     *
+     * @param $rawData
+     * @param $relationshipName
+     * @return mixed
+     * @throws SoldoInvalidRelationshipException
+     */
+    private function getRelationshipData($rawData, $relationshipName)
+    {
+        if (!is_array($rawData) || !array_key_exists($relationshipName, $rawData)) {
+            throw new SoldoInvalidRelationshipException(
+                'Trying to build a relationship with invalid data'
+            );
+        }
+        return $rawData[$relationshipName];
+    }
+
+    /**
+     * Build and return an array of Resource
      *
      * @param $relationshipName
-     * @param $data
+     * @param $rawData
      * @return array
      */
-    public function buildRelationship($relationshipName, $data)
+    public function buildRelationship($relationshipName, $rawData)
     {
-        $this->validateRelationship($relationshipName);
-        $this->validateRelationshipRawData($relationshipName, $data);
+        $className = $this->getRelationshipClass($relationshipName);
+        $this->validateClassName($className);
 
-        $className = $this->relationships[$relationshipName];
+        $data = $this->getRelationshipData($rawData, $relationshipName);
+
         $relationship = [];
-        foreach ($data[$relationshipName] as $r) {
-            $relationship[] = new $className($r);
+        foreach ($data as $relationshipData) {
+            $relationship[] = new $className($relationshipData);
         }
 
         return $relationship;
     }
 
     /**
-     * @param string $relationshipName
-     * @param array $data
+     * Get relationship class given the relationship name
+     *
+     * @param $relationshipName
+     * @return mixed
      * @throws SoldoInvalidRelationshipException
-     * @return boolean
      */
-    private function validateRelationshipRawData($relationshipName, $data)
+    private function getRelationshipClass($relationshipName)
     {
-        $validator = Validator::key($relationshipName, Validator::arrayType()->notEmpty());
-        if ($validator->validate($data) === false) {
+        if (!array_key_exists($relationshipName, $this->relationships)) {
             throw new SoldoInvalidRelationshipException(
-                'Could not build ' . $relationshipName . ' relationship '
-                . 'with the array provided'
+                'Relationship ' . $relationshipName . ' is not defined'
             );
         }
 
-        foreach ($data[$relationshipName] as $singleRelationship) {
-            if (is_array($singleRelationship) === false) {
-                throw new SoldoInvalidRelationshipException(
-                    'Could not build ' . $relationshipName . ' relationship '
-                    . 'with the array provided'
-                );
-            }
-        }
+        $class = $this->relationships[$relationshipName];
 
-        return true;
+        return $class;
     }
 
     /**
-     * @param $relationshipName
+     * Get relationship remote path
+     *
+     * @param string $relationshipName
      * @return string
+     * @throws SoldoInvalidRelationshipException
      */
     public function getRelationshipRemotePath($relationshipName)
     {
-        $this->validateRelationship($relationshipName);
+        $className = $this->getRelationshipClass($relationshipName);
+        $this->validateClassName($className);
 
-        return $this->getRemotePath() . '/' . $relationshipName;
+        $relationshipPath = call_user_func([$className, 'getBasePath']);
+        return $this->getRemotePath() . $relationshipPath;
     }
 
     /**
+     * Remove all not whitelisted key from the array
+     *
      * @param array $data
      * @return array
      */
@@ -299,39 +265,55 @@ abstract class Resource
     }
 
     /**
-     * @return string
+     * Build a full qualified path replacing {string} occurrence
+     * with $this->{string} attribute
+     *
+     * @return mixed
+     * @throws SoldoInvalidPathException
      */
-    final static public function getBasePath()
+    private function getResourcePath()
     {
-        return static::$basePath;
+        if (@preg_match('/^\/[\S]+$/', $this->path) !== 1) {
+            throw new SoldoInvalidPathException(
+                static::class . ' basePath seems to be invalid'
+            );
+        }
+
+        $remotePath = $this->path;
+        preg_match_all('/\{(\S+?)\}/', $this->path, $parts);
+        foreach ($parts[1] as $key => $attributeName) {
+
+            if ($this->{$attributeName} === null) {
+                throw new SoldoInvalidPathException(
+                    static::class . ' ' . $attributeName . ' is not defined'
+                );
+            }
+
+            $remotePath = str_replace($parts[0][$key],
+                urlencode($this->{$attributeName}),
+                $remotePath
+            );
+        }
+
+        return $remotePath;
     }
 
 
-
     /**
-     * Validate a relationship: the $this->relationship must contain a $relationshipName key
-     * and the value of the key must be a valid resource name
+     * Get base path
      *
-     * @param $relationshipName
-     * @return boolean
+     * @return string
+     * @throws SoldoInvalidPathException
      */
-    private function validateRelationship($relationshipName)
+    final static public function getBasePath()
     {
-        if (!array_key_exists($relationshipName, $this->relationships)) {
-            throw new \InvalidArgumentException(
-                'There is no relationship mapped with "'
-                . $relationshipName . '" name'
+        if (static::$basePath === null ||
+            @preg_match('/^\/[\S]+$/', static::$basePath) !== 1) {
+            throw new SoldoInvalidPathException(
+                static::class . ' basePath seems to be invalid'
             );
         }
 
-        $className = $this->relationships[$relationshipName];
-        if (class_exists($className) === false) {
-            throw new \InvalidArgumentException(
-                'Invalid resource class name '
-                . $className . ' doesn\'t exist'
-            );
-        }
-
-        return true;
+        return static::$basePath;
     }
 }

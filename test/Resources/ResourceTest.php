@@ -40,8 +40,7 @@ class ResourceTest extends TestCase
     }
 
     /**
-     * @expectedException \Soldo\Exceptions\SoldoCastException
-     * @expectedExceptionMessage Could not cast castable_attribute. NotExistentClassName doesn't exist
+     * @expectedException \Soldo\Exceptions\SoldoInvalidResourceException
      */
     public function testFillCastableInvalidClassName()
     {
@@ -60,8 +59,7 @@ class ResourceTest extends TestCase
     }
 
     /**
-     * @expectedException \Soldo\Exceptions\SoldoCastException
-     * @expectedExceptionMessage Could not cast castable_attribute. stdClass is not a Resource child
+     * @expectedException \Soldo\Exceptions\SoldoInvalidResourceException
      */
     public function testFillCastableNotChildOfSoldoResource()
     {
@@ -80,8 +78,7 @@ class ResourceTest extends TestCase
     }
 
     /**
-     * @expectedException \Soldo\Exceptions\SoldoCastException
-     * @expectedExceptionMessage Could not cast castable_attribute. $data is not a valid data set
+     * @expectedException \InvalidArgumentException
      */
     public function testFillCastableNotValidDataset()
     {
@@ -191,7 +188,6 @@ class ResourceTest extends TestCase
 
     /**
      * @expectedException \Soldo\Exceptions\SoldoInvalidPathException
-     * @expectedExceptionMessage Static property Soldo\Tests\Fixtures\MockResource::$basePath cannot be null
      */
     public function testGetRemotePathMissingBasePath()
     {
@@ -202,7 +198,6 @@ class ResourceTest extends TestCase
 
     /**
      * @expectedException \Soldo\Exceptions\SoldoInvalidPathException
-     * @expectedExceptionMessage The attribute "id" of Soldo\Tests\Fixtures\MockResource is not defined
      */
     public function testGetRemotePathMissingId()
     {
@@ -213,7 +208,6 @@ class ResourceTest extends TestCase
 
     /**
      * @expectedException \Soldo\Exceptions\SoldoInvalidPathException
-     * @expectedExceptionMessage The attribute $path of Soldo\Tests\Fixtures\MockResource. seems to be not a valid path
      */
     public function testGetRemotePathInvalidBasePath()
     {
@@ -241,8 +235,7 @@ class ResourceTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage There is no relationship mapped with "resources" name
+     * @expectedException \Soldo\Exceptions\SoldoInvalidRelationshipException
      */
     public function testBuildRelationshipNotMappedRelationship()
     {
@@ -251,8 +244,7 @@ class ResourceTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Invalid resource class name InvalidClassName doesn't exist
+     * @expectedException \Soldo\Exceptions\SoldoInvalidResourceException
      */
     public function testBuildRelationshipWithInvalidClassName()
     {
@@ -285,7 +277,7 @@ class ResourceTest extends TestCase
     }
 
     /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidRelationshipException
+     * @expectedException \InvalidArgumentException
      */
     public function testBuildRelationshipNotAMultidimensionalArray()
     {
@@ -311,8 +303,7 @@ class ResourceTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage There is no relationship mapped with "resources" name
+     * @expectedException \Soldo\Exceptions\SoldoInvalidRelationshipException
      */
     public function testGetRelationshipRemotePathNotMappedRelationship()
     {
@@ -322,8 +313,7 @@ class ResourceTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Invalid resource class name InvalidClassName doesn't exist
+     * @expectedException \Soldo\Exceptions\SoldoInvalidResourceException
      */
     public function testGetRelationshipRemotePathInvalidClassName()
     {

@@ -51,7 +51,6 @@ class InternalTransferTest extends TestCase
         foreach ($data as $key => $value) {
             $this->assertNull($resource->{$key});
         }
-
         $resource = new InternalTransfer($data);
         $this->assertEquals($data['amount'], $resource->amount);
         $this->assertEquals($data['currency'], $resource->currency);
@@ -95,7 +94,7 @@ class InternalTransferTest extends TestCase
 
     /**
      * @expectedException \Soldo\Exceptions\SoldoInvalidPathException
-     * @expectedExceptionMessage The attribute "toWalletId" of Soldo\Resources\InternalTransfer is not defined
+     * @expectedExceptionMessage Soldo\Resources\InternalTransfer toWalletId is not defined
      */
     public function testGetRemotePathMissingToWalletId()
     {
@@ -124,7 +123,7 @@ class InternalTransferTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
+     * @expectedException \Soldo\Exceptions\SoldoInvalidRelationshipException
      */
     public function testBuildRelationshipNotMappedRelationship()
     {
@@ -133,7 +132,7 @@ class InternalTransferTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
+     * @expectedException \Soldo\Exceptions\SoldoInvalidRelationshipException
      */
     public function testGetRelationshipRemotePathNotMappedRelationship()
     {

@@ -50,13 +50,11 @@ class RuleTest extends TestCase
         }
     }
 
-    /**
-     * @expectedException  \Soldo\Exceptions\SoldoInvalidPathException
-     */
+
     public function testGetRemotePath()
     {
         $resource = new Rule();
-        $remote_path = $resource->getRemotePath();
+        $this->assertEquals('/rules', $resource->getRemotePath());
     }
 
     public function testToArray()
@@ -70,7 +68,7 @@ class RuleTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
+     * @expectedException \Soldo\Exceptions\SoldoInvalidRelationshipException
      */
     public function testBuildRelationshipNotMappedRelationship()
     {
@@ -79,7 +77,7 @@ class RuleTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
+     * @expectedException \Soldo\Exceptions\SoldoInvalidRelationshipException
      */
     public function testGetRelationshipRemotePathNotMappedRelationship()
     {

@@ -83,7 +83,7 @@ class ExpenseCentreTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
+     * @expectedException \Soldo\Exceptions\SoldoInvalidRelationshipException
      */
     public function testBuildRelationshipNotMappedRelationship()
     {
@@ -92,7 +92,7 @@ class ExpenseCentreTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
+     * @expectedException \Soldo\Exceptions\SoldoInvalidRelationshipException
      */
     public function testGetRelationshipRemotePathNotMappedRelationship()
     {

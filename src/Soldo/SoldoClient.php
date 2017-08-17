@@ -26,7 +26,7 @@ use Soldo\Exceptions\SoldoUnauthorizedException;
 use Soldo\Resources\InternalTransfer;
 use Soldo\Utils\Paginator;
 use Soldo\Resources\Collection;
-use Soldo\Resources\Resource;
+use Soldo\Validators\ResourceValidatorTrait;
 
 /**
  * Class SoldoClient
@@ -35,6 +35,9 @@ use Soldo\Resources\Resource;
  */
 class SoldoClient
 {
+
+    use ResourceValidatorTrait;
+
     /**
      * Define Guzzle timeout in seconds
      */
@@ -207,21 +210,6 @@ class SoldoClient
     }
 
     /**
-     * Throws an exception if class does not exist
-     *
-     * @param $className
-     */
-    private function validateClassName($className)
-    {
-        if (class_exists($className) === false) {
-            throw new \InvalidArgumentException(
-                'Error trying to access a not existing class '
-                . $className . ' doesn\'t exist'
-            );
-        }
-    }
-
-    /**
      * Throw exception and log error
      *
      * @param TransferException $e
@@ -349,7 +337,6 @@ class SoldoClient
      */
     public function getCollection($className, Paginator $paginator = null, $queryParameters = [])
     {
-        // validate class name
         $this->validateClassName($className);
 
         // instantiate a new collection
@@ -372,13 +359,13 @@ class SoldoClient
      * @param string $id
      * @param array $queryParameters
      * @throws \Exception
-     * @return Resource
+     * @return \Soldo\Resources\Resource
      */
     public function getItem($className, $id = null, $queryParameters = [])
     {
         $this->validateClassName($className);
 
-        /** @var Resource $object */
+        /** @var \Soldo\Resources\Resource $object */
         $object = new $className();
         $object->id = $id;
 
@@ -402,13 +389,13 @@ class SoldoClient
      * @param string $id
      * @param array $data
      * @throws \Exception
-     * @return Resource
+     * @return \Soldo\Resources\Resource
      */
     public function updateItem($className, $id, $data)
     {
         $this->validateClassName($className);
 
-        /** @var Resource $object */
+        /** @var \Soldo\Resources\Resource $object */
         $object = new $className();
         $object->id = $id;
 
@@ -444,10 +431,9 @@ class SoldoClient
      */
     public function getRelationship($className, $id, $relationshipName)
     {
-        // validate class name
         $this->validateClassName($className);
 
-        /** @var Resource $object */
+        /** @var \Soldo\Resources\Resource $object */
         $object = new $className();
         $object->id = $id;
 

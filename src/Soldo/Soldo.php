@@ -6,6 +6,7 @@ use Psr\Log\LoggerInterface;
 use Soldo\Authentication\OAuthCredential;
 use Soldo\Exceptions\SoldoException;
 use Soldo\Resources\InternalTransfer;
+use Soldo\Resources\Resource;
 use Soldo\Resources\Transaction;
 use Soldo\Resources\Transactions;
 use Soldo\Utils\Paginator;
@@ -81,7 +82,7 @@ class Soldo
      * Return a single Wallet resource
      *
      * @param string $id
-     * @return Wallet
+     * @return \Soldo\Resources\Resource
      */
     public function getWallet($id)
     {
@@ -110,7 +111,7 @@ class Soldo
      * Return a single ExpenseCentre resource
      *
      * @param $id
-     * @return ExpenseCentre
+     * @return \Soldo\Resources\Resource
      */
     public function getExpenseCentre($id)
     {
@@ -124,7 +125,7 @@ class Soldo
      *
      * @param $id
      * @param $data
-     * @return ExpenseCentre
+     * @return \Soldo\Resources\Resource
      */
     public function updateExpenseCentre($id, $data)
     {
@@ -153,7 +154,7 @@ class Soldo
      * Return a single Employee resource
      *
      * @param $id
-     * @return Employee
+     * @return \Soldo\Resources\Resource
      */
     public function getEmployee($id)
     {
@@ -167,7 +168,7 @@ class Soldo
      *
      * @param $id
      * @param $data
-     * @return Employee
+     * @return \Soldo\Resources\Resource
      */
     public function updateEmployee($id, $data)
     {
@@ -197,7 +198,7 @@ class Soldo
      *
      * @param $id
      * @param bool $withDetails
-     * @return Transaction
+     * @return \Soldo\Resources\Resource
      */
     public function getTransaction($id, $withDetails = false)
     {
@@ -230,7 +231,7 @@ class Soldo
      * Return a single Card resource
      *
      * @param $id
-     * @return Card
+     * @return \Soldo\Resources\Resource
      */
     public function getCard($id)
     {
@@ -255,7 +256,7 @@ class Soldo
     /**
      * Return a single Company resource
      *
-     * @return Company
+     * @return \Soldo\Resources\Resource
      */
     public function getCompany()
     {

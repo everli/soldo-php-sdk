@@ -6,6 +6,6 @@ namespace Soldo\Exceptions;
  * Class SoldoCastException
  * @package Soldo\Exceptions
  */
-class SoldoCastException extends SoldoException
+class SoldoInvalidResourceException extends SoldoException
 {
 }

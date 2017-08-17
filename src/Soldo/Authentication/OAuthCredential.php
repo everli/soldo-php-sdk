@@ -4,7 +4,7 @@ namespace Soldo\Authentication;
 
 use Soldo\Exceptions\SoldoAuthenticationException;
 use Soldo\Resources\Resource;
-use Respect\Validation\Validator;
+use Soldo\Validators\ValidatorTrait;
 
 /**
  * Class OAuthCredential
@@ -19,6 +19,8 @@ use Respect\Validation\Validator;
  */
 class OAuthCredential extends Resource
 {
+
+    use ValidatorTrait;
 
     /**
      * OAuthCredential constructor.
@@ -44,40 +46,28 @@ class OAuthCredential extends Resource
         return false;
     }
 
-    /**
-     * @param array $authData
-     */
-    public function updateAuthenticationData($authData)
-    {
-        $this->validateAuthData($authData);
-
-        $this->access_token = $authData['access_token'];
-        $this->refresh_token = $authData['refresh_token'];
-        $this->token_type = $authData['token_type'];
-        $this->expires_in = $authData['expires_in'];
-    }
 
     /**
-     * Manually validate data since this is a crucial point.
+     * Validate raw data end fill resources with array provided
      *
-     * @param array $authData
+     * @param $data
      * @throws SoldoAuthenticationException
-     * @return bool
      */
-    private function validateAuthData($authData)
+    public function updateAuthenticationData($data)
     {
-        $validator = Validator::key('access_token', Validator::notEmpty())
-            ->key('refresh_token', Validator::notEmpty())
-            ->key('token_type', Validator::notEmpty())
-            ->key('expires_in', Validator::intVal());
+        $rules = [
+            'access_token' => 'required',
+            'refresh_token' => 'required',
+            'token_type' => 'required',
+            'expires_in' => 'integer',
+        ];
 
-        if ($validator->validate($authData) === false) {
+        if(!$this->validateRawData($data, $rules)) {
             throw new SoldoAuthenticationException(
-                'Unable to authenticate user. '
-                . 'Check your credential'
+                'Unable to authenticate user'
             );
         }
 
-        return true;
+        $this->fill($data);
     }
 }
