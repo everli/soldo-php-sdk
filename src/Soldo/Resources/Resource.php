@@ -7,8 +7,6 @@ use Soldo\Exceptions\SoldoInvalidRelationshipException;
 use Soldo\Exceptions\SoldoInvalidResourceException;
 use Soldo\Validators\ResourceValidatorTrait;
 
-//use Soldo\Utils\Validator;
-
 /**
  * Class Resource
  * @package Soldo\Resources
