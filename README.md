@@ -8,9 +8,24 @@ An unofficial SDK to work with the [Soldo API](https://api-demo.soldocloud.net/d
 
 ## Usage
 
-The following examples demonstrate how you would accomplish tasks with the Soldo SDK for PHP
+The following examples demonstrate how you would accomplish tasks with the Soldo SDK for PHP.
+First of all instantiate a new `Soldo` with your credentials:
+
+
+    ```php
+    require_once __DIR__ . '/vendor/autoload.php';
+
+    $soldo = new \Soldo\Soldo([
+        'client_id' => 'Eu97aMWTV3ta9AchozCozGn15XiX6t5x',
+        'client_secret' => 'msNE5I1BnSkWBHPVRJDMYqKvTKRfCS4a',
+    ]);
+    ```
 
 ### Examples
+- **Configuration**
+    - [Adding a Logger](#)
+    - [Going live!](#)
+
 - **Retrieve collections**
     - [Obtaining the Employees list](#)
     - [Obtaining the Expense Centres list](#)
