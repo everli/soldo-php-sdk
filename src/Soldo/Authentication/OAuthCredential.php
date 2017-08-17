@@ -22,6 +22,18 @@ class OAuthCredential extends Resource
     use ValidatorTrait;
 
     /**
+     * Seconds to remove when checking for token expiration
+     */
+    const EXPIRY_BUFFER_TIME = 60;
+
+    /**
+     * Token expiration time in seconds
+     *
+     * @var int
+     */
+    private $tokenExpiresAt;
+
+    /**
      * OAuthCredential constructor.
      * @param string $clientId
      * @param string $clientSecret
@@ -37,14 +49,24 @@ class OAuthCredential extends Resource
     }
 
     /**
-     * Return true if token was generated before expires_in seconds
-     * Add a buffer just to not risk
+     * Return true if token is expired
      *
      * @return bool
      */
     public function isTokenExpired()
     {
-        return false;
+        if($this->tokenExpiresAt === null) {
+            return false;
+        }
+        return time() > $this->tokenExpiresAt;
+    }
+
+    /**
+     * Set tokenExpiresAt property
+     */
+    private function setTokenExpiration()
+    {
+        $this->tokenExpiresAt = time() + $this->expires_in - self::EXPIRY_BUFFER_TIME;
     }
 
     /**
@@ -69,5 +91,6 @@ class OAuthCredential extends Resource
         }
 
         $this->fill($data);
+        $this->setTokenExpiration();
     }
 }

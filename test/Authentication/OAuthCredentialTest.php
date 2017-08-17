@@ -33,11 +33,6 @@ class OAuthCredentialTest extends TestCase
         return $data;
     }
 
-    public function testIsTokenExpired()
-    {
-        $this->assertFalse($this->credential->isTokenExpired());
-    }
-
     /**
      * @expectedException \Soldo\Exceptions\SoldoAuthenticationException
      */
@@ -161,5 +156,29 @@ class OAuthCredentialTest extends TestCase
         $this->assertNotEmpty($this->credential->expires_in);
         $this->assertInternalType('integer', $this->credential->expires_in);
         $this->assertEquals(7200, $this->credential->expires_in);
+
+        $this->assertFalse($this->credential->isTokenExpired());
+    }
+
+    public function testIsTokenExpired()
+    {
+        $ad = $this->getAuthenticationData();
+        $ad['expires_in'] = 5 + OAuthCredential::EXPIRY_BUFFER_TIME;
+        $this->credential->updateAuthenticationData($ad);
+
+        // should not be expired when is created
+        $this->assertFalse($this->credential->isTokenExpired());
+        sleep(2);
+
+        // should not be expired after 2 sec
+        $this->assertFalse($this->credential->isTokenExpired());
+        sleep(2);
+
+        // should not be expired after 4 sec
+        $this->assertFalse($this->credential->isTokenExpired());
+        sleep(2);
+
+        // should be expired after 6 sec
+        $this->assertTrue($this->credential->isTokenExpired());
     }
 }

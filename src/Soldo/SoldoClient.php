@@ -7,6 +7,7 @@
  * faucibus dolor auctor.
  *
  */
+
 namespace Soldo;
 
 use GuzzleHttp\Client;
@@ -318,7 +319,8 @@ class SoldoClient
      */
     public function getAccessToken()
     {
-        if ($this->credential->access_token === null) {
+        if ($this->credential->access_token === null ||
+            $this->credential->isTokenExpired()) {
             $auth_data = $this->authorize();
             $this->credential->updateAuthenticationData($auth_data);
         }
