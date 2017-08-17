@@ -163,22 +163,16 @@ class OAuthCredentialTest extends TestCase
     public function testIsTokenExpired()
     {
         $ad = $this->getAuthenticationData();
-        $ad['expires_in'] = 5 + OAuthCredential::EXPIRY_BUFFER_TIME;
+        $ad['expires_in'] = OAuthCredential::EXPIRY_BUFFER_TIME + 1;
         $this->credential->updateAuthenticationData($ad);
-
-        // should not be expired when is created
         $this->assertFalse($this->credential->isTokenExpired());
-        sleep(2);
 
-        // should not be expired after 2 sec
+        $ad['expires_in'] = OAuthCredential::EXPIRY_BUFFER_TIME;
+        $this->credential->updateAuthenticationData($ad);
         $this->assertFalse($this->credential->isTokenExpired());
-        sleep(2);
 
-        // should not be expired after 4 sec
-        $this->assertFalse($this->credential->isTokenExpired());
-        sleep(2);
-
-        // should be expired after 6 sec
+        $ad['expires_in'] = OAuthCredential::EXPIRY_BUFFER_TIME - 1;
+        $this->credential->updateAuthenticationData($ad);
         $this->assertTrue($this->credential->isTokenExpired());
     }
 }
