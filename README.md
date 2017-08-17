@@ -8,8 +8,6 @@ An unofficial SDK to work with the [Soldo API](https://api-demo.soldocloud.net/d
 
 ## Usage
 
-The following examples demonstrate how you would accomplish tasks with the Soldo SDK for PHP.
-
 First of all instantiate a new `Soldo` object with your credentials:
 
 
