@@ -145,8 +145,8 @@ abstract class Resource
     {
         $attributes = [];
         foreach ($this->attributes as $key => $value) {
-            /** @var resource $value */
             if (array_key_exists($key, $this->cast)) {
+                /** @var \Soldo\Resources\Resource $value */
                 $attributes[$key] = $value->toArray();
                 continue;
             }
