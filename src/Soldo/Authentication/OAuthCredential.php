@@ -70,5 +70,4 @@ class OAuthCredential extends Resource
 
         $this->fill($data);
     }
-
 }
