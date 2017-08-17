@@ -93,7 +93,7 @@ abstract class Resource
      * @param $attributeName
      * @return bool
      */
-    private function hasToCast($attributeName)
+    private function shouldCast($attributeName)
     {
         return array_key_exists($attributeName, $this->cast);
     }
@@ -108,7 +108,7 @@ abstract class Resource
      */
     public function __set($name, $value)
     {
-        if ($this->hasToCast($name)) {
+        if ($this->shouldCast($name)) {
             $className = $this->cast[$name];
             $this->validateClassName($className);
 
