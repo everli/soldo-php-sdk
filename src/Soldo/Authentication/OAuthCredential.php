@@ -30,6 +30,8 @@ class OAuthCredential extends Resource
     {
         parent::__construct();
 
+        // Using snake_case here to remain consistent with other resource attributes
+        // All attributes name are keep equals to those retrieved by the Soldo API
         $this->client_id = $clientId;
         $this->client_secret = $clientSecret;
     }
@@ -68,4 +70,5 @@ class OAuthCredential extends Resource
 
         $this->fill($data);
     }
+
 }
