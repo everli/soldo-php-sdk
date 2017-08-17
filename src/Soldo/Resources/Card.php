@@ -24,7 +24,7 @@ namespace Soldo\Resources;
 class Card extends Resource
 {
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     protected static $basePath = '/cards';
 
