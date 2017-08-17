@@ -19,7 +19,6 @@ use Soldo\Validators\ValidatorTrait;
  */
 class OAuthCredential extends Resource
 {
-
     use ValidatorTrait;
 
     /**
@@ -46,7 +45,6 @@ class OAuthCredential extends Resource
         return false;
     }
 
-
     /**
      * Validate raw data end fill resources with array provided
      *
@@ -62,7 +60,7 @@ class OAuthCredential extends Resource
             'expires_in' => 'integer',
         ];
 
-        if(!$this->validateRawData($data, $rules)) {
+        if (!$this->validateRawData($data, $rules)) {
             throw new SoldoAuthenticationException(
                 'Unable to authenticate user'
             );

@@ -9,7 +9,6 @@ use Soldo\Resources\Resource;
  */
 class MockResource extends Resource
 {
-
     protected static $basePath = '/resources';
 
     /**

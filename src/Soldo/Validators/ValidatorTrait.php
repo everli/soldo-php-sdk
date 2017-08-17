@@ -2,7 +2,6 @@
 
 namespace Soldo\Validators;
 
-
 /**
  * Trait ValidatorTrait
  * @package Soldo\Validators
@@ -23,7 +22,6 @@ trait ValidatorTrait
      */
     protected function validateRawData($rawData, $rules)
     {
-
         if (!is_array($rawData)) {
             return false;
         }
@@ -55,7 +53,7 @@ trait ValidatorTrait
      */
     protected function validateAgainstInteger($value)
     {
-        return ctype_digit((string)$value) === true;
+        return ctype_digit((string) $value) === true;
     }
 
     /**

@@ -90,6 +90,7 @@ class SoldoTest extends TestCase
     private function getExpenseCentreId()
     {
         $expenseCentres = $this->soldo->getExpenseCentres();
+
         return $expenseCentres[0]->id;
     }
 
@@ -99,6 +100,7 @@ class SoldoTest extends TestCase
     private function getEmployeeId()
     {
         $employees = $this->soldo->getEmployees();
+
         return $employees[0]->id;
     }
 
@@ -108,6 +110,7 @@ class SoldoTest extends TestCase
     private function getTransactionId()
     {
         $transactions = $this->soldo->getTransactions();
+
         return $transactions[0]->id;
     }
 
@@ -117,6 +120,7 @@ class SoldoTest extends TestCase
     private function getCardId()
     {
         $cards = $this->soldo->getCards();
+
         return $cards[0]->id;
     }
 

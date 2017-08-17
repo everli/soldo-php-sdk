@@ -35,7 +35,6 @@ use Soldo\Validators\ResourceValidatorTrait;
  */
 class SoldoClient
 {
-
     use ResourceValidatorTrait;
 
     /**

@@ -50,7 +50,6 @@ class RuleTest extends TestCase
         }
     }
 
-
     public function testGetRemotePath()
     {
         $resource = new Rule();

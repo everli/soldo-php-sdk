@@ -13,7 +13,6 @@ class OAuthCredentialTest extends TestCase
     /** @var OAuthCredential */
     private $credential;
 
-
     protected function setUp()
     {
         $this->credential = new OAuthCredential('client_id', 'client_secret');

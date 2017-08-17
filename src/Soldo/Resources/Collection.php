@@ -13,7 +13,6 @@ use Soldo\Validators\ValidatorTrait;
  */
 class Collection
 {
-
     use ValidatorTrait, ResourceValidatorTrait;
 
     /**
@@ -56,7 +55,6 @@ class Collection
      */
     protected $itemType;
 
-
     /**
      * Collection constructor.
      * @param $itemType
@@ -74,8 +72,8 @@ class Collection
      * Validate rawData, build the resources and populate the collection
      *
      * @param $data
-     * @return $this
      * @throws SoldoInvalidCollectionException
+     * @return $this
      */
     public function fill($data)
     {
@@ -88,7 +86,7 @@ class Collection
             'results' => 'array',
         ];
 
-        if(!$this->validateRawData($data, $rules)) {
+        if (!$this->validateRawData($data, $rules)) {
             throw new SoldoInvalidCollectionException(
                 'Could not generate a collection with data provided'
             );

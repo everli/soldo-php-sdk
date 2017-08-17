@@ -15,7 +15,6 @@ use Soldo\Validators\ResourceValidatorTrait;
  */
 abstract class Resource
 {
-
     use ResourceValidatorTrait;
 
     /**
@@ -86,6 +85,7 @@ abstract class Resource
         foreach ($data as $key => $value) {
             $this->{$key} = $value;
         }
+
         return $this;
     }
 
@@ -111,11 +111,11 @@ abstract class Resource
     public function __set($name, $value)
     {
         if ($this->hasToCast($name)) {
-
             $className = $this->cast[$name];
             $this->validateClassName($className);
 
             $this->attributes[$name] = new $className($value);
+
             return;
         }
 
@@ -147,7 +147,7 @@ abstract class Resource
     {
         $attributes = [];
         foreach ($this->attributes as $key => $value) {
-            /** @var Resource $value */
+            /** @var resource $value */
             if (array_key_exists($key, $this->cast)) {
                 $attributes[$key] = $value->toArray();
                 continue;
@@ -161,10 +161,10 @@ abstract class Resource
     /**
      * Get full remote path of the single resource
      *
-     * @return string
      * @throws SoldoInvalidPathException
+     * @return string
      */
-    public final function getRemotePath()
+    final public function getRemotePath()
     {
         $basePath = self::getBasePath();
 
@@ -182,8 +182,8 @@ abstract class Resource
      *
      * @param $rawData
      * @param $relationshipName
-     * @return mixed
      * @throws SoldoInvalidRelationshipException
+     * @return mixed
      */
     private function getRelationshipData($rawData, $relationshipName)
     {
@@ -192,6 +192,7 @@ abstract class Resource
                 'Trying to build a relationship with invalid data'
             );
         }
+
         return $rawData[$relationshipName];
     }
 
@@ -221,8 +222,8 @@ abstract class Resource
      * Get relationship class given the relationship name
      *
      * @param $relationshipName
-     * @return mixed
      * @throws SoldoInvalidRelationshipException
+     * @return mixed
      */
     private function getRelationshipClass($relationshipName)
     {
@@ -241,8 +242,8 @@ abstract class Resource
      * Get relationship remote path
      *
      * @param string $relationshipName
-     * @return string
      * @throws SoldoInvalidRelationshipException
+     * @return string
      */
     public function getRelationshipRemotePath($relationshipName)
     {
@@ -250,6 +251,7 @@ abstract class Resource
         $this->validateClassName($className);
 
         $relationshipPath = call_user_func([$className, 'getBasePath']);
+
         return $this->getRemotePath() . $relationshipPath;
     }
 
@@ -268,8 +270,8 @@ abstract class Resource
      * Build a full qualified path replacing {string} occurrence
      * with $this->{string} attribute
      *
-     * @return mixed
      * @throws SoldoInvalidPathException
+     * @return mixed
      */
     private function getResourcePath()
     {
@@ -282,14 +284,14 @@ abstract class Resource
         $remotePath = $this->path;
         preg_match_all('/\{(\S+?)\}/', $this->path, $parts);
         foreach ($parts[1] as $key => $attributeName) {
-
             if ($this->{$attributeName} === null) {
                 throw new SoldoInvalidPathException(
                     static::class . ' ' . $attributeName . ' is not defined'
                 );
             }
 
-            $remotePath = str_replace($parts[0][$key],
+            $remotePath = str_replace(
+                $parts[0][$key],
                 urlencode($this->{$attributeName}),
                 $remotePath
             );
@@ -298,14 +300,13 @@ abstract class Resource
         return $remotePath;
     }
 
-
     /**
      * Get base path
      *
-     * @return string
      * @throws SoldoInvalidPathException
+     * @return string
      */
-    final static public function getBasePath()
+    final public static function getBasePath()
     {
         if (static::$basePath === null ||
             @preg_match('/^\/[\S]+$/', static::$basePath) !== 1) {

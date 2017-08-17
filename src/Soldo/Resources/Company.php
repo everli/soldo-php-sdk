@@ -17,5 +17,4 @@ class Company extends Resource
      * @var string
      */
     protected static $basePath = '/company';
-
 }

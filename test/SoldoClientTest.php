@@ -48,6 +48,7 @@ class SoldoClientTest extends TestCase
     private function getItemId()
     {
         $collection = $this->soldoClient->getCollection(Employee::class);
+
         return $collection->get()[0]->id;
     }
 

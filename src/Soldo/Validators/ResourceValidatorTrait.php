@@ -5,7 +5,6 @@ namespace Soldo\Validators;
 use Soldo\Exceptions\SoldoInvalidResourceException;
 use Soldo\Resources\Resource;
 
-
 /**
  * Trait ResourceValidatorTrait
  * @package Soldo\Validators
@@ -25,6 +24,6 @@ trait ResourceValidatorTrait
             throw new SoldoInvalidResourceException(
                 $className . ' is not a valid Soldo resource class'
             );
-        };
+        }
     }
 }
