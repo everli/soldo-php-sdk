@@ -38,12 +38,12 @@ class Transaction extends Resource
 {
 
     /**
-     * @var string
+     * @inheritDoc
      */
     protected static $basePath = '/transactions';
 
     /**
-     * @var string
+     * @inheritDoc
      */
     protected $path = '/{id}';
 }

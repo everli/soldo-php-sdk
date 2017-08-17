@@ -13,7 +13,7 @@ namespace Soldo\Resources;
 class Rule extends Resource
 {
     /**
-     * @var string
+     * @inheritDoc
      */
     protected static $basePath = '/rules';
 }

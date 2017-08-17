@@ -16,17 +16,17 @@ namespace Soldo\Resources;
 class ExpenseCentre extends Resource
 {
     /**
-     * @var string
+     * @inheritDoc
      */
     protected static $basePath = '/expensecentres';
 
     /**
-     * @var string
+     * @inheritDoc
      */
     protected $path = '/{id}';
 
     /**
-     * @var array
+     * @inheritDoc
      */
     protected $whiteListed = [
         'custom_reference_id',

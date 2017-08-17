@@ -20,17 +20,17 @@ class Employee extends Resource
 {
 
     /**
-     * @var string
+     * @inheritDoc
      */
     protected static $basePath = '/employees';
 
     /**
-     * @var string
+     * @inheritDoc
      */
     protected $path = '/{id}';
 
     /**
-     * @var array
+     * @inheritDoc
      */
     protected $whiteListed = [
         'custom_reference_id',

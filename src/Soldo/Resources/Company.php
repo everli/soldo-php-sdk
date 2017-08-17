@@ -14,7 +14,7 @@ class Company extends Resource
 {
 
     /**
-     * @var string
+     * @inheritDoc
      */
     protected static $basePath = '/company';
 }

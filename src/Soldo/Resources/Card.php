@@ -24,17 +24,17 @@ namespace Soldo\Resources;
 class Card extends Resource
 {
     /**
-     * @var string
+     * @inheritdoc
      */
     protected static $basePath = '/cards';
 
     /**
-     * @var string
+     * @inheritDoc
      */
     protected $path = '/{id}';
 
     /**
-     * @var array
+     * @inheritDoc
      */
     protected $relationships = [
         'rules' => Rule::class,

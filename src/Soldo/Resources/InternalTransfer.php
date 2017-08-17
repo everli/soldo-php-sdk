@@ -19,17 +19,17 @@ use Soldo\Exceptions\SoldoInternalTransferException;
 class InternalTransfer extends Resource
 {
     /**
-     * @var string
+     * @inheritDoc
      */
     protected static $basePath = '/wallets/internalTransfer';
 
     /**
-     * @var string
+     * @inheritDoc
      */
     protected $path = '/{fromWalletId}/{toWalletId}';
 
     /**
-     * @var array
+     * @inheritDoc
      */
     protected $cast = [
         'from_wallet' => Wallet::class,
