@@ -34,3 +34,5 @@ $soldo = new \Soldo\Soldo([
 ], $logger);
 ```
 
+## Next step
+- [Retrieve collections](./collections.md)
