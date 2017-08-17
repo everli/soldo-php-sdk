@@ -20,7 +20,7 @@ The following examples demonstrate how you would accomplish tasks with the Soldo
     - [Handle pagination](#)
     - [Searching through a collection](#)
     
-   - **Retrieve resource **
+- **Retrieve resource **
     - [Obtaining the Company resource](#)
     - [Obtaining an Employee resource](#)
     - [Obtaining an Expense Centre resource](#)
@@ -28,10 +28,10 @@ The following examples demonstrate how you would accomplish tasks with the Soldo
     - [Obtaining a Card resource](#)
     - [Obtaining a Transaction resource](#)
     
-   - **Money transfer **
+- **Money transfer **
     - [Transferring money from a Wallet to another](#)
    
-   - **Card rules **
+- **Card rules **
     - [Obtaining the card Rules](#)
     - [Updating card rules](#)
       
