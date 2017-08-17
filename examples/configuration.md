@@ -1,6 +1,6 @@
-# Soldo SDK for PHP
+# Configuration
 
-The following examples demonstrate how you would accomplish tasks with the Soldo SDK for PHP.
+The following examples demonstrate how you would add logging capabilities to your `Soldo` object and what are the stuff required for going live.
 
 ## Adding a Logger
 
@@ -33,3 +33,4 @@ $soldo = new \Soldo\Soldo([
     'environment => 'live'
 ], $logger);
 ```
+
