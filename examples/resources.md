@@ -53,7 +53,7 @@ You can update the following Employee properties
 
 doing as follow
 
-```
+```php
 try {
     $employee = $soldo->updateEmployee('SDMD7784-000001', [
         'department' => 'Department name',
@@ -88,7 +88,7 @@ You can update the following  Expense Centre properties
 
 doing as follow
 
-```
+```php
 try {
     $expenseCentre = $soldo->updateExpenseCentre('SDMD7784-000001', [
             'department' => 'Department name',
