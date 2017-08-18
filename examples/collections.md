@@ -100,5 +100,18 @@ try {
 ```
 
 
+## Searching through a collection
+
+It is possible to filter a collection passing the array of parameters you want to search for (see [Soldo documentation](https://api-demo.soldocloud.net/documentation) for the full list of supported params for each collection).
+
+
+```php
+try {
+    $collection = $soldo->getWallets(0, 50, ['type' => 'employee']);
+} catch (\Soldo\Exceptions\SoldoException $e) {
+    echo 'Soldo returned an error: ' . $e->getMessage();
+}
+```
+
 ## Next step
 - [Retrieve resource](./resources.md)
