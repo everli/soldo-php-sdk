@@ -26,29 +26,29 @@ $soldo = new \Soldo\Soldo([
     - [Going live!](./examples/configuration.md#going-live)
 
 - **Retrieve collections**
-    - [Obtaining the Employees list](#)
-    - [Obtaining the Expense Centres list](#)
-    - [Obtaining the Wallets list](#)
-    - [Obtaining the Cards list](#)
-    - [Obtaining the Transactions list](#)
-    - [Handle pagination](#)
-    - [Searching through a collection](#)
+    - [Obtaining the Employees list](./examples/collections.md#obtaining-the-employees-list)
+    - [Obtaining the Expense Centres list](./examples/collections.md#obtaining-the-expense-centres-list)
+    - [Obtaining the Wallets list](./examples/collections.md#obtaining-the-wallets-list)
+    - [Obtaining the Cards list](./examples/collections.md#obtaining-the-cards-list)
+    - [Obtaining the Transactions list](./examples/collections.md#obtaining-the-transactions-list)
+    - [Handle pagination](./examples/collections.md#handle-pagination)
+    - [Searching through a collection](./examples/collections.md#searching-through-a-collection)
     
 - **Retrieve resource**
-    - [Obtaining the Company resource](#)
-    - [Obtaining an Employee resource](#)
-    - [Updating an Employee resource](#)
-    - [Obtaining an Expense Centre resource](#)
-    - [Updating an Expense Centre resource](#)
-    - [Obtaining a Wallet resource](#)
-    - [Obtaining a Card resource](#)
-    - [Obtaining a Transaction resource](#)
+    - [Obtaining the Company resource](./examples/resources.md#obtaining-the-company-resource)
+    - [Obtaining an Employee resource](./examples/resources.md#obtaining-an-employee-resource)
+    - [Updating an Employee resource](./examples/resources.md#updating-an-employee-resource)
+    - [Obtaining an Expense Centre resource](./examples/resources.md#obtaining-an-expense-centre-resource)
+    - [Updating an Expense Centre resource](./examples/resources.md#updating-an--expense-centre-resource)
+    - [Obtaining a Wallet resource](./examples/resources.md#obtaining-a-wallet-resource)
+    - [Obtaining a Card resource](./examples/resources.md#obtaining-a-card-resource)
+    - [Obtaining a Transaction resource](./examples/resources.md#obtaining-a-transaction-resource)
     
 - **Money transfer**
-    - [Transferring money from a Wallet to another](#)
+    - [Transferring money from a Wallet to another](./examples/transfer.md)
    
 - **Card rules**
-    - [Obtaining the card Rules](#)
+    - [Obtaining the card Rules](./examples/card-rules.md#obtaining-the-card-rules)
       
     
 ## Tests
