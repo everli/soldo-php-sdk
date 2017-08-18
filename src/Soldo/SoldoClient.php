@@ -1,12 +1,4 @@
 <?php
-/**
- * Copyright 2017 Supermercato24.
- *
- * Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur blandit tempus porttitor. Maecenas sed diam
- * eget risus varius blandit sit amet non magna. Donec sed odio dui. Vivamus sagittis lacus vel augue laoreet rutrum
- * faucibus dolor auctor.
- *
- */
 
 namespace Soldo;
 
