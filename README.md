@@ -37,7 +37,9 @@ $soldo = new \Soldo\Soldo([
 - **Retrieve resource**
     - [Obtaining the Company resource](#)
     - [Obtaining an Employee resource](#)
+    - [Updating an Employee resource](#)
     - [Obtaining an Expense Centre resource](#)
+    - [Updating an Expense Centre resource](#)
     - [Obtaining a Wallet resource](#)
     - [Obtaining a Card resource](#)
     - [Obtaining a Transaction resource](#)

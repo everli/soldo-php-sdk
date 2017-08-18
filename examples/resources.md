@@ -45,6 +45,29 @@ try {
 }
 ```
 
+## Updating an Employee resource
+
+You can update the following Employee properties 
+- `custom_reference_id`: the employee reference into the calling system
+- `department`: the department the employee belongs to
+
+doing as follow
+
+```
+try {
+    $employee = $soldo->updateEmployee('SDMD7784-000001', [
+        'department' => 'Department name',
+        'custom_reference_id' => 'a-random-string',
+        ]);
+} catch (\Soldo\Exceptions\SoldoException $e) {
+    echo 'Soldo returned an error: ' . $e->getMessage();
+}`
+```
+Any key different from the supported ones will be ignored. If no supported keys are provided an `InvalidArgumentException` will be throw.
+
+Printing out `$employee->department` will show `Department name`and of course the value of `custom_reference_id` will be `a-random-string`.
+
+
 
 ## Obtaining an Expense Centre resource
 
@@ -55,6 +78,30 @@ try {
     echo 'Soldo returned an error: ' . $e->getMessage();
 }
 ```
+
+
+## Updating an  Expense Centre resource
+
+You can update the following  Expense Centre properties 
+- `custom_reference_id`: the employee reference into the calling system
+- `assignee`: the assigne of the expense centre
+
+doing as follow
+
+```
+try {
+    $expenseCentre = $soldo->updateExpenseCentre('SDMD7784-000001', [
+            'department' => 'Department name',
+            'assignee' => 'An Assignee',
+            ]);
+} catch (\Soldo\Exceptions\SoldoException $e) {
+    echo 'Soldo returned an error: ' . $e->getMessage();
+}
+```
+Any key different from the supported ones will be ignored. If no supported keys are provided an `InvalidArgumentException` will be throw.
+
+Printing out `$expenseCentre->department` will show `Department name`and of course the value of `assignee` will be `An Assignee`.
+
 
 
 ## Obtaining a Wallet resource
