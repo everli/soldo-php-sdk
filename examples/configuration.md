@@ -30,7 +30,7 @@ All the calls made currently are defaulted to sandbox (aka `demo`) environment. 
 $soldo = new \Soldo\Soldo([
     'client_id' => 'Eu97aMWTV3ta9AchozCozGn15XiX6t5x',
     'client_secret' => 'msNE5I1BnSkWBHPVRJDMYqKvTKRfCS4a',
-    'environment => 'live'
+    'environment' => 'live'
 ], $logger);
 ```
 
