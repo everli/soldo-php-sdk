@@ -46,8 +46,8 @@ $soldo = new \Soldo\Soldo([
     - [Transferring money from a Wallet to another](#)
    
 - **Card rules**
-    - [Obtaining the card Rules](#)
-    - [Updating card rules](#)
+    - ~~Obtaining the card Rules~~
+    - ~~Updating card Rules~~
       
     
 ## Tests
