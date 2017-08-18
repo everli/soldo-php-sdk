@@ -47,7 +47,6 @@ $soldo = new \Soldo\Soldo([
    
 - **Card rules**
     - [Obtaining the card Rules](#)
-    - [Updating card Rules](#)
       
     
 ## Tests
