@@ -1,12 +1,12 @@
 # Money transfer
 
-With `Soldo` you can easily transfer money from a wallet to another. For doing this you need to know
-
+With `Soldo` you can easily transfer money from a wallet into another.
+For doing this you need to know:
 - Both the **wallet sender id** and the **wallet receiver id**
 - The **amount** to transfer and the **currency code**
 - An **internal token** provided by Soldo
 
-Once you have all of this stuff you can transfer money as follow 
+Once you have all of this stuff you can transfer money as follows:
 
 ```php
 try {
@@ -20,27 +20,27 @@ try {
 } catch (\Soldo\Exceptions\SoldoException $e) {
     echo 'Soldo returned an error: ' . $e->getMessage();
 }
-   
 ```
 
-If everything worked fine `$transfer` will be an instance of `\Soldo\Resources\InternalTransfer` that will have the following properties
+If everything worked fine, `$transfer` will be an instance of `\Soldo\Resources\InternalTransfer` that will have the following properties:
 
-`float amount`  
+`float amount`
 The amount of transferred money
 
-`string currency`   
+`string currency`
 The currency of the transferred amount
 
-`string datetime`   
+`string datetime`
 The date time of the operation
 
-`Wallet from_wallet`   
+`Wallet from_wallet`
 The from wallet object after the transfer
 
-`Wallet to_wallet`   
+`Wallet to_wallet`
 The from wallet object before the transfer
 
-Printing out `$transfer->toArray()` will return 
+Printing out `$transfer->toArray()` will output:
+
 ```
 Array
 (
@@ -74,7 +74,6 @@ Array
 
 )
 ```
-
 
 ## Next step
 - [Card rules](./card-rules.md)

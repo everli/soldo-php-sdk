@@ -1,12 +1,12 @@
 # Configuration
 
-The following examples demonstrate how you would add logging capabilities to your `Soldo` object and what are the stuff required for going live.
+The following examples demonstrate how you would add logging capabilities to your `Soldo` object and what is the configuration required for going live.
 
 ## Adding a Logger
 
 You can pass a PSR-3 compliant Logger to the `Soldo` constructor to enable the logging capabilities that came out of the box.
 
-Supposing you are using [Monolog](https://github.com/Seldaek/monolog)
+Supposing you are using [Monolog](https://github.com/Seldaek/monolog):
 
 ```php
 require_once __DIR__ . '/vendor/autoload.php';
@@ -24,7 +24,7 @@ $soldo = new \Soldo\Soldo([
 
 ## Going live
 
-All the calls made currently are defaulted to sandbox (aka `demo`) environment. To go live simply add this
+All the calls made currently default to the sandbox (aka `demo`) environment. To go live, simply add these lines:
 
 ```php
 $soldo = new \Soldo\Soldo([

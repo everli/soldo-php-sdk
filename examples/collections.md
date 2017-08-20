@@ -1,12 +1,12 @@
 # Retrieve collections
 
-These examples demonstrate how you can easily obtaining the collections provided by the API. Each collections will be an array containing the list of the requested resources.
+These examples demonstrate how you can easily obtain the collections provided by the API. Each collection will be an array containing the list of the requested resources.
 
 It assumes that you have already instantiated a `Soldo` object.
 
 ## Obtaining the Employees list
 
-To obtain the employees list simply do as follow
+To obtain the employees list, use code like the following:
 
 ```php
 try {
@@ -15,11 +15,11 @@ try {
     echo 'Soldo returned an error: ' . $e->getMessage();
 }
 
-// each item of $collection is of type \Soldo\Resource\Employee 
+// each item of $collection is of type \Soldo\Resource\Employee
 var_dump($collection);
 ```
 
-Accessing to other collections is pretty similar. Below you find an example for each collection provided by the API.
+Accessing the other collections is pretty similar. Below you can find an example for each collection provided by the API.
 
 
 ## Obtaining the Expense Centres list
@@ -77,9 +77,9 @@ var_dump($collection);
 
 ## Handle pagination
 
-Each of the methods seen above support cursors based pagination. You can request a specific page and the items per page (note that the max allowed is 50)
+Each of the methods seen above support cursor based pagination. You can request a specific page and the number of items per page. Note that the maximum number of items allowed per page is 50.
 
-In case you want, for example, accessing the second page of the Card collection, simply do as follow
+In case you want, for example, accessing the second page of the Card collection, simply use this code:
 
 ```php
 try {
@@ -89,11 +89,11 @@ try {
 }
 ```
 
-Supposing you want 10 items per page
+Supposing you want 10 items per page:
 
 ```php
 try {
-    $collection = $soldo->getCards(1, 10); 
+    $collection = $soldo->getCards(1, 10);
 } catch (\Soldo\Exceptions\SoldoException $e) {
     echo 'Soldo returned an error: ' . $e->getMessage();
 }

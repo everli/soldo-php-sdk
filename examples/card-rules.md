@@ -8,10 +8,10 @@ Currently each card has the following rules:
 - **OpenCloseAfterOneTx**: if `enabled=true` the card will be disabled after each transaction.
 - **Online**: if `enabled=true` all online purchases are enabled.
 - **Abroad**: if `enabled=true` all the abroad purchases are enabled (ignored for online merchants).
-- **CashPoint**: if `enabled=true` using ATM is permitted.
-- **MaxPerTx**: if `enabled=true` the max amount of a single transaction is the value of the `amount` property (expressed in cent).
+- **CashPoint**: if `enabled=true` using the ATM is permitted.
+- **MaxPerTx**: if `enabled=true` the max amount of a single transaction is the value of the `amount` property (expressed in cents).
 
-In the next big release the following ones will be added:
+In the next big release the following rules will be added:
 - **MagstripeWithdrawal**: enabling / disabling ATM withdrawal if ATM uses the magnetic strip
 - **ATMDailyLimits**: daily limit of ATM withdrawal
 - **ATMWeeklyLimits**: weekly limit of ATM withdrawal
@@ -19,10 +19,9 @@ In the next big release the following ones will be added:
 - **Contactless**: enabling / disabling contactless transactions (without PIN)
 - **BlacklistMCC**: enabling / disabling the merchant blacklist
 
-
 ## Obtaining the card Rules
 
-Once you have the card `id` you can obtain the card rules simply doing
+Once you have the card `id` you can obtain the card rules simply doing:
 
 ```php
 try {
@@ -37,7 +36,7 @@ foreach ($rules as $rule) {
 }
 ```
 
-The code above produces
+The code above outputs:
 
 ```
 Array
@@ -53,7 +52,7 @@ Array
 Array
 (
     [name] => OpenCloseAfterOneTx
-    [enabled] => 
+    [enabled] =>
 )
 Array
 (
@@ -68,7 +67,7 @@ Array
 Array
 (
     [name] => CashPoint
-    [enabled] => 
+    [enabled] =>
 )
 Array
 (
@@ -78,7 +77,6 @@ Array
 )
 
 ```
-
 
 ## Index
 - [Back to README](../README.md)
