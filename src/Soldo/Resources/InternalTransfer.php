@@ -44,9 +44,12 @@ class InternalTransfer extends Resource
      */
     public function generateFingerPrint($internalToken)
     {
-        return hash(
-            'sha512',
-            $this->amount . $this->currency . $this->fromWalletId . $this->toWalletId . $internalToken
-        );
+        return $this->buildFingerprint([
+            'amount',
+            'currency',
+            'fromWalletId',
+            'toWalletId',
+            'token',
+        ], $internalToken);
     }
 }
