@@ -2,6 +2,7 @@
 
 namespace Soldo\Resources;
 
+use Soldo\Exceptions\SoldoInvalidFingerprintException;
 use Soldo\Exceptions\SoldoInvalidPathException;
 use Soldo\Exceptions\SoldoInvalidRelationshipException;
 use Soldo\Exceptions\SoldoInvalidResourceException;
@@ -154,6 +155,45 @@ abstract class Resource
         }
 
         return $attributes;
+    }
+
+    /**
+     * Build a fingerprint concatenating the resource properties listed in $fingerprintOrder
+     * plus the $internalToken (in the order indicated by the 'token' item in the fingerprintOrder array)
+     *
+     * @param array $fingerprintOrder
+     * @param string $internalToken
+     *
+     * @return string
+     * @throws SoldoInvalidFingerprintException
+     */
+    public function buildFingerprint($fingerprintOrder, $internalToken)
+    {
+        // $fingerprintOrder must contain at least one resource property name and the a 'token' item
+        if (count($fingerprintOrder) < 2 || !in_array('token', $fingerprintOrder)) {
+            throw new SoldoInvalidFingerprintException(
+                'Invalid fingerprint order arrays'
+            );
+        }
+
+        $data = '';
+        foreach ($fingerprintOrder as $attributeName) {
+            if($attributeName === 'token') {
+                $data .= $internalToken;
+                continue;
+            }
+
+            if ($this->{$attributeName} === null) {
+                throw new SoldoInvalidFingerprintException(
+                    static::class . ' ' . $attributeName . ' is not defined'
+                );
+            }
+
+            $data .= $this->{$attributeName};
+        }
+
+        return hash('sha512', $data);
+
     }
 
     /**
