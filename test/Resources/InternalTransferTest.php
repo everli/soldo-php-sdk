@@ -3,6 +3,7 @@
 namespace Soldo\Tests\Resources;
 
 use PHPUnit\Framework\TestCase;
+use Soldo\Exceptions\SoldoInvalidFingerprintException;
 use Soldo\Resources\InternalTransfer;
 use Soldo\Resources\Wallet;
 
@@ -149,38 +150,26 @@ class InternalTransferTest extends TestCase
         $this->assertEquals([], $whitelistedData);
     }
 
+    /**
+     * @expectedException \Soldo\Exceptions\SoldoInvalidFingerprintException
+     */
+    public function testGenerateFingerPrintMissingParams()
+    {
+        $resource = new InternalTransfer();
+        $resource->generateFingerPrint('123456');
+    }
+
     public function testGenerateFingerPrint()
     {
         $resource = new InternalTransfer();
-
-        $hash_ref = hash('sha512', '123456');
-        $fp = $resource->generateFingerPrint('123456');
-        $this->assertEquals($hash_ref, $fp);
-
-        $hash_ref = hash('sha512', '100123456');
-        $resource->amount = 100;
-        $fp = $resource->generateFingerPrint('123456');
-        $this->assertEquals($hash_ref, $fp);
-
-        $hash_ref = hash('sha512', '100EUR123456');
-        $resource->amount = 100;
-        $resource->currency = 'EUR';
-        $fp = $resource->generateFingerPrint('123456');
-        $this->assertEquals($hash_ref, $fp);
-
-        $hash_ref = hash('sha512', '100EURFROM-ID123456');
-        $resource->amount = 100;
-        $resource->currency = 'EUR';
-        $resource->fromWalletId = 'FROM-ID';
-        $fp = $resource->generateFingerPrint('123456');
-        $this->assertEquals($hash_ref, $fp);
-
-        $hash_ref = hash('sha512', '100EURFROM-IDTO-ID123456');
         $resource->amount = 100;
         $resource->currency = 'EUR';
         $resource->fromWalletId = 'FROM-ID';
         $resource->toWalletId = 'TO-ID';
+
         $fp = $resource->generateFingerPrint('123456');
+        $hash_ref = hash('sha512', '100EURFROM-IDTO-ID123456');
+
         $this->assertEquals($hash_ref, $fp);
     }
 }
