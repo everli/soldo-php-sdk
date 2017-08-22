@@ -50,5 +50,5 @@ class Transaction extends Resource
     /**
      * @inheritDoc
      */
-    protected $eventType = '{category}.{status}';
+    protected $eventType = '{category}_{status}';
 }
