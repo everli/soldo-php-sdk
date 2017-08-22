@@ -46,4 +46,9 @@ class Transaction extends Resource
      * @inheritDoc
      */
     protected $path = '/{id}';
+
+    /**
+     * @inheritDoc
+     */
+    protected $eventType = '{category}.{status}';
 }
