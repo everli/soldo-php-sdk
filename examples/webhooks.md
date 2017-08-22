@@ -65,59 +65,62 @@ These examples demonstrate how you can easily receiving a notification using the
 In the code we are using some vanilla PHP code for accessing header information and raw json data but if you're using a framework you can (and probably should) use the built-in request methods.
 
 ```php
-try {
-    // get raw json data and cast to array
-    $body = file_get_contents('php://input');
-    $data = json_decode($body, true);
-    
-    // get necessary headers
-    $headers = getallheaders();
-    $fingerprintOrder = $headers['X-Soldo-Fingerprint-Order'];
-    $fingerprint = $headers['X-Soldo-Fingerprint'];
-    
+ try {
+     // get raw json data and cast to array
+     $body = file_get_contents('php://input');
+     $data = json_decode($body, true);
 
-    $event = new \Soldo\SoldoEvent(
-    	$data, 
-    	$fingerprint,
-    	$fingerprintOrder,
-    	'N7OME5XJDWcp9eW7OlaYGrkc3PcCf1Ng'
-    	);
-} catch (\Soldo\Exceptions\SoldoException $e) {
-    echo 'An error has occured trying to catch an event: ' . $e->getMessage();
-}
+     // get necessary headers
+     $headers = getallheaders();
+     $fingerprintOrder = $headers['X-Soldo-Fingerprint-Order'];
+     $fingerprint = $headers['X-Soldo-Fingerprint'];
 
 
-switch ($event->type()) {
-	// refund transaction events
-	case 'transaction.refund_settled':
-		$resource = $event->get();
-		break;
-	
-	// payment transaction events
-	case 'transaction.payment_authorized':
-	case 'transaction.payment_declined':
-	case 'transaction.payment_settled':
-	    $resource = $event->get();
-    	break;
-		
-	// withdrawal transaction events
-	case 'transaction.withdrawal_authorized':
-	case 'transaction.withdrawal_declined':
-	case 'transaction.withdrawal_settled':
-	    $resource = $event->get();
-		   break;
-		
-	default:
-	    $resource = null;
-	    break;
-}
+     $event = new \Soldo\SoldoEvent(
+         $data,
+         $fingerprint,
+         $fingerprintOrder,
+         'N7OME5XJDWcp9eW7OlaYGrkc3PcCf1Ng'
+     );
+ } catch (\Soldo\Exceptions\SoldoException $e) {
+     echo 'An error has occured trying to catch an event: ' . $e->getMessage();
+ }
 
-// $resource will be a \Soldo\Resources\Transaction object
-var_dump($resource);
+
+ switch ($event->type()) {
+     // refund transaction events
+     case 'transaction.refund_settled':
+         $resource = $event->get();
+         break;
+
+     // payment transaction events
+     case 'transaction.payment_authorized':
+     case 'transaction.payment_declined':
+     case 'transaction.payment_settled':
+         $resource = $event->get();
+         break;
+
+     // withdrawal transaction events
+     case 'transaction.withdrawal_authorized':
+     case 'transaction.withdrawal_declined':
+     case 'transaction.withdrawal_settled':
+         $resource = $event->get();
+         break;
+
+     default:
+         $resource = null;
+         break;
+ }
+
+ // $resource will be a \Soldo\Resources\Transaction object
+ // var_dump($resource);
+
+ // return a 200
+ header("HTTP/1.1 200 OK");
 
 ```
 
-The code above outputs:
+The var_dump above, if uncommented, outputs:
 
 ```
 Array
