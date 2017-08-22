@@ -3,6 +3,7 @@
 namespace Soldo;
 
 use Soldo\Exceptions\SoldoInvalidEvent;
+use Soldo\Resources\Resource;
 use Soldo\Validators\ValidatorTrait;
 
 /**
@@ -65,6 +66,7 @@ class SoldoEvent
 
         // build resource
         $className = '\Soldo\Resources\\' . $data['event_type'];
+        /** @var \Soldo\Resources\Resource $resource */
         $resource = new $className($data['data']);
 
         $fingerprintOrder = explode(',', $fingerprintOrder);
