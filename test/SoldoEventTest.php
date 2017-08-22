@@ -185,7 +185,7 @@ class SoldoEventTest extends TestCase
             $data,
             'fd019ecb662b459969372b923890488c1a9d0c11b0cfdb93207cdf5a7b8dad516f86c390baaa861368160b5d90a9eb355a548560f640131d76208108aaeeab45',
             'id,wallet_id,status,transaction_sign,token',
-            SoldoTestCredentials::INTERNAL_TOKEN . '0'
+            SoldoTestCredentials::INTERNAL_TOKEN . '0' //append a char to invalidate token
         );
     }
 
