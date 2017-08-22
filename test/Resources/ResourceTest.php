@@ -3,6 +3,7 @@
 namespace Soldo\Tests\Resources;
 
 use PHPUnit\Framework\TestCase;
+use Soldo\Exceptions\SoldoInvalidFingerprintException;
 use Soldo\Exceptions\SoldoInvalidRelationshipException;
 use Soldo\Resources\Resource;
 use Soldo\Tests\Fixtures\MockResource;
@@ -176,6 +177,52 @@ class ResourceTest extends TestCase
             ],
             $resource->toArray()
         );
+    }
+
+    /**
+     * @expectedException \Soldo\Exceptions\SoldoInvalidFingerprintException
+     */
+    public function testBuildFingerprintOrderWithNoParams()
+    {
+        $resource = new MockResource();
+        $resource->buildFingerprint([], 'foo');
+    }
+
+    /**
+     * @expectedException \Soldo\Exceptions\SoldoInvalidFingerprintException
+     */
+    public function testBuildFingerprintOrderWithOnlyOneParam()
+    {
+        $resource = new MockResource();
+        $resource->buildFingerprint(['foo'], 'foo');
+    }
+
+    /**
+     * @expectedException \Soldo\Exceptions\SoldoInvalidFingerprintException
+     */
+    public function testBuildFingerprintOrderWithNoTokenParam()
+    {
+        $resource = new MockResource();
+        $resource->buildFingerprint(['foo', 'bar'], 'foo');
+    }
+
+    /**
+     * @expectedException \Soldo\Exceptions\SoldoInvalidFingerprintException
+     */
+    public function testBuildFingerprintMissingAttribute()
+    {
+        $resource = new MockResource();
+        $resource->buildFingerprint(['foo', 'token'], 'foo');
+    }
+
+    public function testBuildFingerprint()
+    {
+        $data = [
+            'foo' => 'bar',
+        ];
+        $resource = new MockResource($data);
+        $fingerprint = $resource->buildFingerprint(['foo', 'token'], 'a-random-token');
+        $this->assertEquals(hash('sha512', 'bara-random-token'), $fingerprint);
     }
 
     /**
