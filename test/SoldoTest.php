@@ -3,6 +3,7 @@
 namespace Soldo\Tests;
 
 use PHPUnit\Framework\TestCase;
+use Soldo\Exceptions\SoldoInternalServerErrorException;
 use Soldo\Resources\Card;
 use Soldo\Resources\Company;
 use Soldo\Resources\Employee;
@@ -300,6 +301,9 @@ class SoldoTest extends TestCase
         $transaction = $this->soldo->getTransaction('A_NOT_EXISTING_TRANSACTION_ID');
     }
 
+    /**
+     * @expectedException \Soldo\Exceptions\SoldoInternalServerErrorException
+     */
     public function testGetTransaction()
     {
         $transactionId = $this->getTransactionId();
@@ -309,6 +313,9 @@ class SoldoTest extends TestCase
         $this->assertNull($transaction->details);
     }
 
+    /**
+     * @expectedException \Soldo\Exceptions\SoldoInternalServerErrorException
+     */
     public function testGetTransactionWithDetails()
     {
         $transactionId = $this->getTransactionId();
