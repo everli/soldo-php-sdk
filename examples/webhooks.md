@@ -5,7 +5,7 @@ Use webhooks to be notified about events that happen in a Soldo Business account
 Some events (e.g. a payment or any other type of transaction like an ATM withdrawal) are not the result of a direct API request so those events can be managed with webhooks.  
 Each time an event occurs a POST call is made to the registered webhook.
 
-In order to register a webhook you need to contact Soldo communicating them the endpoint URL (note that your server must provice a valid SSL server certificate).
+In order to register a webhook you need to contact Soldo communicating them the endpoint URL (note that your server must provide a valid SSL server certificate).
 
 Once you did that you'll start receiving notifications to your webhook.   
 Of course you will need to check and validate the authenticity of the Soldo fingerprint using the `token` released by Soldo.
@@ -105,9 +105,9 @@ switch ($event->type()) {
 	case 'transaction.withdrawal_declined':
 	case 'transaction.withdrawal_settled':
 	    $resource = $event->get();
-		break;
+		   break;
 		
-	defalt:
+	default:
 	    $resource = null;
 	    break;
 }
