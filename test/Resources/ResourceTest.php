@@ -3,6 +3,7 @@
 namespace Soldo\Tests\Resources;
 
 use PHPUnit\Framework\TestCase;
+use Soldo\Exceptions\SoldoInvalidEvent;
 use Soldo\Exceptions\SoldoInvalidFingerprintException;
 use Soldo\Exceptions\SoldoInvalidRelationshipException;
 use Soldo\Resources\Resource;
@@ -232,6 +233,41 @@ class ResourceTest extends TestCase
     {
         MockResource::setBasePath($value);
     }
+
+    public function testGetEventTypeNullEventType()
+    {
+        $resource = new MockResource();
+        $this->assertNull($resource->getEventType());
+
+        $resource->setEventType('string-that-not-contains-a-pattern');
+        $this->assertNull($resource->getEventType());
+
+    }
+
+    /**
+     * @expectedException \Soldo\Exceptions\SoldoInvalidEvent
+     */
+    public function testGetEventTypeMissingAttribute()
+    {
+        $resource = new MockResource();
+        $resource->setEventType('{id}');
+        $resource->getEventType();
+    }
+
+    public function testGetEventType()
+    {
+        $resource = new MockResource();
+        $resource->setEventType('{id}');
+        $resource->id = 'CamelCaseEvent';
+        $this->assertEquals('mockresource.camelcaseevent', $resource->getEventType());
+
+        $resource->setEventType('{id}_{foo}');
+        $resource->id = 'CamelCaseEvent';
+        $resource->foo = ' FooParameter';
+        $this->assertEquals('mockresource.camelcaseevent_fooparameter', $resource->getEventType());
+    }
+
+
 
     /**
      * @expectedException \Soldo\Exceptions\SoldoInvalidPathException
