@@ -44,6 +44,14 @@ class MockResource extends Resource
     }
 
     /**
+     * @param $eventType
+     */
+    public function setEventType($eventType)
+    {
+        $this->eventType = $eventType;
+    }
+
+    /**
      * @param $basePath
      */
     public static function setBasePath($basePath)
