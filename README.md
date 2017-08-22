@@ -49,6 +49,9 @@ $soldo = new \Soldo\Soldo([
    
 - **Card rules**
     - [Obtaining the card Rules](./examples/card-rules.md#obtaining-the-card-rules)
+    
+- **Webhooks**
+    - [Receiving a webhook notification](./examples/webhooks.md#receiving-a-webhook-notification)
       
     
 ## Tests
