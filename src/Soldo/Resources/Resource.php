@@ -2,6 +2,7 @@
 
 namespace Soldo\Resources;
 
+use Soldo\Exceptions\SoldoInvalidEvent;
 use Soldo\Exceptions\SoldoInvalidFingerprintException;
 use Soldo\Exceptions\SoldoInvalidPathException;
 use Soldo\Exceptions\SoldoInvalidRelationshipException;
@@ -31,6 +32,13 @@ abstract class Resource
     protected $path;
 
     /**
+     * Event identifier based on the resource status
+     *
+     * @var string
+     */
+    protected $eventType;
+
+    /**
      * List of resource attributes
      *
      * @var array
@@ -57,6 +65,8 @@ abstract class Resource
      * @var array
      */
     protected $cast = [];
+
+
 
     /**
      * Resource constructor.
@@ -193,8 +203,9 @@ abstract class Resource
         }
 
         return hash('sha512', $data);
-
     }
+
+
 
     /**
      * Get full remote path of the single resource
@@ -302,6 +313,35 @@ abstract class Resource
     public function filterWhiteList($data)
     {
         return array_intersect_key($data, array_flip($this->whiteListed));
+    }
+
+    /**
+     * Return a string representing the event type based on the resource status
+     * E.g. for a Payment Refused Transactions it will return transaction.payment_refused
+     *
+     * @return null|string
+     * @throws SoldoInvalidEvent
+     */
+    public function getEventType()
+    {
+        if($this->eventType === null) {
+            return null;
+        }
+
+        $eventParts = [];
+        preg_match_all('/\{(\S+?)\}/', $this->eventType, $parts);
+        foreach ($parts[1] as $key => $attributeName) {
+            if ($this->{$attributeName} === null) {
+                throw new SoldoInvalidEvent(
+                    static::class . ' ' . $attributeName . ' is not defined'
+                );
+            }
+
+            $eventParts[] = trim(strtolower($this->{$attributeName}));
+        }
+
+        $classShortName = strtolower((new \ReflectionClass($this))->getShortName());
+        return $classShortName . '.' . implode('_', $eventParts);
     }
 
     /**
