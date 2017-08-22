@@ -67,7 +67,6 @@ abstract class Resource
     protected $cast = [];
 
 
-
     /**
      * Resource constructor.
      * @param array $data
@@ -188,7 +187,7 @@ abstract class Resource
 
         $data = '';
         foreach ($fingerprintOrder as $attributeName) {
-            if($attributeName === 'token') {
+            if ($attributeName === 'token') {
                 $data .= $internalToken;
                 continue;
             }
@@ -204,7 +203,6 @@ abstract class Resource
 
         return hash('sha512', $data);
     }
-
 
 
     /**
@@ -324,12 +322,17 @@ abstract class Resource
      */
     public function getEventType()
     {
-        if($this->eventType === null) {
+        if ($this->eventType === null) {
             return null;
         }
 
         $eventParts = [];
         preg_match_all('/\{(\S+?)\}/', $this->eventType, $parts);
+
+        if (empty($parts[0])) {
+            return null;
+        }
+
         foreach ($parts[1] as $key => $attributeName) {
             if ($this->{$attributeName} === null) {
                 throw new SoldoInvalidEvent(
