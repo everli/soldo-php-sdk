@@ -30,20 +30,6 @@ class SoldoEvent
     private $type;
 
     /**
-     * The ordered list need to build the resource fingerprint
-     *
-     * @var array
-     */
-    private $fingerprintOrder;
-
-    /**
-     * Fingerprint contained in the X-Soldo-Fingerprint request header
-     *
-     * @var boolean
-     */
-    private $fingerprint;
-
-    /**
      * The resource that triggered the event
      *
      * @var \Soldo\Resources\Resource
@@ -56,9 +42,10 @@ class SoldoEvent
      * @param array $data
      * @param string $fingerprint
      * @param string $fingerprintOrder
+     * @param string $internalToken
      * @throws SoldoInvalidEvent
      */
-    public function __construct($data, $fingerprint, $fingerprintOrder)
+    public function __construct($data, $fingerprint, $fingerprintOrder, $internalToken)
     {
         $rules = [
             'event_type' => 'required',
@@ -80,11 +67,18 @@ class SoldoEvent
 
         // build resource
         $className = '\Soldo\Resources\\' . $data['event_type'];
-        $this->resource = new $className($data['data']);
-        $this->type = $this->resource->getEventType();
+        $resource = new $className($data['data']);
 
-        $this->fingerprint = $fingerprint;
-        $this->fingerprintOrder = explode(',', $fingerprintOrder);
+        $fingerprintOrder = explode(',', $fingerprintOrder);
+        $resourceFingerprint = $resource->buildFingerprint($fingerprintOrder, $internalToken);
+        if ($fingerprint !== $resourceFingerprint) {
+            throw new SoldoInvalidEvent(
+                'Cannot verify the given fingerprint'
+            );
+        }
+
+        $this->resource = $resource;
+        $this->type = $this->resource->getEventType();
     }
 
     /**
@@ -98,22 +92,13 @@ class SoldoEvent
     }
 
     /**
-     * Return the resource if the generated fingerprint matches $this->fingerprint
-     * Throw an exception otherwise
+     * Return the resource that triggered the event
      *
-     * @param string $internalToken
      * @return Resources\Resource
      * @throws SoldoInvalidEvent
      */
-    public function get($internalToken)
+    public function get()
     {
-        $fingerprint = $this->resource->buildFingerprint($this->fingerprintOrder, $internalToken);
-        if ($fingerprint !== $this->fingerprint) {
-            throw new SoldoInvalidEvent(
-                'Cannot verify the given fingerprint'
-            );
-        }
-
         return $this->resource;
     }
 
