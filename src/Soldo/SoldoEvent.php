@@ -11,7 +11,6 @@ use Soldo\Validators\ValidatorTrait;
  */
 class SoldoEvent
 {
-
     use ValidatorTrait;
 
     /**
@@ -35,7 +34,6 @@ class SoldoEvent
      * @var \Soldo\Resources\Resource
      */
     private $resource;
-
 
     /**
      * SoldoWebhook constructor.
@@ -94,8 +92,8 @@ class SoldoEvent
     /**
      * Return the resource that triggered the event
      *
-     * @return Resources\Resource
      * @throws SoldoInvalidEvent
+     * @return Resources\Resource
      */
     public function get()
     {
@@ -116,8 +114,4 @@ class SoldoEvent
             self::EVENT_TYPE_EXPENSE_CENTRE,
         ];
     }
-
-
-
-
 }

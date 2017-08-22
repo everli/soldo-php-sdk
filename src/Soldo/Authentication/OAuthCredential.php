@@ -55,9 +55,10 @@ class OAuthCredential extends Resource
      */
     public function isTokenExpired()
     {
-        if($this->tokenExpiresAt === null) {
+        if ($this->tokenExpiresAt === null) {
             return false;
         }
+
         return time() > $this->tokenExpiresAt;
     }
 

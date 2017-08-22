@@ -66,7 +66,6 @@ abstract class Resource
      */
     protected $cast = [];
 
-
     /**
      * Resource constructor.
      * @param array $data
@@ -173,8 +172,8 @@ abstract class Resource
      * @param array $fingerprintOrder
      * @param string $internalToken
      *
-     * @return string
      * @throws SoldoInvalidFingerprintException
+     * @return string
      */
     public function buildFingerprint($fingerprintOrder, $internalToken)
     {
@@ -203,7 +202,6 @@ abstract class Resource
 
         return hash('sha512', $data);
     }
-
 
     /**
      * Get full remote path of the single resource
@@ -317,8 +315,8 @@ abstract class Resource
      * Return a string representing the event type based on the resource status
      * E.g. for a Payment Refused Transactions it will return transaction.payment_refused
      *
-     * @return null|string
      * @throws SoldoInvalidEvent
+     * @return null|string
      */
     public function getEventType()
     {
@@ -340,10 +338,11 @@ abstract class Resource
                 );
             }
 
-            $eventParts[] = trim(strtolower($this->{$attributeName}));
+            $eventParts[] = trim(mb_strtolower($this->{$attributeName}));
         }
 
-        $classShortName = strtolower((new \ReflectionClass($this))->getShortName());
+        $classShortName = mb_strtolower((new \ReflectionClass($this))->getShortName());
+
         return $classShortName . '.' . implode('_', $eventParts);
     }
 

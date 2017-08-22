@@ -241,7 +241,6 @@ class ResourceTest extends TestCase
 
         $resource->setEventType('string-that-not-contains-a-pattern');
         $this->assertNull($resource->getEventType());
-
     }
 
     /**
@@ -266,8 +265,6 @@ class ResourceTest extends TestCase
         $resource->foo = ' FooParameter';
         $this->assertEquals('mockresource.camelcaseevent_fooparameter', $resource->getEventType());
     }
-
-
 
     /**
      * @expectedException \Soldo\Exceptions\SoldoInvalidPathException
