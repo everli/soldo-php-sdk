@@ -1,7 +1,10 @@
 # Release Notes
 
-## v1.0.0 (2017-08-23)
-
-## v1.0.1 (2017-08-25)
+## Version 1.0.1 
+_2017-08-25_
 * Remove `@expectedException` in `SoldoTest->testGetTransaction` and `SoldoTest->testGetTransactionWithDetails`
 * Update dependencies
+
+## Version 1.0.0 
+_2017-08-23_
+* Initial release. Yay! 
