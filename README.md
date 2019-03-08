@@ -1,7 +1,10 @@
 # Soldo SDK for PHP
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 An unofficial SDK to work with the [Soldo API](https://api-demo.soldocloud.net/documentation)
+
+## Contacts
+In case you're interested in using the Soldo API, please [contact them](https://www.soldo.com/en-uk/contact-us/) so they can support you in integrating them in your existing system.
 
 ## Prerequisites
 - PHP 5.5 or above
