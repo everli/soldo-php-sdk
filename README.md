@@ -1,4 +1,5 @@
 # Soldo SDK for PHP
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 An unofficial SDK to work with the [Soldo API](https://api-demo.soldocloud.net/documentation)
 
