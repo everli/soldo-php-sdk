@@ -1,5 +1,4 @@
 {
-  "version": "4.2.0",
   "name": "supermercato24/soldo-php-sdk",
   "description": "Unofficial PHP SDK to work with Soldo API",
   "keywords": ["supermercato24", "soldo", "api"],
