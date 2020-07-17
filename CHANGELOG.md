@@ -1,6 +1,10 @@
 # Release Notes
 
 ## [Unreleased]
+## [3.0.0] - 2020-07-17
+### Changed
+- Update company name
+- Update CHANGELOG
 
 ## [2.0.0] - 2019-03-27
 ### Added
@@ -22,7 +26,3 @@
 ### Added
 - Initial release. Yay! 
 
-[Unreleased]: https://github.com/Supermercato24/soldo-php-sdk/compare/2.0.0...HEAD
-[2.0.0]: https://github.com/Supermercato24/soldo-php-sdk/compare/1.0.1...2.0.0
-[1.0.1]: https://github.com/Supermercato24/soldo-php-sdk/compare/1.0.0...1.0.0
-[1.0.0]: https://github.com/Supermercato24/soldo-php-sdk/releases/tag/1.0.0

@@ -1,12 +1,13 @@
 {
-  "name": "supermercato24/soldo-php-sdk",
+  "name": "everli/soldo-php-sdk",
+  "version": "3.0.0",
   "description": "Unofficial PHP SDK to work with Soldo API",
-  "keywords": ["supermercato24", "soldo", "api"],
+  "keywords": ["everli", "soldo", "api"],
   "license": "Apache-2.0",
   "authors": [
     {
-      "name": "Supermercato dev team",
-      "homepage": "https://supermercato24.it"
+      "name": "Everli dev team",
+      "homepage": "https://everli.com"
     }
   ],
   "require": {
@@ -31,7 +32,7 @@
   },
   "extra": {
     "branch-alias": {
-      "dev-master": "2.0-dev"
+      "dev-master": "3.0.x-dev"
     }
   }
 }
