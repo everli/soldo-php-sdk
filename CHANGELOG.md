@@ -22,7 +22,7 @@
 ### Added
 - Initial release. Yay! 
 
-[Unreleased]: https://github.com/Supermercato24/soldo-php-sdk/compare/2.0.0...HEAD
-[2.0.0]: https://github.com/Supermercato24/soldo-php-sdk/compare/1.0.1...2.0.0
-[1.0.1]: https://github.com/Supermercato24/soldo-php-sdk/compare/1.0.0...1.0.0
-[1.0.0]: https://github.com/Supermercato24/soldo-php-sdk/releases/tag/1.0.0
+[Unreleased]: https://github.com/everli/soldo-php-sdk/compare/2.0.0...HEAD
+[2.0.0]: https://github.com/everli/soldo-php-sdk/compare/1.0.1...2.0.0
+[1.0.1]: https://github.com/everli/soldo-php-sdk/compare/1.0.0...1.0.0
+[1.0.0]: https://github.com/everli/soldo-php-sdk/releases/tag/1.0.0
