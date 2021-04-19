@@ -5,13 +5,13 @@ namespace Soldo;
 use Psr\Log\LoggerInterface;
 use Soldo\Authentication\OAuthCredential;
 use Soldo\Exceptions\SoldoException;
+use Soldo\Resources\Group;
 use Soldo\Resources\InternalTransfer;
 use Soldo\Resources\Transaction;
 use Soldo\Utils\Paginator;
 use Soldo\Resources\Card;
 use Soldo\Resources\Company;
 use Soldo\Resources\Employee;
-use Soldo\Resources\ExpenseCentre;
 use Soldo\Resources\Wallet;
 
 /**
@@ -83,49 +83,6 @@ class Soldo
         $wallet = $this->client->getItem(Wallet::class, $id);
 
         return $wallet;
-    }
-
-    /**
-     * Return an array containing a list of ExpenseCentre
-     *
-     * @param int $page
-     * @param int $perPage
-     * @param array $searchFields
-     * @return array
-     */
-    public function getExpenseCentres($page = 0, $perPage = Paginator::MAX_ALLOWED_ITEMS_PER_PAGE, $searchFields = [])
-    {
-        $paginator = new Paginator($page, $perPage);
-        $collection = $this->client->getCollection(ExpenseCentre::class, $paginator, $searchFields);
-
-        return $collection->get();
-    }
-
-    /**
-     * Return a single ExpenseCentre resource
-     *
-     * @param mixed $id
-     * @return \Soldo\Resources\Resource
-     */
-    public function getExpenseCentre($id)
-    {
-        $expense_center = $this->client->getItem(ExpenseCentre::class, $id);
-
-        return $expense_center;
-    }
-
-    /**
-     * Update the ExpenseCentre by id and return the resource up to date
-     *
-     * @param mixed $id
-     * @param array $data
-     * @return \Soldo\Resources\Resource
-     */
-    public function updateExpenseCentre($id, $data)
-    {
-        $expense_center = $this->client->updateItem(ExpenseCentre::class, $id, $data);
-
-        return $expense_center;
     }
 
     /**
@@ -203,6 +160,35 @@ class Soldo
         $transaction = $this->client->getItem(Transaction::class, $id, $queryParameters);
 
         return $transaction;
+    }
+
+    /**
+     * Return an array containing a list of Groups
+     *
+     * @param int $page
+     * @param int $perPage
+     * @param array $searchFields
+     * @return array
+     */
+    public function getGroups($page = 0, $perPage = Paginator::MAX_ALLOWED_ITEMS_PER_PAGE, $searchFields = [])
+    {
+        $paginator = new Paginator($page, $perPage);
+        $collection = $this->client->getCollection(Group::class, $paginator, $searchFields);
+
+        return $collection->get();
+    }
+
+    /**
+     * Return a single Group resource
+     *
+     * @param mixed $id
+     * @return \Soldo\Resources\Resource
+     */
+    public function getGroup($id)
+    {
+        $group = $this->client->getItem(Group::class, $id);
+
+        return $group;
     }
 
     /**
