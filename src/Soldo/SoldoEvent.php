@@ -20,7 +20,6 @@ class SoldoEvent
     const EVENT_TYPE_CARD = 'Card';
     const EVENT_TYPE_TRANSACTION = 'Transaction';
     const EVENT_TYPE_EMPLOYEE = 'Employee';
-    const EVENT_TYPE_EXPENSE_CENTRE = 'ExpenseCentre';
 
     /**
      * An identifier for the event
@@ -113,7 +112,6 @@ class SoldoEvent
             self::EVENT_TYPE_CARD,
             self::EVENT_TYPE_TRANSACTION,
             self::EVENT_TYPE_EMPLOYEE,
-            self::EVENT_TYPE_EXPENSE_CENTRE,
         ];
     }
 }

@@ -5,7 +5,7 @@ namespace Soldo\Resources;
 use Soldo\Exceptions\SoldoInternalTransferException;
 
 /**
- * Class ExpenseCentre
+ * Class InternalTransfer
  * @package Soldo\Resources
  *
  * @property string fromWalletId

@@ -56,7 +56,7 @@ Array
             [currency_code] => EUR
             [available_amount] => 4623
             [blocked_amount] => 0
-            [primary_user_type] => expensecentre
+            [primary_user_type] => company
             [primary_user_public_id] => SDMD7784-000002
             [visible] => 1
         )

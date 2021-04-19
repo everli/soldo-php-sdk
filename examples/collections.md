@@ -22,16 +22,16 @@ var_dump($collection);
 Accessing the other collections is pretty similar. Below you can find an example for each collection provided by the API.
 
 
-## Obtaining the Expense Centres list
+## Obtaining the Groups list
 
 ```php
 try {
-    $collection = $soldo->getExpenseCentres();
+    $collection = $soldo->getGroups();
 } catch (\Soldo\Exceptions\SoldoException $e) {
     echo 'Soldo returned an error: ' . $e->getMessage();
 }
 
-// each item of $collection is of type \Soldo\Resource\ExpenseCentre
+// each item of $collection is of type \Soldo\Resource\Group
 var_dump($collection);
 ```
 

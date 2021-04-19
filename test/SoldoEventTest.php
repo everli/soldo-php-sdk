@@ -52,7 +52,7 @@ class SoldoEventTest extends TestCase
                     'masked_pan' => '999999******3706',
                     'owner_id' => 'SDMD7784-000002',
                     'custom_reference_id' => 'sdfgsfgsdfg',
-                    'owner_type' => 'expensecentre',
+                    'owner_type' => 'company',
                 ]
         ];
         return $data;

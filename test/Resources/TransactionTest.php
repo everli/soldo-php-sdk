@@ -54,7 +54,7 @@ class TransactionTest extends TestCase
             'card_id' => '47a15e93-096a-11e7-9088-0a3392c1c947',
             'masked_pan' => '999999******6952',
             'owner_id' => 'soldo-000011',
-            'owner_type' => 'expensecentre',
+            'owner_type' => 'company',
             'owner_name' => 'IT',
             'details' =>
                 [

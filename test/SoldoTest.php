@@ -3,11 +3,10 @@
 namespace Soldo\Tests;
 
 use PHPUnit\Framework\TestCase;
-use Soldo\Exceptions\SoldoInternalServerErrorException;
 use Soldo\Resources\Card;
 use Soldo\Resources\Company;
 use Soldo\Resources\Employee;
-use Soldo\Resources\ExpenseCentre;
+use Soldo\Resources\Group;
 use Soldo\Resources\Rule;
 use Soldo\Resources\Transaction;
 use Soldo\Resources\Wallet;
@@ -88,11 +87,11 @@ class SoldoTest extends TestCase
     /**
      * @return mixed
      */
-    private function getExpenseCentreId()
+    private function getGroupId()
     {
-        $expenseCentres = $this->soldo->getExpenseCentres();
+        $groups = $this->soldo->getGroups();
 
-        return $expenseCentres[0]->id;
+        return $groups[0]->id;
     }
 
     /**
@@ -129,7 +128,7 @@ class SoldoTest extends TestCase
     {
         $wallets = $this->soldo->getWallets();
         $this->assertInternalType('array', $wallets);
-        $this->assertTrue(count($wallets) > 1, 'There should be at least two Wallet'); //TODO: verify that this assertion is true
+        $this->assertTrue(count($wallets) > 1, 'There should be at least two Wallet');
 
         /** @var Wallet $wallet */
         $wallet = $wallets[0];
@@ -157,73 +156,40 @@ class SoldoTest extends TestCase
         $this->assertEquals($ids['id'], $wallet->id);
     }
 
-    public function testGetExpenseCentres()
+    public function testGetGroups()
     {
-        $expenseCentres = $this->soldo->getExpenseCentres();
-        $this->assertInternalType('array', $expenseCentres);
-        $this->assertTrue(count($expenseCentres) > 0, 'There should be at least one Expense Centre');
+        $groups = $this->soldo->getGroups();
+        $this->assertInternalType('array', $groups);
+        $this->assertTrue(count($groups) > 0, 'There should be at least one Group');
 
-        foreach ($expenseCentres as $expenseCentre) {
-            /** @var ExpenseCentre $expenseCentre*/
-            $this->assertInstanceOf(ExpenseCentre::class, $expenseCentre);
+        foreach ($groups as $group) {
+            /** @var Group $groups*/
+            $this->assertInstanceOf(Group::class, $group);
         }
     }
 
     /**
-     * @expectedException \Soldo\Exceptions\SoldoModelNotFoundException
+     * @expectedException \Soldo\Exceptions\SoldoBadRequestException
      */
-    public function testGetExpenseCentreNotFound()
+    public function testGetGroupNotFound()
     {
-        $expenseCentre = $this->soldo->getExpenseCentre('A_NOT_EXISTING_EXPENSE_CENTRE_ID');
+        $group = $this->soldo->getGroup('A_NOT_EXISTING_GROUP_ID');
     }
 
-    public function testGetExpenseCentre()
+    public function testGetGroup()
     {
-        $expenseCentreId = $this->getExpenseCentreId();
-        $expenseCentre = $this->soldo->getExpenseCentre($expenseCentreId);
-        $this->assertInstanceOf(ExpenseCentre::class, $expenseCentre);
-        $this->assertEquals($expenseCentreId, $expenseCentre->id);
-    }
-
-    /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testUpdateExpenseCentreEmptyData()
-    {
-        $expenseCentreId = $this->getExpenseCentreId();
-        $expenseCentre = $this->soldo->updateExpenseCentre($expenseCentreId, []);
-    }
-
-    /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testUpdateExpenseCentreBlacklistedData()
-    {
-        $expenseCentreId = $this->getExpenseCentreId();
-        $expenseCentre = $this->soldo->updateExpenseCentre($expenseCentreId, ['a_not_whitelisted_key' => 'Random Value']);
-    }
-
-    public function testUpdateExpenseCentre()
-    {
-        $expenseCentreId = $this->getExpenseCentreId();
-        $expenseCentre = $this->soldo->updateExpenseCentre($expenseCentreId, ['assignee' => 'Random Assignee']);
-        $this->assertInstanceOf(ExpenseCentre::class, $expenseCentre);
-        $this->assertEquals('Random Assignee', $expenseCentre->assignee);
-    }
-
-    public function testUpdateExpenseCentreWithBlacklistedData()
-    {
-        $expenseCentreId = $this->getExpenseCentreId();
-        $expenseCentre = $this->soldo->updateExpenseCentre($expenseCentreId, ['assignee' => 'Another Random Assignee', 'a_not_whitelisted_key' => 'Random Value']);
-        $this->assertInstanceOf(ExpenseCentre::class, $expenseCentre);
-        $this->assertEquals('Another Random Assignee', $expenseCentre->assignee);
+        $groupId = $this->getGroupId();
+        /** @var Group $group */
+        $group = $this->soldo->getGroup($groupId);
+        $this->assertInstanceOf(Group::class, $group);
+        $this->assertEquals($groupId, $group->id);
     }
 
     public function testGetEmployees()
     {
         $employees = $this->soldo->getEmployees();
         $this->assertInternalType('array', $employees);
-        $this->assertTrue(count($employees) > 0, 'There should be at least one Employee'); //TODO: verify that this assertion is true
+        $this->assertTrue(count($employees) > 0, 'There should be at least one Employee');
 
         foreach ($employees as $employee) {
             /** @var Employee $employ  */
@@ -285,7 +251,7 @@ class SoldoTest extends TestCase
     {
         $transactions = $this->soldo->getTransactions();
         $this->assertInternalType('array', $transactions);
-        $this->assertTrue(count($transactions) > 0, 'There should be at least one Transaction'); //TODO: verify that this assertion is true
+        $this->assertTrue(count($transactions) > 0, 'There should be at least one Transaction');
 
         foreach ($transactions as $transaction) {
             /** @var Transaction $transaction */
@@ -324,7 +290,7 @@ class SoldoTest extends TestCase
     {
         $cards = $this->soldo->getCards();
         $this->assertInternalType('array', $cards);
-        $this->assertTrue(count($cards) > 0, 'There should be at least one Card'); //TODO: verify that this assertion is true
+        $this->assertTrue(count($cards) > 0, 'There should be at least one Card');
 
         foreach ($cards as $card) {
             /** @var Card $card */
@@ -361,7 +327,7 @@ class SoldoTest extends TestCase
         $cardId = $this->getCardId();
         $rules = $this->soldo->getCardRules($cardId);
         $this->assertInternalType('array', $rules);
-        $this->assertTrue(count($rules) > 0, 'There should be at least one Rule for the required card'); //TODO: verify that this assertion is true
+        $this->assertTrue(count($rules) > 0, 'There should be at least one Rule for the required card');
 
         foreach ($rules as $rule) {
             /** @var Rule $rule */

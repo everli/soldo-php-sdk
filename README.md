@@ -31,7 +31,7 @@ $soldo = new \Soldo\Soldo([
 
 - **Retrieve collections**
     - [Obtaining the Employees list](./examples/collections.md#obtaining-the-employees-list)
-    - [Obtaining the Expense Centres list](./examples/collections.md#obtaining-the-expense-centres-list)
+    - [Obtaining the Groups list](./examples/collections.md#obtaining-the-groups-list)
     - [Obtaining the Wallets list](./examples/collections.md#obtaining-the-wallets-list)
     - [Obtaining the Cards list](./examples/collections.md#obtaining-the-cards-list)
     - [Obtaining the Transactions list](./examples/collections.md#obtaining-the-transactions-list)
@@ -42,8 +42,7 @@ $soldo = new \Soldo\Soldo([
     - [Obtaining the Company resource](./examples/resources.md#obtaining-the-company-resource)
     - [Obtaining an Employee resource](./examples/resources.md#obtaining-an-employee-resource)
     - [Updating an Employee resource](./examples/resources.md#updating-an-employee-resource)
-    - [Obtaining an Expense Centre resource](./examples/resources.md#obtaining-an-expense-centre-resource)
-    - [Updating an Expense Centre resource](./examples/resources.md#updating-an--expense-centre-resource)
+    - [Obtaining a Group resource](./examples/resources.md#obtaining-a-group-resource)
     - [Obtaining a Wallet resource](./examples/resources.md#obtaining-a-wallet-resource)
     - [Obtaining a Card resource](./examples/resources.md#obtaining-a-card-resource)
     - [Obtaining a Transaction resource](./examples/resources.md#obtaining-a-transaction-resource)
