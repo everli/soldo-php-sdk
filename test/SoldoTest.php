@@ -160,7 +160,7 @@ class SoldoTest extends TestCase
     {
         $groups = $this->soldo->getGroups();
         $this->assertInternalType('array', $groups);
-        $this->assertTrue(count($groups) > 0, 'There should be at least one Expense Centre');
+        $this->assertTrue(count($groups) > 0, 'There should be at least one Group');
 
         foreach ($groups as $group) {
             /** @var Group $groups*/
@@ -173,7 +173,7 @@ class SoldoTest extends TestCase
      */
     public function testGetGroupNotFound()
     {
-        $expenseCentre = $this->soldo->getGroup('A_NOT_EXISTING_GROUP_ID');
+        $group = $this->soldo->getGroup('A_NOT_EXISTING_GROUP_ID');
     }
 
     public function testGetGroup()
