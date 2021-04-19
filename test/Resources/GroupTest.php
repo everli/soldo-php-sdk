@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 use Soldo\Resources\Group;
 
 /**
- * Class ExpenseCentreTest
+ * Class GroupTest
  */
 class GroupTest extends TestCase
 {
