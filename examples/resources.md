@@ -68,39 +68,16 @@ Any key different from the supported ones will be ignored. If no supported keys 
 
 Printing out `$employee->department` will show `Department name` and the value of `custom_reference_id` will be `a-random-string`.
 
-## Obtaining an Expense Centre resource
+## Obtaining a Group resource
 
 ```php
 try {
-    $resource = $soldo->getExpenseCentre('SDMD7784-000002');
+    $resource = $soldo->getGroup('SDMD7784-000002');
 } catch (\Soldo\Exceptions\SoldoException $e) {
     echo 'Soldo returned an error: ' . $e->getMessage();
 }
 ```
 
-
-## Updating an  Expense Centre resource
-
-You can update the following  Expense Centre properties:
-- `custom_reference_id`: the employee reference id into the calling system
-- `assignee`: the assignee of the expense centre
-
-doing as follows:
-
-```php
-try {
-    $expenseCentre = $soldo->updateExpenseCentre('SDMD7784-000001', [
-            'department' => 'Department name',
-            'assignee' => 'An Assignee',
-            ]);
-} catch (\Soldo\Exceptions\SoldoException $e) {
-    echo 'Soldo returned an error: ' . $e->getMessage();
-}
-```
-
-Any key different from the supported ones will be ignored. If no supported keys are provided an `InvalidArgumentException` will be thrown.
-
-Printing out `$expenseCentre->department` will show `Department name` and the value of `assignee` will be `An Assignee`.
 
 ## Obtaining a Wallet resource
 

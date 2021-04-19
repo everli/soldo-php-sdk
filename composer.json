@@ -1,6 +1,6 @@
 {
   "name": "everli/soldo-php-sdk",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "description": "Unofficial PHP SDK to work with Soldo API",
   "keywords": ["everli", "soldo", "api"],
   "license": "Apache-2.0",
