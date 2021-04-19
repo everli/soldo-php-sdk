@@ -27,10 +27,9 @@ namespace Soldo\Resources;
  * @property array tags
  * @property string card_id
  * @property string masked_pan
- * @property string owner_id
+ * @property string group_id
  * @property string owner_type
- * @property string owner_name
- * @property string owner_surname
+ * @property string trx_owner_id
  * @property string custom_reference_id
  * @property array details
  */
