@@ -1,6 +1,10 @@
 # Release Notes
 
 ## [Unreleased]
+## [4.0.0] - 2021-04-19
+### Added
+- Support new Soldo 2.0 APIs
+
 ## [3.0.0] - 2020-07-17
 ### Changed
 - Update company name
