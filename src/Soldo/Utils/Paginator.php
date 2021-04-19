@@ -54,8 +54,6 @@ class Paginator
             );
         }
 
-        // TODO: handle orderDirection and orderedProperties
-
         // set page param
         $this->page = $page < 0 ?
             0 :
