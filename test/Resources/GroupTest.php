@@ -3,12 +3,12 @@
 namespace Soldo\Tests\Resources;
 
 use PHPUnit\Framework\TestCase;
-use Soldo\Resources\ExpenseCentre;
+use Soldo\Resources\Group;
 
 /**
  * Class ExpenseCentreTest
  */
-class ExpenseCentreTest extends TestCase
+class GroupTest extends TestCase
 {
     /**
      * @return array
@@ -19,20 +19,20 @@ class ExpenseCentreTest extends TestCase
             'id' => 'soldo-000008',
             'name' => 'Test Department',
             'custom_reference_id' => 'mySecondCustomReference',
-            'status' => 'ACTIVE',
-            'visible' => true,
+            'note' => 'bar',
+            'type' => 'TEAM',
         ];
     }
 
     public function testConstructor()
     {
         $data = $this->getResourceData();
-        $resource = new ExpenseCentre();
+        $resource = new Group();
         foreach ($data as $key => $value) {
             $this->assertNull($resource->{$key});
         }
 
-        $resource = new ExpenseCentre($data);
+        $resource = new Group($data);
         foreach ($data as $key => $value) {
             $this->assertEquals($value, $resource->{$key});
         }
@@ -41,7 +41,7 @@ class ExpenseCentreTest extends TestCase
     public function testFill()
     {
         $data = $this->getResourceData();
-        $resource = new ExpenseCentre();
+        $resource = new Group();
         foreach ($data as $key => $value) {
             $this->assertNull($resource->{$key});
         }
@@ -57,28 +57,28 @@ class ExpenseCentreTest extends TestCase
      */
     public function testGetRemotePathMissingId()
     {
-        $resource = new ExpenseCentre();
+        $resource = new Group();
         $resource->getRemotePath();
     }
 
     public function testGetRemotePath()
     {
-        $resource = new ExpenseCentre(['id' => 1]);
+        $resource = new Group(['id' => 1]);
         $remote_path = $resource->getRemotePath();
-        $this->assertEquals('/expensecentres/1', $remote_path);
+        $this->assertEquals('/groups/1', $remote_path);
 
         $resource->id = 'm0cpGDu45S';
         $remote_path = $resource->getRemotePath();
-        $this->assertEquals('/expensecentres/m0cpGDu45S', $remote_path);
+        $this->assertEquals('/groups/m0cpGDu45S', $remote_path);
     }
 
     public function testToArray()
     {
-        $resource = new ExpenseCentre();
+        $resource = new Group();
         $this->assertEquals([], $resource->toArray());
 
         $data = $this->getResourceData();
-        $resource = new ExpenseCentre($data);
+        $resource = new Group($data);
         $this->assertEquals($data, $resource->toArray());
     }
 
@@ -87,7 +87,7 @@ class ExpenseCentreTest extends TestCase
      */
     public function testBuildRelationshipNotMappedRelationship()
     {
-        $resource = new ExpenseCentre();
+        $resource = new Group();
         $resource->buildRelationship('invalid-resource-name', []);
     }
 
@@ -96,20 +96,7 @@ class ExpenseCentreTest extends TestCase
      */
     public function testGetRelationshipRemotePathNotMappedRelationship()
     {
-        $resource = new ExpenseCentre();
+        $resource = new Group();
         $remotePath = $resource->getRelationshipRemotePath('resources');
-    }
-
-    public function testFilterWhiteList()
-    {
-        $resource = new ExpenseCentre();
-
-        $data = ['foo' => 'bar', 'john' => 'doe', 'lorem' => 'ipsum'];
-        $whitelistedData = $resource->filterWhiteList($data);
-        $this->assertEquals([], $whitelistedData);
-
-        $data = ['foo' => 'bar', 'john' => 'doe', 'lorem' => 'ipsum', 'custom_reference_id' => 'id', 'assignee' => 'foo'];
-        $whitelistedData = $resource->filterWhiteList($data);
-        $this->assertEquals(['custom_reference_id' => 'id', 'assignee' => 'foo'], $whitelistedData);
     }
 }
