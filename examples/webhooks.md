@@ -50,9 +50,9 @@ The endpoint you expose will receive a JSON Payload similar to:
       ],
       "card_id":"f275d49c-1526-11e7-9287-0a89c8769141",
       "masked_pan":"999999******3706",
-      "owner_id":"SDMD7784-000002",
+      "group_id":"SDMD7784-000002",
       "custom_reference_id":"sdfgsfgsdfg",
-      "owner_type":"expensecentre"
+      "owner_type":"company"
    }
 }
 ```
@@ -158,7 +158,7 @@ Array
     [masked_pan] => 999999******3706
     [owner_id] => SDMD7784-000002
     [custom_reference_id] => sdfgsfgsdfg
-    [owner_type] => expensecentre
+    [owner_type] => COMPANY
 )
 
 ```
