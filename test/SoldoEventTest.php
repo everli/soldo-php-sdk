@@ -3,6 +3,8 @@
 namespace Soldo\Tests\Resources;
 
 use PHPUnit\Framework\TestCase;
+use Soldo\Exceptions\SoldoInvalidEvent;
+use Soldo\Exceptions\SoldoInvalidFingerprintException;
 use Soldo\Resources\Transaction;
 use Soldo\SoldoEvent;
 use Soldo\Tests\SoldoTestCredentials;
@@ -12,6 +14,7 @@ use Soldo\Tests\SoldoTestCredentials;
  */
 class SoldoEventTest extends TestCase
 {
+    private const INTERNAL_TOKEN_TEST = 'CNGZ0YEB2ZPFBRHMA';
 
     /**
      * @return array
@@ -68,7 +71,7 @@ class SoldoEventTest extends TestCase
      */
     private $expectedFingerprint;
 
-    public function setUp()
+    public function setUp(): void
     {
         $data = $this->getEventData()['data'];
 
@@ -77,141 +80,132 @@ class SoldoEventTest extends TestCase
             $data['wallet_id'],
             $data['status'],
             $data['transaction_sign'],
-            SoldoTestCredentials::INTERNAL_TOKEN,
+            self::INTERNAL_TOKEN_TEST,
         ]));
 
         parent::setUp();
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidEvent
-     */
     public function testConstructorMissingEventType()
     {
+        $this->expectException(SoldoInvalidEvent::class);
+
         $data = $this->getEventData();
         unset($data['event_type']);
-        $e = new SoldoEvent(
+        new SoldoEvent(
             $data,
             $this->expectedFingerprint,
             $this->expectedFingerprintOrder,
-            SoldoTestCredentials::INTERNAL_TOKEN
+            self::INTERNAL_TOKEN_TEST
         );
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidEvent
-     */
     public function testConstructorMissingEventName()
     {
+        $this->expectException(SoldoInvalidEvent::class);
+
         $data = $this->getEventData();
         unset($data['event_name']);
         $e = new SoldoEvent(
             $data,
             $this->expectedFingerprint,
             $this->expectedFingerprintOrder,
-            SoldoTestCredentials::INTERNAL_TOKEN
+            self::INTERNAL_TOKEN_TEST
         );
     }
 
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidEvent
-     */
     public function testConstructorMissingData()
     {
+        $this->expectException(SoldoInvalidEvent::class);
+
         $data = $this->getEventData();
         unset($data['data']);
         $e = new SoldoEvent(
             $data,
             $this->expectedFingerprint,
             $this->expectedFingerprintOrder,
-            SoldoTestCredentials::INTERNAL_TOKEN
+            self::INTERNAL_TOKEN_TEST
         );
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidEvent
-     */
     public function testConstructorInvalidData()
     {
+        $this->expectException(SoldoInvalidEvent::class);
+
         $data = $this->getEventData();
         $data['data'] = 'string';
         $e = new SoldoEvent(
             $data,
             $this->expectedFingerprint,
             $this->expectedFingerprintOrder,
-            SoldoTestCredentials::INTERNAL_TOKEN
+            self::INTERNAL_TOKEN_TEST
         );
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidEvent
-     */
     public function testConstructorInvalidEventType()
     {
+        $this->expectException(SoldoInvalidEvent::class);
+
         $data = $this->getEventData();
         $data['event_type'] = 'ResourceNotSupported';
         $e = new SoldoEvent(
             $data,
             $this->expectedFingerprint,
             $this->expectedFingerprintOrder,
-            SoldoTestCredentials::INTERNAL_TOKEN
+            self::INTERNAL_TOKEN_TEST
         );
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidFingerprintException
-     */
     public function testConstructorInvalidFingerPrintOrder()
     {
+        $this->expectException(SoldoInvalidFingerprintException::class);
+
         $data = $this->getEventData();
         $e = new SoldoEvent(
             $data,
             $this->expectedFingerprint,
             '',
-            SoldoTestCredentials::INTERNAL_TOKEN
+            self::INTERNAL_TOKEN_TEST
         );
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidFingerprintException
-     */
     public function testConstructorInvalidFingerPrintOrderMissingToken()
     {
+        $this->expectException(SoldoInvalidFingerprintException::class);
+
         $data = $this->getEventData();
         $e = new SoldoEvent(
             $data,
             $this->expectedFingerprint,
             'id,wallet_id,status,transaction_sign',
-            SoldoTestCredentials::INTERNAL_TOKEN
+            self::INTERNAL_TOKEN_TEST
         );
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidEvent
-     */
     public function testConstructorInvalidFingerPrint()
     {
+        $this->expectException(SoldoInvalidEvent::class);
+
         $data = $this->getEventData();
         $e = new SoldoEvent(
             $data,
             'invalid-fingerprint',
             $this->expectedFingerprintOrder,
-            SoldoTestCredentials::INTERNAL_TOKEN
+            '123'
         );
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidEvent
-     */
     public function testConstructorInvalidInternalToken()
     {
+        $this->expectException(SoldoInvalidEvent::class);
+
         $data = $this->getEventData();
         $e = new SoldoEvent(
             $data,
             $this->expectedFingerprint,
             $this->expectedFingerprintOrder,
-            SoldoTestCredentials::INTERNAL_TOKEN . '0' //append a char to invalidate token
+            '1230'
         );
     }
 
@@ -222,7 +216,7 @@ class SoldoEventTest extends TestCase
             $data,
             $this->expectedFingerprint,
             $this->expectedFingerprintOrder,
-            SoldoTestCredentials::INTERNAL_TOKEN
+            self::INTERNAL_TOKEN_TEST
         );
         $resource = $e->get();
         $this->assertInstanceOf(Transaction::class, $resource);
@@ -236,7 +230,7 @@ class SoldoEventTest extends TestCase
             $data,
             $this->expectedFingerprint,
             $this->expectedFingerprintOrder,
-            SoldoTestCredentials::INTERNAL_TOKEN
+            self::INTERNAL_TOKEN_TEST
         );
         $this->assertEquals('transaction.refund_settled', $e->type());
     }

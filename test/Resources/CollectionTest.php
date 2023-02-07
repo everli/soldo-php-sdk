@@ -4,6 +4,7 @@ namespace Soldo\Tests\Resources;
 
 use PHPUnit\Framework\TestCase;
 use Soldo\Exceptions\SoldoInvalidCollectionException;
+use Soldo\Exceptions\SoldoInvalidResourceException;
 use Soldo\Resources\Collection;
 use Soldo\Tests\Fixtures\MockCollection;
 use Soldo\Tests\Fixtures\MockResource;
@@ -39,157 +40,140 @@ class CollectionTest extends TestCase
         return $data;
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidResourceException
-     */
     public function testFillNullItemType()
     {
-        $collection = new Collection(null);
+        $this->expectException(SoldoInvalidResourceException::class);
+        new Collection(null);
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidResourceException
-     */
     public function testFillInvalidItemType()
     {
-        $collection = new Collection('InvalidClassName');
+        $this->expectException(SoldoInvalidResourceException::class);
+        new Collection('InvalidClassName');
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidCollectionException
-     */
     public function testFillEmptyData()
     {
+        $this->expectException(SoldoInvalidCollectionException::class);
+
         $collection = new Collection(MockResource::class);
         $collection->fill([]);
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidCollectionException
-     */
     public function testFillMissingPages()
     {
+        $this->expectException(SoldoInvalidCollectionException::class);
+
         $data = $this->getCollectionData();
         unset($data['pages']);
         $collection = new Collection(MockResource::class);
         $collection->fill($data);
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidCollectionException
-     */
     public function testFillInvalidPages()
     {
+        $this->expectException(SoldoInvalidCollectionException::class);
+
         $data = $this->getCollectionData();
         $data['pages'] = 'FOO';
         $collection = new Collection(MockResource::class);
         $collection->fill($data);
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidCollectionException
-     */
     public function testFillMissingTotal()
     {
+        $this->expectException(SoldoInvalidCollectionException::class);
+
         $data = $this->getCollectionData();
         unset($data['total']);
         $collection = new Collection(MockResource::class);
         $collection->fill($data);
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidCollectionException
-     */
     public function testFillInvalidTotal()
     {
+        $this->expectException(SoldoInvalidCollectionException::class);
+
         $data = $this->getCollectionData();
         $data['total'] = 'FOO';
         $collection = new Collection(MockResource::class);
         $collection->fill($data);
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidCollectionException
-     */
     public function testFillMissingPageSize()
     {
+        $this->expectException(SoldoInvalidCollectionException::class);
+
         $data = $this->getCollectionData();
         unset($data['page_size']);
         $collection = new Collection(MockResource::class);
         $collection->fill($data);
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidCollectionException
-     */
     public function testFillInvalidPageSize()
     {
+        $this->expectException(SoldoInvalidCollectionException::class);
+
         $data = $this->getCollectionData();
         $data['page_size'] = 'FOO';
         $collection = new Collection(MockResource::class);
         $collection->fill($data);
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidCollectionException
-     */
     public function testFillMissingCurrentPage()
     {
+        $this->expectException(SoldoInvalidCollectionException::class);
+
         $data = $this->getCollectionData();
         unset($data['current_page']);
         $collection = new Collection(MockResource::class);
         $collection->fill($data);
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidCollectionException
-     */
     public function testFillInvalidCurrentPage()
     {
+        $this->expectException(SoldoInvalidCollectionException::class);
+
         $data = $this->getCollectionData();
         $data['current_page'] = 'FOO';
         $collection = new Collection(MockResource::class);
         $collection->fill($data);
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidCollectionException
-     */
     public function testFillMissingResultsSize()
     {
+        $this->expectException(SoldoInvalidCollectionException::class);
+
         $data = $this->getCollectionData();
         unset($data['results_size']);
         $collection = new Collection(MockResource::class);
         $collection->fill($data);
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidCollectionException
-     */
     public function testFillInvalidResultsSize()
     {
+        $this->expectException(SoldoInvalidCollectionException::class);
+
         $data = $this->getCollectionData();
         $data['results_size'] = 'FOO';
         $collection = new Collection(MockResource::class);
         $collection->fill($data);
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidCollectionException
-     */
     public function testFillMissingResults()
     {
+        $this->expectException(SoldoInvalidCollectionException::class);
+
         $data = $this->getCollectionData();
         unset($data['results']);
         $collection = new Collection(MockResource::class);
         $collection->fill($data);
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidCollectionException
-     */
     public function testFillInvalidResults()
     {
+        $this->expectException(SoldoInvalidCollectionException::class);
+
         $data = $this->getCollectionData();
         $data['results_size'] = 'FOO';
         $collection = new Collection(MockResource::class);

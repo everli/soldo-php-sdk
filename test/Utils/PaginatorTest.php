@@ -2,6 +2,7 @@
 
 namespace Soldo\Tests\Utils;
 
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Soldo\Utils\Paginator;
 
@@ -10,20 +11,18 @@ use Soldo\Utils\Paginator;
  */
 class PaginatorTest extends TestCase
 {
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testConstructorInvalidPage()
     {
-        $p = new Paginator('FOO', 10);
+        $this->expectException(InvalidArgumentException::class);
+
+        new Paginator('FOO', 10);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testConstructorInvalidPerPage()
     {
-        $p = new Paginator(10, 'FOO');
+        $this->expectException(InvalidArgumentException::class);
+
+        new Paginator(10, 'FOO');
     }
 
     public function testContructorNegativePage()

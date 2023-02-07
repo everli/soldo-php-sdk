@@ -2,12 +2,18 @@
 
 namespace Soldo\Tests;
 
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Soldo\Authentication\OAuthCredential;
+use Soldo\Exceptions\SoldoAuthenticationException;
+use Soldo\Exceptions\SoldoInternalTransferException;
+use Soldo\Exceptions\SoldoInvalidRelationshipException;
 use Soldo\Exceptions\SoldoInvalidResourceException;
+use Soldo\Exceptions\SoldoModelNotFoundException;
 use Soldo\Resources\Collection;
 use Soldo\Resources\Employee;
 use Soldo\Resources\Card;
+use Soldo\Resources\Rule;
 use Soldo\SoldoClient;
 
 /**
@@ -18,11 +24,12 @@ class SoldoClientTest extends TestCase
     /** @var SoldoClient */
     private $soldoClient;
 
-    public function setUp()
+    public function setUp(): void
     {
+        // Demo credentials
         $credential = new OAuthCredential(
-            SoldoTestCredentials::CLIENT_ID,
-            SoldoTestCredentials::CLIENT_SECRET
+            getenv('CLIENT_ID'),
+            getenv('CLIENT_SECRET')
         );
         $environment = 'demo';
         $this->soldoClient = new SoldoClient($credential, $environment);
@@ -35,8 +42,8 @@ class SoldoClientTest extends TestCase
     {
         return new SoldoClient(
             new OAuthCredential(
-                'client_id',
-                'client_secret'
+                'wrong_client_id',
+                'wrong_client_secret'
             ),
             'demo'
         );
@@ -52,36 +59,33 @@ class SoldoClientTest extends TestCase
         return $collection->get()[0]->id;
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoAuthenticationException
-     */
     public function testGetAccessTokenInvalidCredentials()
     {
+        $this->expectException(SoldoAuthenticationException::class);
+
         $sc = $this->getClientWithInvalidCredentials();
-        $access_token = $sc->getAccessToken();
+        $sc->getAccessToken();
     }
 
     public function testGetAccessToken()
     {
         $access_token = $this->soldoClient->getAccessToken();
         $this->assertNotNull($access_token);
-        $this->assertInternalType('string', $access_token);
+        $this->assertIsString('string', $access_token);
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoAuthenticationException
-     */
     public function testGetCollectionInvalidCredentials()
     {
+        $this->expectException(SoldoAuthenticationException::class);
+
         $sc = $this->getClientWithInvalidCredentials();
         $sc->getCollection(Employee::class);
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidResourceException
-     */
     public function testGetCollectionInvalidClass()
     {
+        $this->expectException(SoldoInvalidResourceException::class);
+
         $this->soldoClient->getCollection('INVALID_CLASS_NAME');
     }
 
@@ -94,29 +98,28 @@ class SoldoClientTest extends TestCase
         }
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoAuthenticationException
-     */
+
     public function testGetItemInvalidCredentials()
     {
+        $this->expectException(SoldoAuthenticationException::class);
+
         $sc = $this->getClientWithInvalidCredentials();
-        $item = $sc->getItem(Employee::class, 'a-valid-id');
+        $sc->getItem(Employee::class, 'a-valid-id');
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidResourceException
-     */
+
     public function testGetItemInvalidClass()
     {
-        $item = $this->soldoClient->getItem('INVALID_CLASS_NAME');
+        $this->expectException(SoldoInvalidResourceException::class);
+
+        $this->soldoClient->getItem('INVALID_CLASS_NAME');
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoModelNotFoundException
-     */
     public function testGetItemNotFound()
     {
-        $item = $this->soldoClient->getItem(Employee::class, 'NOT_EXISTING_ID');
+        $this->expectException(SoldoModelNotFoundException::class);
+
+        $this->soldoClient->getItem(Employee::class, 'NOT_EXISTING_ID');
     }
 
     public function testGetItem()
@@ -127,49 +130,43 @@ class SoldoClientTest extends TestCase
         $this->assertInstanceOf(Employee::class, $item);
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoAuthenticationException
-     */
     public function testUpdateItemInvalidCredentials()
     {
+        $this->expectException(SoldoAuthenticationException::class);
+
         $itemId = $this->getItemId();
         $sc = $this->getClientWithInvalidCredentials();
-        $item = $sc->updateItem(Employee::class, $itemId, ['department' => 'A Depertament']);
+        $sc->updateItem(Employee::class, $itemId, ['department' => 'A Depertament']);
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidResourceException
-     */
     public function testUpdateItemInvalidClass()
     {
+        $this->expectException(SoldoInvalidResourceException::class);
+
         $itemId = $this->getItemId();
-        $item = $this->soldoClient->updateItem('INVALID_CLASS_NAME', $itemId, ['department' => 'A Depertament']);
+        $this->soldoClient->updateItem('INVALID_CLASS_NAME', $itemId, ['department' => 'A Depertament']);
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoModelNotFoundException
-     */
     public function testUpdateItemNotFound()
     {
-        $item = $this->soldoClient->updateItem(Employee::class, 'A_NOT_EXISTING_ID', ['department' => 'A Depertament']);
+        $this->expectException(SoldoModelNotFoundException::class);
+        $this->soldoClient->updateItem(Employee::class, 'A_NOT_EXISTING_ID', ['department' => 'A Depertament']);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testUpdateItemEmptyData()
     {
+        $this->expectException(InvalidArgumentException::class);
+
         $itemId = $this->getItemId();
-        $item = $this->soldoClient->updateItem(Employee::class, $itemId, []);
+        $this->soldoClient->updateItem(Employee::class, $itemId, []);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testUpdateItemNotWhitelisted()
     {
+        $this->expectException(InvalidArgumentException::class);
+
         $itemId = $this->getItemId();
-        $item = $this->soldoClient->updateItem(Employee::class, $itemId, ['random_key' => 'Random Value']);
+        $this->soldoClient->updateItem(Employee::class, $itemId, ['random_key' => 'Random Value']);
     }
 
     public function testUpdateItem()
@@ -182,37 +179,33 @@ class SoldoClientTest extends TestCase
         $this->assertEquals('A Department', $item->department);
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoAuthenticationException
-     */
+
     public function testGetRelationshipInvalidCredentials()
     {
+        $this->expectException(SoldoAuthenticationException::class);
+
         $sc = $this->getClientWithInvalidCredentials();
-        $relationship = $sc->getRelationship(Card::class, 'fake-id', 'rules');
+        $sc->getRelationship(Card::class, 'fake-id', 'rules');
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidResourceException
-     */
     public function testGetRelationshipInvalidClass()
     {
-        $relationship = $this->soldoClient->getRelationship('INVALID_CLASS_NAME', 'fake-id', 'rules');
+        $this->expectException(SoldoInvalidResourceException::class);
+
+        $this->soldoClient->getRelationship('INVALID_CLASS_NAME', 'fake-id', 'rules');
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidRelationshipException
-     */
     public function testGetRelationshipInvalidRelationship()
     {
-        $relationship = $this->soldoClient->getRelationship(Card::class, 'fake-id', 'not-mapped-relationship');
+        $this->expectException(SoldoInvalidRelationshipException::class);
+
+        $this->soldoClient->getRelationship(Card::class, 'fake-id', 'not-mapped-relationship');
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoModelNotFoundException
-     */
     public function testGetRelationshipNotFound()
     {
-        $relationship = $this->soldoClient->getRelationship(Card::class, 'fake-id', 'rules');
+        $this->expectException(SoldoModelNotFoundException::class);
+        $this->soldoClient->getRelationship(Card::class, 'fake-id', 'rules');
     }
 
     public function testGetRelationship()
@@ -221,28 +214,24 @@ class SoldoClientTest extends TestCase
         $card_id = $cards->get()[0]->id;
 
         $relationship = $this->soldoClient->getRelationship(Card::class, $card_id, 'rules');
-        $this->assertInternalType('array', $relationship);
+        $this->assertIsArray($relationship);
         foreach ($relationship as $r) {
-            $this->assertInstanceOf(\Soldo\Resources\Rule::class, $r);
+            $this->assertInstanceOf(Rule::class, $r);
         }
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoAuthenticationException
-     */
     public function testPerformTransferInvalidCredentials()
     {
+        $this->expectException(SoldoAuthenticationException::class);
+
         $sc = $this->getClientWithInvalidCredentials();
-        $access_token = $sc->performTransfer('from-wallet', 'to-wallet', 50, 'EUR', '123456');
+        $sc->performTransfer('from-wallet', 'to-wallet', 50, 'EUR', '123456');
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInternalTransferException
-     *
-     * I think this is enough since the real transfer is tested in SoldoTest
-     */
     public function testPerformTransferInvalidParams()
     {
-        $access_token = $this->soldoClient->performTransfer('from-wallet', 'to-wallet', 50, 'EUR', '123456');
+        $this->expectException(SoldoInternalTransferException::class);
+
+        $this->soldoClient->performTransfer('from-wallet', 'to-wallet', 50, 'EUR', '123456');
     }
 }

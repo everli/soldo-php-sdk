@@ -9,6 +9,8 @@
          stopOnError="true"
          stopOnFailure="true"
          stopOnIncomplete="true"
-         syntaxCheck="false"
 >
+    <php>
+        <server name="APP_ENV" value="testing"/>
+    </php>
 </phpunit>
