@@ -5,3 +5,4 @@
 /test/SoldoTestCredentials.php
 /examples/soldo.log
 .env.testing
+.phpunit.result.cache

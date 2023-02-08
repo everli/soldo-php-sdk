@@ -10,7 +10,4 @@
          stopOnFailure="true"
          stopOnIncomplete="true"
 >
-    <php>
-        <server name="APP_ENV" value="testing"/>
-    </php>
 </phpunit>
