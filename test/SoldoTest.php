@@ -2,7 +2,12 @@
 
 namespace Soldo\Tests;
 
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
+use Soldo\Exceptions\SoldoBadRequestException;
+use Soldo\Exceptions\SoldoException;
+use Soldo\Exceptions\SoldoInternalTransferException;
+use Soldo\Exceptions\SoldoModelNotFoundException;
 use Soldo\Resources\Card;
 use Soldo\Resources\Company;
 use Soldo\Resources\Employee;
@@ -22,41 +27,39 @@ class SoldoTest extends TestCase
     /** @var Soldo */
     private $soldo;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->soldo = new Soldo(
             [
-                'client_id' => SoldoTestCredentials::CLIENT_ID,
-                'client_secret' => SoldoTestCredentials::CLIENT_SECRET,
+                'client_id' => getenv('CLIENT_ID'),
+                'client_secret' => getenv('CLIENT_SECRET'),
                 'environment' => 'demo',
             ]
         );
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoException
-     * @expectedExceptionMessage Required "client_id" key is missing in config
-     */
     public function testConstructorWithoutConfig()
     {
-        $s = new Soldo([]);
+        $this->expectException(SoldoException::class);
+        $this->expectExceptionMessage("Required \"client_id\" key is missing in config");
+
+        new Soldo([]);
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoException
-     * @expectedExceptionMessage Required "client_id" key is missing in config
-     */
     public function testConstructorWithoutClientIdParam()
     {
-        $s = new Soldo(['client_secret' => 'FOO']);
+        $this->expectException(SoldoException::class);
+        $this->expectExceptionMessage("Required \"client_id\" key is missing in config");
+
+        new Soldo(['client_secret' => 'FOO']);
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoException
-     * @expectedExceptionMessage Required "client_secret" key is missing in config
-     */
+
     public function testConstructorWithoutClientSecretParam()
     {
+        $this->expectException(SoldoException::class);
+        $this->expectExceptionMessage("Required \"client_secret\" key is missing in config");
+
         $s = new Soldo(['client_id' => 'FOO']);
     }
 
@@ -127,12 +130,12 @@ class SoldoTest extends TestCase
     public function testGetWallets()
     {
         $wallets = $this->soldo->getWallets();
-        $this->assertInternalType('array', $wallets);
+        $this->assertIsArray($wallets);
         $this->assertTrue(count($wallets) > 1, 'There should be at least two Wallet');
 
         /** @var Wallet $wallet */
         $wallet = $wallets[0];
-        $this->assertInternalType('string', $wallet->id);
+        $this->assertIsString($wallet->id);
 
         foreach ($wallets as $wallet) {
             /** @var Wallet $wallet  */
@@ -140,12 +143,11 @@ class SoldoTest extends TestCase
         }
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoModelNotFoundException
-     */
     public function testGetWalletNotFound()
     {
-        $wallet = $this->soldo->getWallet('A_NOT_EXISTING_WALLET_ID');
+        $this->expectException(SoldoModelNotFoundException::class);
+
+        $this->soldo->getWallet('A_NOT_EXISTING_WALLET_ID');
     }
 
     public function testGetWallet()
@@ -159,7 +161,7 @@ class SoldoTest extends TestCase
     public function testGetGroups()
     {
         $groups = $this->soldo->getGroups();
-        $this->assertInternalType('array', $groups);
+        $this->assertIsArray($groups);
         $this->assertTrue(count($groups) > 0, 'There should be at least one Group');
 
         foreach ($groups as $group) {
@@ -168,12 +170,11 @@ class SoldoTest extends TestCase
         }
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoBadRequestException
-     */
     public function testGetGroupNotFound()
     {
-        $group = $this->soldo->getGroup('A_NOT_EXISTING_GROUP_ID');
+        $this->expectException(SoldoBadRequestException::class);
+
+        $this->soldo->getGroup('A_NOT_EXISTING_GROUP_ID');
     }
 
     public function testGetGroup()
@@ -188,7 +189,7 @@ class SoldoTest extends TestCase
     public function testGetEmployees()
     {
         $employees = $this->soldo->getEmployees();
-        $this->assertInternalType('array', $employees);
+        $this->assertIsArray($employees);
         $this->assertTrue(count($employees) > 0, 'There should be at least one Employee');
 
         foreach ($employees as $employee) {
@@ -197,12 +198,11 @@ class SoldoTest extends TestCase
         }
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoModelNotFoundException
-     */
     public function testGetEmployeeNotFound()
     {
-        $employee = $this->soldo->getEmployee('A_NOT_EXISTING_EMPLOYEE_ID');
+        $this->expectException(SoldoModelNotFoundException::class);
+
+        $this->soldo->getEmployee('A_NOT_EXISTING_EMPLOYEE_ID');
     }
 
     public function testGetEmployee()
@@ -213,22 +213,21 @@ class SoldoTest extends TestCase
         $this->assertEquals($employeeId, $employee->id);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testUpdateEmployeeeEmptyData()
     {
+        $this->expectException(InvalidArgumentException::class);
+
         $employeeId = $this->getEmployeeId();
-        $employee = $this->soldo->updateEmployee($employeeId, []);
+
+        $this->soldo->updateEmployee($employeeId, []);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testUpdateEmployBlacklistedData()
     {
+        $this->expectException(InvalidArgumentException::class);
+
         $employeeId = $this->getEmployeeId();
-        $employee = $this->soldo->updateEmployee($employeeId, ['a_not_whitelisted_key' => 'Random Value']);
+        $this->soldo->updateEmployee($employeeId, ['a_not_whitelisted_key' => 'Random Value']);
     }
 
     public function testUpdateEmployee()
@@ -250,7 +249,7 @@ class SoldoTest extends TestCase
     public function testGetTransactions()
     {
         $transactions = $this->soldo->getTransactions();
-        $this->assertInternalType('array', $transactions);
+        $this->assertIsArray($transactions);
         $this->assertTrue(count($transactions) > 0, 'There should be at least one Transaction');
 
         foreach ($transactions as $transaction) {
@@ -259,12 +258,11 @@ class SoldoTest extends TestCase
         }
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoModelNotFoundException
-     */
     public function testGetTransactionNotFound()
     {
-        $transaction = $this->soldo->getTransaction('A_NOT_EXISTING_TRANSACTION_ID');
+        $this->expectException(SoldoBadRequestException::class);
+
+        $this->soldo->getTransaction('A_NOT_EXISTING_TRANSACTION_ID');
     }
 
     public function testGetTransaction()
@@ -283,13 +281,13 @@ class SoldoTest extends TestCase
         $this->assertInstanceOf(Transaction::class, $transaction);
         $this->assertEquals($transactionId, $transaction->id);
         $this->assertNotNull($transaction->details);
-        $this->assertInternalType('array', $transaction->details);
+        $this->assertIsArray($transaction->details);
     }
 
     public function testGetCards()
     {
         $cards = $this->soldo->getCards();
-        $this->assertInternalType('array', $cards);
+        $this->assertIsArray($cards);
         $this->assertTrue(count($cards) > 0, 'There should be at least one Card');
 
         foreach ($cards as $card) {
@@ -298,12 +296,11 @@ class SoldoTest extends TestCase
         }
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoModelNotFoundException
-     */
     public function testGetCardNotFound()
     {
-        $card = $this->soldo->getCard('A_NOT_EXISTING_CARD_ID');
+        $this->expectException(SoldoModelNotFoundException::class);
+
+        $this->soldo->getCard('A_NOT_EXISTING_CARD_ID');
     }
 
     public function testGetCard()
@@ -314,19 +311,18 @@ class SoldoTest extends TestCase
         $this->assertEquals($cardId, $card->id);
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoModelNotFoundException
-     */
     public function testGetCardRulesNotFound()
     {
-        $rules = $this->soldo->getCardRules('A_NOT_EXISTING_CARD_ID');
+        $this->expectException(SoldoModelNotFoundException::class);
+
+        $this->soldo->getCardRules('A_NOT_EXISTING_CARD_ID');
     }
 
     public function testGetCardRules()
     {
         $cardId = $this->getCardId();
         $rules = $this->soldo->getCardRules($cardId);
-        $this->assertInternalType('array', $rules);
+        $this->assertIsArray($rules);
         $this->assertTrue(count($rules) > 0, 'There should be at least one Rule for the required card');
 
         foreach ($rules as $rule) {
@@ -341,73 +337,68 @@ class SoldoTest extends TestCase
         $this->assertInstanceOf(Company::class, $company);
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInternalTransferException
-     */
     public function testPerformTransferToNotExistingWallet()
     {
+        $this->expectException(SoldoInternalTransferException::class);
+
         $walletIds = $this->getWalletsId();
-        $transfer = $this->soldo->transferMoney(
+        $this->soldo->transferMoney(
             $walletIds['id_with_available_amount'],
             'ANOTHER_NOT_EXISTING_WALLET',
             1,
             'EUR',
-            SoldoTestCredentials::INTERNAL_TOKEN
+            'token'
         );
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInternalTransferException
-     */
     public function testPerformTransferFromNotExistingWallet()
     {
+        $this->expectException(SoldoInternalTransferException::class);
+
         $walletIds = $this->getWalletsId();
-        $transfer = $this->soldo->transferMoney(
+        $this->soldo->transferMoney(
             'ANOTHER_NOT_EXISTING_WALLET',
             $walletIds['id'],
             1,
             'EUR',
-            SoldoTestCredentials::INTERNAL_TOKEN
+            'token'
         );
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInternalTransferException
-     */
     public function testPerformTransferWithInvalidAmount()
     {
+        $this->expectException(SoldoInternalTransferException::class);
+
         $walletIds = $this->getWalletsId();
-        $transfer = $this->soldo->transferMoney(
+        $this->soldo->transferMoney(
             $walletIds['id_with_available_amount'],
             $walletIds['id'],
             9999999,
             'EUR',
-            SoldoTestCredentials::INTERNAL_TOKEN
+            'token'
         );
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInternalTransferException
-     */
     public function testPerformTransferWithInvalidCurrencyCode()
     {
+        $this->expectException(SoldoInternalTransferException::class);
+
         $walletIds = $this->getWalletsId();
-        $transfer = $this->soldo->transferMoney(
+        $this->soldo->transferMoney(
             $walletIds['id_with_available_amount'],
             $walletIds['id'],
             1,
             'NOT_EXISTING_CURRENCY_CODE',
-            SoldoTestCredentials::INTERNAL_TOKEN
+            'token'
         );
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInternalTransferException
-     */
     public function testPerformTransferWithInvalidInternalToken()
     {
+        $this->expectException(SoldoInternalTransferException::class);
+
         $walletIds = $this->getWalletsId();
-        $transfer = $this->soldo->transferMoney(
+        $this->soldo->transferMoney(
             $walletIds['id_with_available_amount'],
             $walletIds['id'],
             1,
@@ -432,7 +423,7 @@ class SoldoTest extends TestCase
             $walletIds['id'],
             $amountToTransfer,
             'EUR',
-            SoldoTestCredentials::INTERNAL_TOKEN
+            getenv('INTERNAL_TOKEN')
         );
 
         $availableAmountOfFromWalletAfter = $transfer->from_wallet->available_amount;

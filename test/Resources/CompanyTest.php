@@ -3,6 +3,7 @@
 namespace Soldo\Tests\Resources;
 
 use PHPUnit\Framework\TestCase;
+use Soldo\Exceptions\SoldoInvalidRelationshipException;
 use Soldo\Resources\Company;
 
 /**
@@ -67,20 +68,18 @@ class CompanyTest extends TestCase
         $this->assertEquals($data, $resource->toArray());
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidRelationshipException
-     */
     public function testBuildRelationshipNotMappedRelationship()
     {
+        $this->expectException(SoldoInvalidRelationshipException::class);
+
         $resource = new Company();
         $resource->buildRelationship('invalid-resource-name', []);
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidRelationshipException
-     */
     public function testGetRelationshipRemotePathNotMappedRelationship()
     {
+        $this->expectException(SoldoInvalidRelationshipException::class);
+
         $resource = new Company();
         $remotePath = $resource->getRelationshipRemotePath('resources');
     }

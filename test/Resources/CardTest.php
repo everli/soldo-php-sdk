@@ -4,6 +4,7 @@ namespace Soldo\Tests\Resources;
 
 use PHPUnit\Framework\TestCase;
 use Soldo\Exceptions\SoldoInvalidPathException;
+use Soldo\Exceptions\SoldoInvalidRelationshipException;
 use Soldo\Resources\Card;
 use Soldo\Resources\Rule;
 
@@ -104,11 +105,10 @@ class CardTest extends TestCase
         }
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidPathException
-     */
     public function testGetRemotePathMissingId()
     {
+        $this->expectException(SoldoInvalidPathException::class);
+
         $resource = new Card();
         $resource->getRemotePath();
     }
@@ -134,23 +134,21 @@ class CardTest extends TestCase
         $this->assertEquals($data, $resource->toArray());
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidRelationshipException
-     */
     public function testBuildRelationshipNotMappedRelationship()
     {
+        $this->expectException(SoldoInvalidRelationshipException::class);
+
         $resource = new Card();
         $resource->buildRelationship('invalid-resource-name', []);
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidRelationshipException
-     */
     public function testBuildRelationshipInvalidData()
     {
+        $this->expectException(SoldoInvalidRelationshipException::class);
+
         $resource = new Card();
-        $resources = $resource->buildRelationship('rules', 'not-an-array');
-        $resources = $resource->buildRelationship('rules', []);
+        $resource->buildRelationship('rules', 'not-an-array');
+        $resource->buildRelationship('rules', []);
     }
 
     public function testBuildRelationship()
@@ -166,22 +164,19 @@ class CardTest extends TestCase
         }
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidRelationshipException
-     */
     public function testGetRelationshipRemotePathNotMappedRelationship()
     {
+        $this->expectException(SoldoInvalidRelationshipException::class);
+
         $resource = new Card();
-        $remotePath = $resource->getRelationshipRemotePath('resources');
+        $resource->getRelationshipRemotePath('resources');
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidPathException
-     */
     public function testGetRelationshipRemotePathMissingId()
     {
+        $this->expectException(SoldoInvalidPathException::class);
         $resource = new Card();
-        $remotePath = $resource->getRelationshipRemotePath('rules');
+        $resource->getRelationshipRemotePath('rules');
     }
 
     public function testGetRelationshipRemotePath()

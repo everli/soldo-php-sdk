@@ -9,6 +9,5 @@
          stopOnError="true"
          stopOnFailure="true"
          stopOnIncomplete="true"
-         syntaxCheck="false"
 >
 </phpunit>

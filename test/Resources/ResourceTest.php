@@ -2,11 +2,13 @@
 
 namespace Soldo\Tests\Resources;
 
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Soldo\Exceptions\SoldoInvalidEvent;
 use Soldo\Exceptions\SoldoInvalidFingerprintException;
+use Soldo\Exceptions\SoldoInvalidPathException;
 use Soldo\Exceptions\SoldoInvalidRelationshipException;
-use Soldo\Resources\Resource;
+use Soldo\Exceptions\SoldoInvalidResourceException;
 use Soldo\Tests\Fixtures\MockResource;
 
 /**
@@ -34,18 +36,18 @@ class ResourceTest extends TestCase
         $this->assertEquals('bar', $resource->foo);
 
         $this->assertNotNull($resource->castable_attribute);
-        $this->assertInternalType('array', $resource->castable_attribute);
+        $this->assertIsArray($resource->castable_attribute);
         $this->assertEquals([
             'foo' => 'bar',
             'john' => 'doe',
         ], $resource->castable_attribute);
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidResourceException
-     */
+
     public function testFillCastableInvalidClassName()
     {
+        $this->expectException(SoldoInvalidResourceException::class);
+
         /** @var MockResource $resource */
         $resource = new MockResource();
         $resource->setCast(
@@ -60,11 +62,10 @@ class ResourceTest extends TestCase
         ]);
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidResourceException
-     */
     public function testFillCastableNotChildOfSoldoResource()
     {
+        $this->expectException(SoldoInvalidResourceException::class);
+
         /** @var MockResource $resource */
         $resource = new MockResource();
         $resource->setCast(
@@ -79,11 +80,9 @@ class ResourceTest extends TestCase
         ]);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testFillCastableNotValidDataset()
     {
+        $this->expectException(InvalidArgumentException::class);
         /** @var MockResource $resource */
         $resource = new MockResource();
         $resource->setCast(
@@ -119,7 +118,8 @@ class ResourceTest extends TestCase
     public function testToArrayEmptyData()
     {
         $resource = new MockResource();
-        $this->assertInternalType('array', $resource->toArray());
+        $this->assertIsArray($resource->toArray());
+        $this->assertIsArray($resource->toArray());
         $this->assertEmpty($resource->toArray());
     }
 
@@ -180,38 +180,34 @@ class ResourceTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidFingerprintException
-     */
     public function testBuildFingerprintOrderWithNoParams()
     {
+        $this->expectException(SoldoInvalidFingerprintException::class);
+
         $resource = new MockResource();
         $resource->buildFingerprint([], 'foo');
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidFingerprintException
-     */
     public function testBuildFingerprintOrderWithOnlyOneParam()
     {
+        $this->expectException(SoldoInvalidFingerprintException::class);
+
         $resource = new MockResource();
         $resource->buildFingerprint(['foo'], 'foo');
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidFingerprintException
-     */
     public function testBuildFingerprintOrderWithNoTokenParam()
     {
+        $this->expectException(SoldoInvalidFingerprintException::class);
+
         $resource = new MockResource();
         $resource->buildFingerprint(['foo', 'bar'], 'foo');
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidFingerprintException
-     */
     public function testBuildFingerprintMissingAttribute()
     {
+        $this->expectException(SoldoInvalidFingerprintException::class);
+
         $resource = new MockResource();
         $resource->buildFingerprint(['foo', 'token'], 'foo');
     }
@@ -243,11 +239,10 @@ class ResourceTest extends TestCase
         $this->assertNull($resource->getEventType());
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidEvent
-     */
     public function testGetEventTypeMissingAttribute()
     {
+        $this->expectException(SoldoInvalidEvent::class);
+
         $resource = new MockResource();
         $resource->setEventType('{id}');
         $resource->getEventType();
@@ -266,31 +261,28 @@ class ResourceTest extends TestCase
         $this->assertEquals('mockresource.camelcaseevent_fooparameter', $resource->getEventType());
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidPathException
-     */
     public function testGetRemotePathMissingBasePath()
     {
+        $this->expectException(SoldoInvalidPathException::class);
+
         $resource = new MockResource();
         $this->setMockResourceBasePath(null);
         $resource->getRemotePath();
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidPathException
-     */
     public function testGetRemotePathMissingId()
     {
+        $this->expectException(SoldoInvalidPathException::class);
+
         $resource = new MockResource();
         $resource->setPath('/{id}');
         $resource->getRemotePath();
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidPathException
-     */
     public function testGetRemotePathInvalidBasePath()
     {
+        $this->expectException(SoldoInvalidPathException::class);
+
         $resource = new MockResource();
         $resource->setPath('path-without-slash');
         $resource->getRemotePath();
@@ -314,56 +306,51 @@ class ResourceTest extends TestCase
         $this->assertEquals('/resources/a+string+with+spaces', $resource->getRemotePath());
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidRelationshipException
-     */
     public function testBuildRelationshipNotMappedRelationship()
     {
+        $this->expectException(SoldoInvalidRelationshipException::class);
+
         $resource = new MockResource();
-        $resources = $resource->buildRelationship('resources', []);
+        $resource->buildRelationship('resources', []);
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidResourceException
-     */
     public function testBuildRelationshipWithInvalidClassName()
     {
+        $this->expectException(SoldoInvalidResourceException::class);
+
         /** @var MockResource $resource */
         $resource = new MockResource();
         $resource->setRelationships(['resources' => 'InvalidClassName']);
-        $resources = $resource->buildRelationship('resources', []);
+        $resource->buildRelationship('resources', []);
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidRelationshipException
-     */
     public function testBuildRelationshipRawDataNotAnArray()
     {
+        $this->expectException(SoldoInvalidRelationshipException::class);
+
         /** @var MockResource $resource */
         $resource = new MockResource();
         $resource->setRelationships(['resources' => MockResource::class]);
-        $resources = $resource->buildRelationship('resources', 'not-an-array');
+        $resource->buildRelationship('resources', 'not-an-array');
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidRelationshipException
-     */
     public function testBuildRelationshipEmptyRowData()
     {
+        $this->expectException(SoldoInvalidRelationshipException::class);
+
         /** @var MockResource $resource */
         $resource = new MockResource();
         $resource->setRelationships(['resources' => MockResource::class]);
-        $resources = $resource->buildRelationship('resources', []);
+        $resource->buildRelationship('resources', []);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testBuildRelationshipNotAMultidimensionalArray()
     {
+        $this->expectException(InvalidArgumentException::class);
+
         $resource = new MockResource();
         $resource->setRelationships(['resources' => MockResource::class]);
-        $resources = $resource->buildRelationship('resources', ['resources' => ['foo' => 'bar']]);
+        $resource->buildRelationship('resources', ['resources' => ['foo' => 'bar']]);
     }
 
     public function testBuildRelationship()
@@ -382,24 +369,21 @@ class ResourceTest extends TestCase
         }
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidRelationshipException
-     */
     public function testGetRelationshipRemotePathNotMappedRelationship()
     {
+        $this->expectException(SoldoInvalidRelationshipException::class);
+
         $resource = new MockResource();
         $resource->setRelationships([]);
-        $remotePath = $resource->getRelationshipRemotePath('resources');
+        $resource->getRelationshipRemotePath('resources');
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidResourceException
-     */
     public function testGetRelationshipRemotePathInvalidClassName()
     {
+        $this->expectException(SoldoInvalidResourceException::class);
         $resource = new MockResource();
         $resource->setRelationships(['resources' => 'InvalidClassName']);
-        $remotePath = $resource->getRelationshipRemotePath('resources');
+        $resource->getRelationshipRemotePath('resources');
     }
 
     public function testGetRelationshipRemotePath()

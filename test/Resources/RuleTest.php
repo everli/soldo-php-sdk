@@ -3,6 +3,7 @@
 namespace Soldo\Tests\Resources;
 
 use PHPUnit\Framework\TestCase;
+use Soldo\Exceptions\SoldoInvalidRelationshipException;
 use Soldo\Resources\Rule;
 
 /**
@@ -66,22 +67,20 @@ class RuleTest extends TestCase
         $this->assertEquals($data, $resource->toArray());
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidRelationshipException
-     */
     public function testBuildRelationshipNotMappedRelationship()
     {
+        $this->expectException(SoldoInvalidRelationshipException::class);
+
         $resource = new Rule();
         $resource->buildRelationship('invalid-resource-name', []);
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidRelationshipException
-     */
     public function testGetRelationshipRemotePathNotMappedRelationship()
     {
+        $this->expectException(SoldoInvalidRelationshipException::class);
+
         $resource = new Rule();
-        $remotePath = $resource->getRelationshipRemotePath('resources');
+        $resource->getRelationshipRemotePath('resources');
     }
 
     public function testFilterWhiteList()

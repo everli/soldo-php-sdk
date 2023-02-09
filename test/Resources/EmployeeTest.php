@@ -3,6 +3,8 @@
 namespace Soldo\Tests\Resources;
 
 use PHPUnit\Framework\TestCase;
+use Soldo\Exceptions\SoldoInvalidPathException;
+use Soldo\Exceptions\SoldoInvalidRelationshipException;
 use Soldo\Resources\Employee;
 
 /**
@@ -54,11 +56,10 @@ class EmployeeTest extends TestCase
         }
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidPathException
-     */
     public function testGetRemotePathMissingId()
     {
+        $this->expectException(SoldoInvalidPathException::class);
+
         $resource = new Employee();
         $resource->getRemotePath();
     }
@@ -84,22 +85,20 @@ class EmployeeTest extends TestCase
         $this->assertEquals($data, $resource->toArray());
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidRelationshipException
-     */
     public function testBuildRelationshipNotMappedRelationship()
     {
+        $this->expectException(SoldoInvalidRelationshipException::class);
+
         $resource = new Employee();
         $resource->buildRelationship('invalid-resource-name', []);
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidRelationshipException
-     */
     public function testGetRelationshipRemotePathNotMappedRelationship()
     {
+        $this->expectException(SoldoInvalidRelationshipException::class);
+
         $resource = new Employee();
-        $remotePath = $resource->getRelationshipRemotePath('resources');
+        $resource->getRelationshipRemotePath('resources');
     }
 
     public function testFilterWhiteList()

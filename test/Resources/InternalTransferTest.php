@@ -4,6 +4,8 @@ namespace Soldo\Tests\Resources;
 
 use PHPUnit\Framework\TestCase;
 use Soldo\Exceptions\SoldoInvalidFingerprintException;
+use Soldo\Exceptions\SoldoInvalidPathException;
+use Soldo\Exceptions\SoldoInvalidRelationshipException;
 use Soldo\Resources\InternalTransfer;
 use Soldo\Resources\Wallet;
 
@@ -84,21 +86,19 @@ class InternalTransferTest extends TestCase
         $this->assertEquals($data['to_wallet'], $resource->to_wallet->toArray());
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidPathException
-     */
     public function testGetRemotePathMissingFromWalletId()
     {
+        $this->expectException(SoldoInvalidPathException::class);
+
         $resource = new InternalTransfer();
         $remote_path = $resource->getRemotePath();
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidPathException
-     * @expectedExceptionMessage Soldo\Resources\InternalTransfer toWalletId is not defined
-     */
     public function testGetRemotePathMissingToWalletId()
     {
+        $this->expectException(SoldoInvalidPathException::class);
+        $this->expectExceptionMessage("Soldo\Resources\InternalTransfer toWalletId is not defined");
+
         $resource = new InternalTransfer();
         $resource->fromWalletId = 'from-wallet-id';
         $remote_path = $resource->getRemotePath();
@@ -123,22 +123,20 @@ class InternalTransferTest extends TestCase
         $this->assertEquals($data, $resource->toArray());
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidRelationshipException
-     */
     public function testBuildRelationshipNotMappedRelationship()
     {
+        $this->expectException(SoldoInvalidRelationshipException::class);
+
         $resource = new InternalTransfer();
         $resource->buildRelationship('invalid-resource-name', []);
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidRelationshipException
-     */
     public function testGetRelationshipRemotePathNotMappedRelationship()
     {
+        $this->expectException(SoldoInvalidRelationshipException::class);
+
         $resource = new InternalTransfer();
-        $remotePath = $resource->getRelationshipRemotePath('resources');
+        $resource->getRelationshipRemotePath('resources');
     }
 
     public function testFilterWhiteList()
@@ -150,11 +148,10 @@ class InternalTransferTest extends TestCase
         $this->assertEquals([], $whitelistedData);
     }
 
-    /**
-     * @expectedException \Soldo\Exceptions\SoldoInvalidFingerprintException
-     */
     public function testGenerateFingerPrintMissingParams()
     {
+        $this->expectException(SoldoInvalidFingerprintException::class);
+
         $resource = new InternalTransfer();
         $resource->generateFingerPrint('123456');
     }
