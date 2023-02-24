@@ -1,13 +1,11 @@
 # Soldo SDK for PHP
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-
 An unofficial SDK to work with the [Soldo API](https://api-demo.soldocloud.net/documentation)
 
 ## Contacts
 In case you're interested in using the Soldo API, please [contact them](mailto:businessdevelopment@soldo.com) so they can support you in integrating them in your existing system.
 
 ## Prerequisites
-- PHP 5.5 or above
+- PHP 7.2 or above
 - [curl](https://secure.php.net/manual/en/book.curl.php) extension enabled
 
 ## Usage
@@ -66,23 +64,3 @@ $soldo = new \Soldo\Soldo([
 ```bash
 $ ./vendor/bin/phpunit
 ```
-
-## License
-
-```
-Copyright 2019 S24 S.p.A.
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-```
-
-
