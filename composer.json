@@ -1,12 +1,17 @@
 {
-  "name": "everli/soldo-php-sdk",
   "version": "4.0.0",
+  "name": "everli/soldo-php-sdk",
   "description": "Unofficial PHP SDK to work with Soldo API",
-  "keywords": ["everli", "soldo", "api"],
-  "license": "Apache-2.0",
+  "license": "AGPL-3.0-only",
+  "keywords": [
+    "everli",
+    "soldo",
+    "api"
+  ],
   "authors": [
     {
-      "name": "Everli dev team",
+      "name": "Everli Team",
+      "email": "tech@everli.com",
       "homepage": "https://everli.com"
     }
   ],
