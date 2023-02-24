@@ -5,7 +5,7 @@ An unofficial SDK to work with the [Soldo API](https://api-demo.soldocloud.net/d
 In case you're interested in using the Soldo API, please [contact them](mailto:businessdevelopment@soldo.com) so they can support you in integrating them in your existing system.
 
 ## Prerequisites
-- PHP 7.2 or above
+- PHP 5.5 or above
 - [curl](https://secure.php.net/manual/en/book.curl.php) extension enabled
 
 ## Usage
